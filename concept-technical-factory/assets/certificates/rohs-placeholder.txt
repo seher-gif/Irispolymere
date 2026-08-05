@@ -1,0 +1,2 @@
+Placeholder for ROHS certificate document.
+Replace this file with the client-supplied PDF certificate after approval.

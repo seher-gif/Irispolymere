@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Iris Polymere industrial placeholder visual" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="900" fill="#0d2f3f"/>
+  <g stroke="#2a4a56" stroke-width="1">
+    <line x1="90" y1="0" x2="90" y2="900"/>
+    <line x1="180" y1="0" x2="180" y2="900"/>
+    <line x1="270" y1="0" x2="270" y2="900"/>
+    <line x1="360" y1="0" x2="360" y2="900"/>
+    <line x1="450" y1="0" x2="450" y2="900"/>
+    <line x1="540" y1="0" x2="540" y2="900"/>
+    <line x1="630" y1="0" x2="630" y2="900"/>
+    <line x1="720" y1="0" x2="720" y2="900"/>
+    <line x1="810" y1="0" x2="810" y2="900"/>
+    <line x1="900" y1="0" x2="900" y2="900"/>
+    <line x1="990" y1="0" x2="990" y2="900"/>
+    <line x1="1080" y1="0" x2="1080" y2="900"/>
+    <line x1="1170" y1="0" x2="1170" y2="900"/>
+    <line x1="0" y1="90" x2="1200" y2="90"/>
+    <line x1="0" y1="180" x2="1200" y2="180"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="360" x2="1200" y2="360"/>
+    <line x1="0" y1="450" x2="1200" y2="450"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="0" y1="630" x2="1200" y2="630"/>
+    <line x1="0" y1="720" x2="1200" y2="720"/>
+    <line x1="0" y1="810" x2="1200" y2="810"/>
+  </g>
+  <g stroke="#e8ece9" stroke-width="2.2" fill="none" opacity="0.9">
+    <circle cx="600" cy="420" r="180"/>
+    <circle cx="600" cy="420" r="120"/>
+    <circle cx="600" cy="420" r="60"/>
+    <path d="M600 240v-60M600 660v60M420 420h-60M780 420h60"/>
+  </g>
+  <g fill="#4f7f78" opacity="0.85">
+    <circle cx="600" cy="420" r="18"/>
+  </g>
+  <g stroke="#e8ece9" stroke-width="1.4" opacity="0.6">
+    <path d="M120 780h960M120 820h960"/>
+  </g>
+
+</svg>

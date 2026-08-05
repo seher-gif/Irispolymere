@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0d2f3f"/>
+  <g stroke="#183f4f" stroke-width="1">
+    <line x1="0" y1="158" x2="1200" y2="158"/>
+    <line x1="0" y1="316" x2="1200" y2="316"/>
+    <line x1="0" y1="474" x2="1200" y2="474"/>
+    <line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="900" y1="0" x2="900" y2="630"/>
+  </g>
+  <g fill="none" stroke="#4f7f78" stroke-width="2">
+    <rect x="700" y="230" width="360" height="120"/>
+    <path d="M700 290H620M1060 290h60"/>
+  </g>
+  <text x="90" y="300" font-family="Arial, sans-serif" font-size="52" font-weight="700" fill="#ffffff">Iris Polymere</text>
+  <text x="90" y="350" font-family="Arial, sans-serif" font-size="24" fill="#a9c2bd">Compound Solutions Engineered for Industrial Performance</text>
+</svg>

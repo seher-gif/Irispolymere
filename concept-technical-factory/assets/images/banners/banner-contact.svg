@@ -1,0 +1,14 @@
+<svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Iris Polymere contact and technical support">
+  <rect width="1200" height="800" fill="#09232c"/>
+  <rect width="1200" height="800" fill="#103442" opacity="0.35"/>
+  <g stroke="#ffffff" stroke-width="1" opacity="0.08"><line x1="200" y1="0" x2="200" y2="800"/><line x1="400" y1="0" x2="400" y2="800"/><line x1="600" y1="0" x2="600" y2="800"/><line x1="800" y1="0" x2="800" y2="800"/><line x1="1000" y1="0" x2="1000" y2="800"/><line x1="0" y1="200" x2="1200" y2="200"/><line x1="0" y1="400" x2="1200" y2="400"/><line x1="0" y1="600" x2="1200" y2="600"/></g>
+  <g stroke="#5f817b" stroke-width="2" fill="none" opacity="0.9">
+    <circle cx="744" cy="336" r="128"/>
+    <path d="M616 336h256M744 208v256"/>
+  </g>
+  <g stroke="#c8cecc" stroke-width="1.5" fill="none" opacity="0.55">
+    <path d="M96 688h264M96 688v-96"/>
+    <path d="M1032 128h-240M1032 128v112.00000000000001"/>
+  </g>
+  <text x="72" y="736" font-family="monospace" font-size="21.599999999999998" letter-spacing="2" fill="#c8cecc" opacity="0.75">IRIS-POLYMERE / CONTACT</text>
+</svg>

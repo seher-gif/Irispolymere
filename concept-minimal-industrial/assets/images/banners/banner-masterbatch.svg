@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Iris Polymere industrial placeholder visual" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="900" fill="#0d2f3f"/>
+  <g stroke="#2a4a56" stroke-width="1">
+    <line x1="90" y1="0" x2="90" y2="900"/>
+    <line x1="180" y1="0" x2="180" y2="900"/>
+    <line x1="270" y1="0" x2="270" y2="900"/>
+    <line x1="360" y1="0" x2="360" y2="900"/>
+    <line x1="450" y1="0" x2="450" y2="900"/>
+    <line x1="540" y1="0" x2="540" y2="900"/>
+    <line x1="630" y1="0" x2="630" y2="900"/>
+    <line x1="720" y1="0" x2="720" y2="900"/>
+    <line x1="810" y1="0" x2="810" y2="900"/>
+    <line x1="900" y1="0" x2="900" y2="900"/>
+    <line x1="990" y1="0" x2="990" y2="900"/>
+    <line x1="1080" y1="0" x2="1080" y2="900"/>
+    <line x1="1170" y1="0" x2="1170" y2="900"/>
+    <line x1="0" y1="90" x2="1200" y2="90"/>
+    <line x1="0" y1="180" x2="1200" y2="180"/>
+    <line x1="0" y1="270" x2="1200" y2="270"/>
+    <line x1="0" y1="360" x2="1200" y2="360"/>
+    <line x1="0" y1="450" x2="1200" y2="450"/>
+    <line x1="0" y1="540" x2="1200" y2="540"/>
+    <line x1="0" y1="630" x2="1200" y2="630"/>
+    <line x1="0" y1="720" x2="1200" y2="720"/>
+    <line x1="0" y1="810" x2="1200" y2="810"/>
+  </g>  <g fill="#4f7f78" opacity="0.85">
+    <circle cx="511" cy="685" r="6"/>
+    <circle cx="584" cy="533" r="4"/>
+    <circle cx="254" cy="620" r="12"/>
+    <circle cx="276" cy="387" r="13"/>
+    <circle cx="239" cy="665" r="12"/>
+    <circle cx="399" cy="219" r="5"/>
+    <circle cx="624" cy="414" r="5"/>
+    <circle cx="426" cy="246" r="12"/>
+    <circle cx="614" cy="230" r="13"/>
+    <circle cx="306" cy="685" r="7"/>
+    <circle cx="825" cy="521" r="13"/>
+    <circle cx="243" cy="495" r="13"/>
+    <circle cx="586" cy="225" r="7"/>
+    <circle cx="227" cy="485" r="6"/>
+    <circle cx="476" cy="414" r="6"/>
+    <circle cx="733" cy="260" r="13"/>
+    <circle cx="495" cy="486" r="6"/>
+    <circle cx="285" cy="497" r="13"/>
+    <circle cx="834" cy="296" r="9"/>
+    <circle cx="279" cy="480" r="5"/>
+    <circle cx="757" cy="230" r="13"/>
+    <circle cx="390" cy="454" r="12"/>
+    <circle cx="617" cy="597" r="9"/>
+    <circle cx="656" cy="499" r="11"/>
+    <circle cx="550" cy="353" r="7"/>
+    <circle cx="993" cy="292" r="7"/>
+    <circle cx="263" cy="494" r="8"/>
+    <circle cx="717" cy="453" r="9"/>
+    <circle cx="926" cy="429" r="8"/>
+    <circle cx="803" cy="237" r="5"/>
+    <circle cx="704" cy="414" r="6"/>
+    <circle cx="955" cy="375" r="6"/>
+    <circle cx="680" cy="415" r="4"/>
+    <circle cx="864" cy="239" r="12"/>
+    <circle cx="766" cy="604" r="9"/>
+    <circle cx="528" cy="555" r="9"/>
+    <circle cx="788" cy="454" r="13"/>
+    <circle cx="996" cy="433" r="5"/>
+    <circle cx="275" cy="683" r="8"/>
+    <circle cx="665" cy="556" r="5"/>
+    <circle cx="242" cy="574" r="8"/>
+    <circle cx="842" cy="495" r="11"/>
+    <circle cx="471" cy="566" r="10"/>
+    <circle cx="864" cy="377" r="4"/>
+    <circle cx="652" cy="381" r="6"/>
+    <circle cx="805" cy="259" r="11"/>
+    <circle cx="240" cy="311" r="8"/>
+    <circle cx="312" cy="578" r="7"/>
+    <circle cx="587" cy="400" r="11"/>
+    <circle cx="262" cy="285" r="11"/>
+    <circle cx="591" cy="481" r="8"/>
+    <circle cx="320" cy="619" r="10"/>
+    <circle cx="743" cy="342" r="10"/>
+    <circle cx="547" cy="549" r="10"/>
+    <circle cx="416" cy="277" r="5"/>
+    <circle cx="360" cy="277" r="7"/>
+    <circle cx="854" cy="319" r="4"/>
+    <circle cx="676" cy="625" r="13"/>
+    <circle cx="366" cy="334" r="8"/>
+    <circle cx="184" cy="274" r="10"/>
+  </g>
+  <g stroke="#e8ece9" stroke-width="2" fill="none" opacity="0.7">
+    <rect x="470" y="360" width="260" height="180"/>
+  </g>
+
+</svg>

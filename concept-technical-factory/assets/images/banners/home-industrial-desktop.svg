@@ -1,0 +1,14 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Industrial compound production banner">
+  <rect width="1600" height="900" fill="#09232c"/>
+  <rect width="1600" height="900" fill="#103442" opacity="0.35"/>
+  <g stroke="#ffffff" stroke-width="1" opacity="0.08"><line x1="266.6666666666667" y1="0" x2="266.6666666666667" y2="900"/><line x1="533.3333333333334" y1="0" x2="533.3333333333334" y2="900"/><line x1="800" y1="0" x2="800" y2="900"/><line x1="1066.6666666666667" y1="0" x2="1066.6666666666667" y2="900"/><line x1="1333.3333333333335" y1="0" x2="1333.3333333333335" y2="900"/><line x1="0" y1="225" x2="1600" y2="225"/><line x1="0" y1="450" x2="1600" y2="450"/><line x1="0" y1="675" x2="1600" y2="675"/></g>
+  <g stroke="#5f817b" stroke-width="2" fill="none" opacity="0.9">
+    <circle cx="992" cy="378" r="144"/>
+    <path d="M848 378h288M992 234v288"/>
+  </g>
+  <g stroke="#c8cecc" stroke-width="1.5" fill="none" opacity="0.55">
+    <path d="M128 774h352M128 774v-108"/>
+    <path d="M1376 144h-320M1376 144v126.00000000000001"/>
+  </g>
+  <text x="96" y="828" font-family="monospace" font-size="28.799999999999997" letter-spacing="2" fill="#c8cecc" opacity="0.75">IRIS-POLYMERE / FACTORY-01</text>
+</svg>
