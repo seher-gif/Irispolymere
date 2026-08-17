@@ -37,7 +37,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
 
   return (
     <>
-      <section className="bg-gradient-to-br from-[#0b3a68] to-brand-darker px-6 py-14 text-white">
+      <section className="bg-brand-darker px-6 py-14 text-white">
         <Container>
           <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-2 text-xs text-white/70">
             <Link href={`/${locale}`} className="font-semibold hover:text-white">{t("breadcrumb.home")}</Link>
@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
               const product = productsBySlug[rs];
               if (!product) return null;
               return (
-                <Link key={rs} href={`/${locale}/products/${rs}`} className="rounded-md border border-line bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-brand">
+                <Link key={rs} href={`/${locale}/products/${rs}`} className="rounded-md border border-line bg-white p-5 transition-colors hover:border-brand">
                   <strong className="block text-sm text-ink">{t(product.titleKey)}</strong>
                   <span className="mt-1 block text-xs text-muted">{t("btn.viewProduct")}</span>
                 </Link>
@@ -96,7 +96,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
             <SectionHead title={t("blog.relatedArticles")} />
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {otherPosts.map((p) => (
-                <Link key={p.slug} href={`/${locale}/blog/${p.slug}`} className="rounded-md border border-line bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-brand">
+                <Link key={p.slug} href={`/${locale}/blog/${p.slug}`} className="rounded-md border border-line bg-white p-5 transition-colors hover:border-brand">
                   <strong className="block text-sm text-ink">{t(`${p.key}.title`)}</strong>
                   <span className="mt-1 block text-xs font-bold text-brand">{t("blog.readArticle")}</span>
                 </Link>

@@ -18,7 +18,7 @@ export function ApplicationsSection({ t, locale }: { t: TFunc; locale: string })
         <SectionHead eyebrow={t("home.applications.eyebrow")} title={t("home.applications.title")} />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {items.map(({ Icon, key, href }) => (
-            <Link key={key} href={href} className="flex items-center gap-4 rounded-md border border-line bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-brand-tint">
+            <Link key={key} href={href} className="flex items-center gap-4 border border-line bg-white p-5 transition-colors hover:border-brand hover:bg-brand-tint">
               <Icon className="h-9 w-9 shrink-0 text-brand" />
               <strong className="text-sm text-ink">{t(key)}</strong>
             </Link>

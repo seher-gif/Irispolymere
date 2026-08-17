@@ -15,7 +15,7 @@ export function CertificatesPreview({ t, locale }: { t: TFunc; locale: string })
             <Link
               key={c}
               href={`/${locale}/certificates`}
-              className="flex flex-col items-center gap-3 rounded-md border border-line bg-white p-8 text-center transition-all hover:-translate-y-1 hover:shadow-lg"
+              className="flex flex-col items-center gap-3 border border-line bg-white p-8 text-center transition-colors hover:border-brand"
             >
               <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-tint-2 text-brand">
                 <CertShieldIcon className="h-8 w-8" />

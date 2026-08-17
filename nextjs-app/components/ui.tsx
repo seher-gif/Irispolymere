@@ -69,7 +69,7 @@ export function PageHero({
   crumbs: { labelKey: string; href?: string }[];
 }) {
   return (
-    <section className="bg-gradient-to-br from-[#0b3a68] to-brand-darker px-6 py-14 text-white">
+    <section className="bg-brand-darker px-6 py-14 text-white">
       <Container>
         <Breadcrumb t={t} locale={locale} items={crumbs} />
         <span className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-white/70">
@@ -87,7 +87,7 @@ export function CTABand({ t, locale }: { t: TFunc; locale: string }) {
   return (
     <section className="py-16">
       <Container>
-        <div className="flex flex-col items-start gap-6 rounded-md bg-gradient-to-br from-brand to-brand-darker p-10 text-white sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col items-start gap-6 bg-brand p-10 text-white sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-2xl font-extrabold">{t("home.cta.title")}</h2>
             <p className="mt-2 max-w-lg text-white/85">{t("home.cta.lead")}</p>

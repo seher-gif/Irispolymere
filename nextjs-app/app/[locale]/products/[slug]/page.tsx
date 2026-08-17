@@ -205,7 +205,7 @@ function DetailPage({ locale, t, product }: { locale: Locale; t: ReturnType<type
           <SectionHead title={t("label.relatedProducts")} />
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {related.map((r) => (
-              <Link key={r.slug} href={`/${locale}/products/${r.slug}`} className="rounded-md border border-line bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-brand">
+              <Link key={r.slug} href={`/${locale}/products/${r.slug}`} className="rounded-md border border-line bg-white p-5 transition-colors hover:border-brand">
                 <strong className="block text-sm text-ink">{t(r.titleKey)}</strong>
                 <span className="mt-1 block text-xs text-muted">{t("btn.viewProduct")}</span>
               </Link>

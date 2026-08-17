@@ -15,7 +15,7 @@ export function BenefitsSection({ t }: { t: TFunc }) {
         <SectionHead center eyebrow={t("home.benefits.eyebrow")} title={t("home.benefits.title")} />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           {BENEFITS.map(({ Icon, titleKey, descKey }) => (
-            <div key={titleKey} className="rounded-md border border-line bg-white p-7 transition-shadow hover:shadow-lg">
+            <div key={titleKey} className="border border-line bg-white p-7 transition-colors hover:border-brand">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-brand-tint text-brand">
                 <Icon className="h-6 w-6" />
               </div>
