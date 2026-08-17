@@ -6,7 +6,7 @@ import { CardLink } from "./ui";
 
 export function BlogCard({ t, locale, post }: { t: TFunc; locale: string; post: BlogPost }) {
   return (
-    <Link href={`/${locale}/blog/${post.slug}`} className="group flex h-full flex-col overflow-hidden rounded-md border border-line bg-white transition-all hover:-translate-y-1 hover:shadow-xl">
+    <Link href={`/${locale}/blog/${post.slug}`} className="group flex h-full flex-col overflow-hidden border border-line bg-white transition-colors hover:border-brand">
       <div className="aspect-[16/10] overflow-hidden">
         <IndustrialVisual accent={post.accent} variant="card" className="h-full w-full" />
       </div>

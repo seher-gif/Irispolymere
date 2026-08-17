@@ -19,7 +19,7 @@ export function ProductCard({
   labelKey?: string;
 }) {
   return (
-    <Link href={href} className="group flex h-full flex-col overflow-hidden rounded-md border border-line bg-white transition-all hover:-translate-y-1 hover:shadow-xl">
+    <Link href={href} className="group flex h-full flex-col overflow-hidden border border-line bg-white transition-colors hover:border-brand">
       <div className="aspect-[16/10] overflow-hidden">
         <IndustrialVisual accent={accent} variant="card" className="h-full w-full" />
       </div>
