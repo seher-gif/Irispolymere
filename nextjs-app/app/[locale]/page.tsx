@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
+import { buildMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { HeroSlider } from "@/components/HeroSlider";
 import { AboutSection } from "@/components/home/AboutSection";
@@ -16,17 +17,14 @@ import { CTABand } from "@/components/ui";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    title: "Iris Polymere — Advanced Compound Solutions for Reliable Production",
+  if (!isLocale(locale)) return {};
+  return buildMetadata({
+    locale,
+    segments: [],
+    title: "Iris Polymere — Advanced Compound Solutions",
     description:
-      "Iris Polymere develops high-performance PVC, HFFR, masterbatch, and filler compound solutions for cable, plastics, and industrial manufacturing applications across Algeria, North Africa and the Middle East.",
-    alternates: { canonical: `https://www.irispolymere.com/${locale}` },
-    openGraph: {
-      title: "Iris Polymere — Advanced Compound Solutions for Reliable Production",
-      description: "PVC, HFFR, masterbatch and filler compound solutions for cable, plastics and industrial manufacturing.",
-      images: ["/brand/og-placeholder.png"],
-    },
-  };
+      "Iris Polymere develops high-performance PVC, HFFR, masterbatch, and filler compound solutions for cable, plastics, and industrial manufacturing.",
+  });
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {

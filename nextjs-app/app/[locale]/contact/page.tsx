@@ -5,6 +5,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
 import { contactInfo, telHref } from "@/lib/contact-info";
+import { buildMetadata } from "@/lib/seo";
 import { PinIcon, PhoneIcon, MailIcon, MapIcon } from "@/components/Icons";
 import { ContactForm } from "@/components/ContactForm";
 import { Container, PageHero } from "@/components/ui";
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  return { title: `${t("contact.hero.title")} — Iris Polymere`, description: t("contact.hero.lead") };
+  return buildMetadata({ locale, segments: ["contact"], title: `${t("contact.hero.title")} — Iris Polymere`, description: t("contact.hero.lead") });
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {

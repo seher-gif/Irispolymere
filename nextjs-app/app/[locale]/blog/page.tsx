@@ -4,6 +4,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/lib/data/blog";
+import { buildMetadata } from "@/lib/seo";
 import { BlogCard } from "@/components/BlogCard";
 import { Container, PageHero, CTABand } from "@/components/ui";
 
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  return { title: `${t("blog.hero.title")} — Iris Polymere`, description: t("blog.hero.lead") };
+  return buildMetadata({ locale, segments: ["blog"], title: `${t("blog.hero.title")} — Iris Polymere`, description: t("blog.hero.lead") });
 }
 
 export default async function BlogIndexPage({ params }: { params: Promise<{ locale: string }> }) {

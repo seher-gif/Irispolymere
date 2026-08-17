@@ -3,6 +3,7 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
+import { buildMetadata } from "@/lib/seo";
 import { CertShieldIcon, EcoIcon } from "@/components/Icons";
 import { CertModalTrigger } from "@/components/CertModal";
 import { Container, PageHero, CTABand } from "@/components/ui";
@@ -16,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  return { title: `${t("certs.hero.title")} — Iris Polymere`, description: t("certs.hero.lead") };
+  return buildMetadata({ locale, segments: ["certificates"], title: `${t("certs.hero.title")} — Iris Polymere`, description: t("certs.hero.lead") });
 }
 
 const CERTS = [
