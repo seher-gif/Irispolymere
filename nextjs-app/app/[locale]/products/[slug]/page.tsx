@@ -5,6 +5,7 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { products, productsByCategory, productsBySlug, appKeys, benKeys, type ProductCategory } from "@/lib/data/products";
+import { buildMetadata } from "@/lib/seo";
 import { ProductCard } from "@/components/ProductCard";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
 import { CheckIcon, CableIcon, ProfileIcon, InjectionIcon, ExtrusionIcon } from "@/components/Icons";
@@ -32,11 +33,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   if ((CATEGORY_SLUGS as readonly string[]).includes(slug)) {
     const meta = CATEGORY_META[slug as keyof typeof CATEGORY_META];
-    return { title: `${t(`${meta.heroKey}.title`)} — Iris Polymere`, description: t(`${meta.heroKey}.lead`) };
+    return buildMetadata({ locale, segments: ["products", slug], title: `${t(`${meta.heroKey}.title`)} — Iris Polymere`, description: t(`${meta.heroKey}.lead`) });
   }
   const product = productsBySlug[slug];
   if (!product) return {};
-  return { title: `${t(product.titleKey)} — Iris Polymere`, description: t(product.descKey) };
+  return buildMetadata({ locale, segments: ["products", slug], title: `${t(product.titleKey)} — Iris Polymere`, description: t(product.descKey) });
 }
 
 export default async function ProductRoute({ params }: { params: Promise<{ locale: string; slug: string }> }) {

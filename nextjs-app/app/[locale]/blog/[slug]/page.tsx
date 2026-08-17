@@ -7,6 +7,7 @@ import { tFrom } from "@/lib/i18n/t";
 import { blogPosts, blogPostsBySlug } from "@/lib/data/blog";
 import { blogBody } from "@/lib/data/blog-content";
 import { productsBySlug } from "@/lib/data/products";
+import { buildMetadata } from "@/lib/seo";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
 import { Container, PageHero, CTABand, SectionHead } from "@/components/ui";
 
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!post || !isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  return { title: `${t(`${post.key}.title`)} — Iris Polymere Blog`, description: t(`${post.key}.excerpt`) };
+  return buildMetadata({ locale: locale as Locale, segments: ["blog", slug], title: `${t(`${post.key}.title`)} — Iris Polymere`, description: t(`${post.key}.excerpt`) });
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {

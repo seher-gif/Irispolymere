@@ -22,7 +22,7 @@ export function HeroSlider() {
   return (
     <section className="relative h-[440px] overflow-hidden bg-brand-darker sm:h-[500px] lg:h-[560px]">
       {SLIDES.map((slide, i) => (
-        <div key={slide.key} className={`absolute inset-0 transition-opacity duration-700 ${i === active ? "opacity-100" : "pointer-events-none opacity-0"}`}>
+        <div key={slide.key} aria-hidden={i !== active} className={`absolute inset-0 transition-opacity duration-700 ${i === active ? "opacity-100" : "pointer-events-none opacity-0"}`}>
           {slide.image ? (
             <>
               <Image src={slide.image} alt="" fill priority={i === 0} className="object-cover object-center" sizes="100vw" />
@@ -38,7 +38,13 @@ export function HeroSlider() {
                 <span className="h-[2px] w-6 bg-white/75" />
                 {t(`${slide.key}.eyebrow`)}
               </span>
-              <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">{t(`${slide.key}.title`)}</h1>
+              {/* Only one <h1> may exist per page — the first slide owns it;
+                  later slides use a visually identical <p> to avoid duplicate H1s. */}
+              {i === 0 ? (
+                <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">{t(`${slide.key}.title`)}</h1>
+              ) : (
+                <p className="text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">{t(`${slide.key}.title`)}</p>
+              )}
               <p className="mt-5 text-white/85">{t(`${slide.key}.lead`)}</p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href={`/${locale}/products/pvc`} className="bg-white px-6 py-3 text-sm font-bold text-brand hover:bg-white/90">

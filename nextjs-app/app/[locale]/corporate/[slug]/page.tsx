@@ -4,6 +4,7 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { corporatePages, corporatePagesBySlug } from "@/lib/data/corporate";
+import { buildMetadata } from "@/lib/seo";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
 import { CheckIcon, CostIcon, FlaskIcon, GaugeIcon, LayersIcon, GlobeIcon } from "@/components/Icons";
 import { Container, PageHero, CTABand } from "@/components/ui";
@@ -19,11 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
   const title = `${t(page.heroTitleKey)} — Iris Polymere`;
-  return {
-    title,
-    description: t(page.heroLeadKey),
-    alternates: { canonical: `https://www.irispolymere.com/${locale}/corporate/${slug}` },
-  };
+  return buildMetadata({ locale: locale as Locale, segments: ["corporate", slug], title, description: t(page.metaDescriptionKey) });
 }
 
 export default async function CorporatePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
