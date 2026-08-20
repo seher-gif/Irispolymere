@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useI18n } from "./providers/i18n-provider";
 import { CertShieldIcon } from "./Icons";
 
-export function CertModalTrigger({ certKey, label }: { certKey: string; label: string }) {
+export function CertModalTrigger({ label }: { label: string }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
 

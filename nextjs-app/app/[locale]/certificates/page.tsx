@@ -4,6 +4,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
 import { buildMetadata } from "@/lib/seo";
+import { certificates } from "@/lib/data/certificates";
 import { CertShieldIcon, EcoIcon } from "@/components/Icons";
 import { CertModalTrigger } from "@/components/CertModal";
 import { Container, PageHero, CTABand } from "@/components/ui";
@@ -20,12 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildMetadata({ locale, segments: ["certificates"], title: `${t("certs.hero.title")} — Iris Polymere`, description: t("certs.hero.lead") });
 }
 
-const CERTS = [
-  { key: "iso", Icon: CertShieldIcon },
-  { key: "eco", Icon: EcoIcon },
-  { key: "reach", Icon: CertShieldIcon },
-  { key: "rohs", Icon: CertShieldIcon },
-];
+const ICONS: Record<string, typeof CertShieldIcon> = { eco: EcoIcon };
 
 export default async function CertificatesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: rawLocale } = await params;
@@ -40,19 +36,30 @@ export default async function CertificatesPage({ params }: { params: Promise<{ l
       <section className="py-16 sm:py-20">
         <Container>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {CERTS.map(({ key, Icon }) => (
-              <div key={key} className="flex flex-col items-center gap-3 rounded-md border border-line bg-white p-8 text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-tint-2 text-brand">
-                  <Icon className="h-8 w-8" />
+            {certificates.map((cert) => {
+              const Icon = ICONS[cert.key] ?? CertShieldIcon;
+              return (
+                <div key={cert.key} className="flex flex-col items-center gap-3 border border-line bg-white p-8 text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-brand-tint-2 text-brand">
+                    <Icon className="h-8 w-8" />
+                  </div>
+                  <h3 className="text-base font-bold text-ink">{cert.title[locale]}</h3>
+                  <p className="text-sm text-muted">{cert.desc[locale]}</p>
+                  {cert.pdfUrl ? (
+                    <a href={cert.pdfUrl} target="_blank" rel="noopener noreferrer" className="rounded-sm bg-brand px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-hover">
+                      {t("btn.viewCertificate")}
+                    </a>
+                  ) : (
+                    <>
+                      <span className="rounded-full bg-surface-alt px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-muted">{t("certs.download")}</span>
+                      <CertModalTrigger label={cert.title[locale]} />
+                    </>
+                  )}
                 </div>
-                <h3 className="text-base font-bold text-ink">{t(`certs.${key}.title`)}</h3>
-                <p className="text-sm text-muted">{t(`certs.${key}.desc`)}</p>
-                <span className="rounded-full bg-surface-alt px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-muted">{t("certs.download")}</span>
-                <CertModalTrigger certKey={key} label={t(`certs.${key}.title`)} />
-              </div>
-            ))}
+              );
+            })}
           </div>
-          <div className="mt-10 rounded-md border border-dashed border-line bg-surface-alt p-5 text-sm text-muted">
+          <div className="mt-10 border border-dashed border-line bg-surface-alt p-5 text-sm text-muted">
             {t("certs.note")}
           </div>
         </Container>
