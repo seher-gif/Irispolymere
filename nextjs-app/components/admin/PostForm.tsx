@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { RichTextEditor } from "./RichTextEditor";
+import type { PostFormState } from "@/lib/actions/posts";
 
 type Category = { id: string; nameEn: string };
 type PostData = {
+  slug: string;
   titleEn: string; titleFr: string | null; titleAr: string | null;
   excerptEn: string; excerptFr: string | null; excerptAr: string | null;
   bodyEn: string; bodyFr: string | null; bodyAr: string | null;
+  metaTitleEn: string | null; metaTitleFr: string | null; metaTitleAr: string | null;
+  metaDescriptionEn: string | null; metaDescriptionFr: string | null; metaDescriptionAr: string | null;
   coverImage: string | null;
   categoryId: string | null;
   published: boolean;
@@ -19,19 +23,37 @@ const LOCALES = [
   { code: "ar", label: "العربية", required: false },
 ] as const;
 
+const initialState: PostFormState = {};
+
 export function PostForm({
   action,
   categories,
   post,
 }: {
-  action: (formData: FormData) => void;
+  action: (prev: PostFormState, formData: FormData) => Promise<PostFormState>;
   categories: Category[];
   post?: PostData;
 }) {
   const [tab, setTab] = useState<"en" | "fr" | "ar">("en");
+  const [state, formAction, pending] = useActionState(action, initialState);
 
   return (
-    <form action={action} className="flex flex-col gap-6">
+    <form action={formAction} className="flex flex-col gap-6">
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-bold text-ink">URL Slug</label>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted">/blog/</span>
+          <input
+            name="slug"
+            defaultValue={post?.slug ?? ""}
+            placeholder="auto-generated from title if left blank"
+            className="flex-1 border border-line px-3 py-2 text-sm outline-none focus:border-brand"
+            pattern="[a-z0-9-]*"
+            title="Lowercase letters, numbers and hyphens only"
+          />
+        </div>
+      </div>
+
       <div className="flex gap-1 border-b border-line">
         {LOCALES.map((l) => (
           <button
@@ -47,22 +69,36 @@ export function PostForm({
 
       {LOCALES.map((l) => {
         const cap = l.code.charAt(0).toUpperCase() + l.code.slice(1);
-        const titleVal = post ? (post as never as Record<string, string>)[`title${cap}`] : "";
-        const excerptVal = post ? (post as never as Record<string, string>)[`excerpt${cap}`] : "";
-        const bodyVal = post ? (post as never as Record<string, string>)[`body${cap}`] : "";
+        const get = (prefix: string) => (post ? (post as never as Record<string, string>)[`${prefix}${cap}`] : "");
         return (
           <div key={l.code} className={tab === l.code ? "flex flex-col gap-4" : "hidden"} dir={l.code === "ar" ? "rtl" : "ltr"}>
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-ink">Title{l.required ? " *" : ""}</label>
-              <input name={`title${cap}`} defaultValue={titleVal ?? ""} required={l.required} className="border border-line px-3 py-2.5 text-sm outline-none focus:border-brand" />
+              <input name={`title${cap}`} defaultValue={get("title") ?? ""} required={l.required} className="border border-line px-3 py-2.5 text-sm outline-none focus:border-brand" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-ink">Excerpt{l.required ? " *" : ""}</label>
-              <textarea name={`excerpt${cap}`} defaultValue={excerptVal ?? ""} required={l.required} rows={2} className="border border-line px-3 py-2.5 text-sm outline-none focus:border-brand" />
+              <textarea name={`excerpt${cap}`} defaultValue={get("excerpt") ?? ""} required={l.required} rows={2} className="border border-line px-3 py-2.5 text-sm outline-none focus:border-brand" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-ink">Body{l.required ? " *" : ""}</label>
-              <RichTextEditor name={`body${cap}`} defaultValue={bodyVal ?? ""} />
+              <RichTextEditor name={`body${cap}`} defaultValue={get("body") ?? ""} />
+            </div>
+
+            <div className="mt-2 border border-dashed border-line bg-surface-alt p-4">
+              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-muted">
+                SEO (optional — falls back to Title / Excerpt above when blank)
+              </p>
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-ink-soft">Meta Title</label>
+                  <input name={`metaTitle${cap}`} defaultValue={get("metaTitle") ?? ""} maxLength={70} className="border border-line bg-white px-3 py-2 text-sm outline-none focus:border-brand" />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-ink-soft">Meta Description</label>
+                  <textarea name={`metaDescription${cap}`} defaultValue={get("metaDescription") ?? ""} maxLength={165} rows={2} className="border border-line bg-white px-3 py-2 text-sm outline-none focus:border-brand" />
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -89,9 +125,11 @@ export function PostForm({
         Published
       </label>
 
+      {state.error && <p className="text-sm font-semibold text-red-600">{state.error}</p>}
+
       <div>
-        <button type="submit" className="bg-brand px-6 py-3 text-sm font-bold text-white hover:bg-brand-hover">
-          {post ? "Save Changes" : "Create Post"}
+        <button type="submit" disabled={pending} className="bg-brand px-6 py-3 text-sm font-bold text-white hover:bg-brand-hover disabled:opacity-60">
+          {pending ? "Saving…" : post ? "Save Changes" : "Create Post"}
         </button>
       </div>
     </form>

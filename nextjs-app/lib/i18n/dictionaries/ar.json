@@ -154,7 +154,7 @@
   "contact.form.error.required": "هذا الحقل مطلوب.",
   "contact.form.error.email": "يرجى إدخال بريد إلكتروني صحيح.",
   "contact.form.success.title": "شكرًا لك — تم استلام رسالتك.",
-  "contact.form.success.text": "هذا نموذج أولي ولا يرسل البيانات إلى خادم حقيقي. سيتواصل فريقنا معك بمجرد ربط الموقع بأنظمة الإنتاج.",
+  "contact.form.success.text": "سيقوم فريقنا بمراجعة طلبك والتواصل معك في أقرب وقت ممكن.",
   "contact.quote.title": "طلب عرض سعر",
   "contact.quote.lead": "أخبرنا عن المنتج الذي يهمّك ومتطلباتك وسيتواصل معك فريقنا.",
   "about.hero.eyebrow": "الشركة",

@@ -154,7 +154,7 @@
   "contact.form.error.required": "Ce champ est obligatoire.",
   "contact.form.error.email": "Veuillez saisir une adresse e-mail valide.",
   "contact.form.success.title": "Merci — votre message a bien été reçu.",
-  "contact.form.success.text": "Ceci est un formulaire de prototype et n'envoie pas de données à un serveur réel. Notre équipe vous recontactera une fois le site connecté aux systèmes de production.",
+  "contact.form.success.text": "Notre équipe examinera votre demande et vous recontactera prochainement.",
   "contact.quote.title": "Demander un Devis",
   "contact.quote.lead": "Indiquez-nous votre produit d'intérêt et vos besoins, notre équipe vous répondra rapidement.",
   "about.hero.eyebrow": "Entreprise",
