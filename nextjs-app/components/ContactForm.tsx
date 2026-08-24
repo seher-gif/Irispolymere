@@ -1,40 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState } from "react";
 import { useI18n } from "./providers/i18n-provider";
+import { submitContactForm, type ContactFormState } from "@/lib/actions/contact";
 
-type Errors = Record<string, boolean>;
+const initialState: ContactFormState = {};
 
 export function ContactForm() {
-  const { t } = useI18n();
-  const [errors, setErrors] = useState<Errors>({});
-  const [sent, setSent] = useState(false);
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const next: Errors = {};
-    for (const field of ["fullName", "company", "country", "email", "productInterest", "message"]) {
-      const value = String(data.get(field) ?? "").trim();
-      if (!value) next[field] = true;
-    }
-    const email = String(data.get("email") ?? "").trim();
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = true;
-
-    setErrors(next);
-    if (Object.keys(next).length === 0) {
-      setSent(true);
-      form.reset();
-    }
-  }
+  const { t, locale } = useI18n();
+  const [state, formAction, pending] = useActionState(submitContactForm, initialState);
+  const errors = state.errors ?? {};
 
   const fieldClass = (name: string) =>
     `w-full rounded-sm border px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand ${
       errors[name] ? "border-red-400" : "border-line"
     }`;
 
-  if (sent) {
+  if (state.success) {
     return (
       <div className="flex items-start gap-3 rounded-md border border-green-200 bg-green-50 p-6">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 shrink-0 text-green-600">
@@ -49,7 +31,8 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+    <form action={formAction} noValidate className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <input type="hidden" name="locale" value={locale} />
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-bold text-ink">{t("contact.form.fullName")} <span className="text-brand">*</span></label>
         <input name="fullName" className={fieldClass("fullName")} />
@@ -93,8 +76,8 @@ export function ContactForm() {
         {errors.message && <span className="text-xs font-semibold text-red-500">{t("contact.form.error.required")}</span>}
       </div>
       <div className="col-span-full">
-        <button type="submit" className="w-full rounded-sm bg-brand py-3.5 text-sm font-bold text-white hover:bg-brand-hover sm:w-auto sm:px-10">
-          {t("btn.submitRequest")}
+        <button type="submit" disabled={pending} className="w-full rounded-sm bg-brand py-3.5 text-sm font-bold text-white hover:bg-brand-hover disabled:opacity-60 sm:w-auto sm:px-10">
+          {pending ? "…" : t("btn.submitRequest")}
         </button>
       </div>
     </form>

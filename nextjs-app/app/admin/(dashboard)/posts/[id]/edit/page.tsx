@@ -17,7 +17,6 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
   return (
     <div>
       <h1 className="text-2xl font-extrabold text-ink">Edit Blog Post</h1>
-      <p className="mt-1 text-sm text-muted">Slug: /{post.slug}</p>
       <div className="mt-6 max-w-3xl">
         <PostForm action={action} categories={categories} post={post} />
       </div>

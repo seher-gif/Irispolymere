@@ -34,12 +34,28 @@ async function main() {
     const category = p.category
       ? tri(p.category.nameEn, p.category.nameFr, p.category.nameAr)
       : "null";
+    // SEO fields fall back to title / excerpt per-locale when left blank.
+    // A custom meta title is used verbatim (it's the final <title>, same as
+    // WordPress SEO plugins); only the auto-generated fallback gets the
+    // site name appended, since the raw post title never includes it.
+    const metaTitle = tri(
+      p.metaTitleEn || `${p.titleEn} — Iris Polymere`,
+      p.metaTitleFr || `${p.titleFr || p.titleEn} — Iris Polymere`,
+      p.metaTitleAr || `${p.titleAr || p.titleEn} — Iris Polymere`
+    );
+    const metaDescription = tri(
+      p.metaDescriptionEn || p.excerptEn,
+      p.metaDescriptionFr || p.excerptFr,
+      p.metaDescriptionAr || p.excerptAr
+    );
     return `  {
     slug: ${JSON.stringify(p.slug)},
     categoryName: ${category},
     title: ${tri(p.titleEn, p.titleFr, p.titleAr)},
     excerpt: ${tri(p.excerptEn, p.excerptFr, p.excerptAr)},
     bodyHtml: ${tri(p.bodyEn, p.bodyFr, p.bodyAr)},
+    metaTitle: ${metaTitle},
+    metaDescription: ${metaDescription},
     coverImage: ${p.coverImage ? JSON.stringify(p.coverImage) : "null"},
     publishedAt: ${JSON.stringify((p.publishedAt ?? p.createdAt).toISOString())},
   }`;
@@ -57,6 +73,8 @@ export type BlogPost = {
   title: LocalizedText;
   excerpt: LocalizedText;
   bodyHtml: LocalizedText;
+  metaTitle: LocalizedText;
+  metaDescription: LocalizedText;
   coverImage: string | null;
   publishedAt: string;
 };

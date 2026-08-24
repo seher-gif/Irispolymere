@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return buildMetadata({
     locale: locale as Locale,
     segments: ["blog", slug],
-    title: `${post.title[locale as Locale]} — Iris Polymere`,
-    description: post.excerpt[locale as Locale],
+    title: post.metaTitle[locale as Locale],
+    description: post.metaDescription[locale as Locale],
   });
 }
 

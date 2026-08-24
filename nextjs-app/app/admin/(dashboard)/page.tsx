@@ -2,11 +2,12 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 
 export default async function AdminDashboard() {
-  const [postCount, publishedCount, categoryCount, mediaCount] = await Promise.all([
+  const [postCount, publishedCount, categoryCount, mediaCount, unreadMessages] = await Promise.all([
     prisma.post.count(),
     prisma.post.count({ where: { published: true } }),
     prisma.category.count(),
     prisma.media.count(),
+    prisma.contactSubmission.count({ where: { read: false } }),
   ]);
 
   const cards = [
@@ -14,6 +15,7 @@ export default async function AdminDashboard() {
     { label: "Published", value: publishedCount, href: "/admin/posts" },
     { label: "Categories", value: categoryCount, href: "/admin/categories" },
     { label: "Media Files", value: mediaCount, href: "/admin/media" },
+    { label: "Unread Messages", value: unreadMessages, href: "/admin/messages" },
   ];
 
   return (
@@ -21,7 +23,7 @@ export default async function AdminDashboard() {
       <h1 className="text-2xl font-extrabold text-ink">Dashboard</h1>
       <p className="mt-1 text-sm text-muted">Manage the Iris Polymere blog, categories, media and certificates.</p>
 
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {cards.map((c) => (
           <Link key={c.label} href={c.href} className="border border-line bg-white p-5 transition-colors hover:border-brand">
             <span className="text-3xl font-extrabold text-brand">{c.value}</span>

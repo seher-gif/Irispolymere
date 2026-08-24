@@ -14,13 +14,14 @@ function slugify(input: string) {
 }
 
 async function uniqueSlug(base: string, ignoreId?: string) {
-  let slug = slugify(base);
+  const cleaned = slugify(base);
+  let slug = cleaned || "post";
   let suffix = 1;
   // eslint-disable-next-line no-constant-condition
   while (true) {
     const existing = await prisma.post.findUnique({ where: { slug } });
     if (!existing || existing.id === ignoreId) return slug;
-    slug = `${slugify(base)}-${++suffix}`;
+    slug = `${cleaned || "post"}-${++suffix}`;
   }
 }
 
@@ -38,15 +39,25 @@ function readPostFields(formData: FormData) {
     coverImage: String(formData.get("coverImage") ?? "").trim() || null,
     categoryId: String(formData.get("categoryId") ?? "").trim() || null,
     published: formData.get("published") === "on",
+    metaTitleEn: String(formData.get("metaTitleEn") ?? "").trim() || null,
+    metaTitleFr: String(formData.get("metaTitleFr") ?? "").trim() || null,
+    metaTitleAr: String(formData.get("metaTitleAr") ?? "").trim() || null,
+    metaDescriptionEn: String(formData.get("metaDescriptionEn") ?? "").trim() || null,
+    metaDescriptionFr: String(formData.get("metaDescriptionFr") ?? "").trim() || null,
+    metaDescriptionAr: String(formData.get("metaDescriptionAr") ?? "").trim() || null,
   };
 }
 
-export async function createPost(formData: FormData) {
+export type PostFormState = { error?: string };
+
+export async function createPost(_prev: PostFormState, formData: FormData): Promise<PostFormState> {
   const fields = readPostFields(formData);
   if (!fields.titleEn || !fields.excerptEn || !fields.bodyEn) {
-    throw new Error("Title, excerpt and body (English) are required.");
+    return { error: "Title, excerpt and body (English) are required." };
   }
-  const slug = await uniqueSlug(fields.titleEn);
+
+  const requestedSlug = String(formData.get("slug") ?? "").trim();
+  const slug = await uniqueSlug(requestedSlug || fields.titleEn);
 
   const post = await prisma.post.create({
     data: {
@@ -60,14 +71,19 @@ export async function createPost(formData: FormData) {
   redirect(`/admin/posts/${post.id}/edit`);
 }
 
-export async function updatePost(id: string, formData: FormData) {
+export async function updatePost(id: string, _prev: PostFormState, formData: FormData): Promise<PostFormState> {
   const fields = readPostFields(formData);
   if (!fields.titleEn || !fields.excerptEn || !fields.bodyEn) {
-    throw new Error("Title, excerpt and body (English) are required.");
+    return { error: "Title, excerpt and body (English) are required." };
   }
 
   const existing = await prisma.post.findUnique({ where: { id } });
-  if (!existing) throw new Error("Post not found.");
+  if (!existing) return { error: "Post not found." };
+
+  const requestedSlug = String(formData.get("slug") ?? "").trim();
+  const slug = requestedSlug
+    ? await uniqueSlug(requestedSlug, id)
+    : existing.slug;
 
   const wasPublished = existing.published;
   const nowPublished = fields.published;
@@ -76,12 +92,14 @@ export async function updatePost(id: string, formData: FormData) {
     where: { id },
     data: {
       ...fields,
+      slug,
       publishedAt: !wasPublished && nowPublished ? new Date() : existing.publishedAt,
     },
   });
 
   revalidatePath("/admin/posts");
   revalidatePath(`/admin/posts/${id}/edit`);
+  return {};
 }
 
 export async function deletePost(id: string) {
