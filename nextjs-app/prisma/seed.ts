@@ -13,7 +13,7 @@ async function main() {
   // this panel is never reachable from the internet (see ADMIN.md). Change
   // it directly in the database before using this for anything beyond a
   // local demo.
-  const adminEmail = "admin";
+  const adminEmail = "admin@admin.com";
   const adminPassword = "123456";
   const existingAdmin = await prisma.adminUser.findUnique({ where: { email: adminEmail } });
 
