@@ -19,8 +19,8 @@ export default function AdminLoginPage() {
         </div>
         <form action={formAction} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="email" className="text-sm font-bold text-ink">Email</label>
-            <input id="email" name="email" type="email" required autoComplete="username" className="border border-line px-3 py-2.5 text-sm outline-none focus:border-brand" />
+            <label htmlFor="email" className="text-sm font-bold text-ink">Username</label>
+            <input id="email" name="email" type="text" required autoComplete="username" className="border border-line px-3 py-2.5 text-sm outline-none focus:border-brand" />
           </div>
           <div className="flex flex-col gap-1.5">
             <label htmlFor="password" className="text-sm font-bold text-ink">Password</label>
