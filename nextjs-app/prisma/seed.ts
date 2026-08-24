@@ -1,7 +1,6 @@
 import { PrismaClient } from "../lib/generated/prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import bcrypt from "bcryptjs";
-import { randomBytes } from "crypto";
 import path from "path";
 
 const dbPath = path.join(process.cwd(), "dev.db");
@@ -10,13 +9,16 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   // --- Admin user -----------------------------------------------------
-  const adminEmail = "admin@irispolymere.com";
+  // NOTE: "admin" / "123456" is a placeholder for local development only —
+  // this panel is never reachable from the internet (see ADMIN.md). Change
+  // it directly in the database before using this for anything beyond a
+  // local demo.
+  const adminEmail = "admin";
+  const adminPassword = "123456";
   const existingAdmin = await prisma.adminUser.findUnique({ where: { email: adminEmail } });
-  let generatedPassword: string | null = null;
 
   if (!existingAdmin) {
-    generatedPassword = randomBytes(9).toString("base64url");
-    const passwordHash = await bcrypt.hash(generatedPassword, 12);
+    const passwordHash = await bcrypt.hash(adminPassword, 12);
     await prisma.adminUser.create({
       data: { email: adminEmail, passwordHash, name: "Iris Polymere Admin" },
     });
@@ -127,12 +129,12 @@ async function main() {
 
   console.log("Seed complete.");
   console.log("Categories:", categories.length, "| Posts:", posts.length, "| Certificates:", certs.length);
-  if (generatedPassword) {
-    console.log("\n=== ADMIN LOGIN (first run only — save this) ===");
+  if (!existingAdmin) {
+    console.log("\n=== ADMIN LOGIN ===");
     console.log("URL:      http://localhost:3300/admin/login");
-    console.log("Email:    ", adminEmail);
-    console.log("Password: ", generatedPassword);
-    console.log("=================================================\n");
+    console.log("Username: ", adminEmail);
+    console.log("Password: ", adminPassword);
+    console.log("====================\n");
   } else {
     console.log("Admin user already exists — skipped.");
   }
