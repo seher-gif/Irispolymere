@@ -71,7 +71,18 @@ model Media {
   sizeBytes    Int
   kind         String // "pdf" | "image"
   url          String // relative /uploads path
+  altText      String? // accessibility/SEO alt text for images; unused for PDFs
   uploadedAt   DateTime @default(now())
+}
+
+// Homepage hero banners — 1 to 5, rotate on the public site. Enforced in
+// lib/actions/banners.ts (max 5 on create, min 1 on delete), not here.
+model Banner {
+  id        String   @id @default(cuid())
+  url       String // relative /uploads path
+  altText   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
 }
 
 model ContactSubmission {
@@ -86,6 +97,22 @@ model ContactSubmission {
   locale          String // which language the visitor submitted from
   read            Boolean  @default(false)
   createdAt       DateTime @default(now())
+}
+
+// Admin-editable SEO overrides for static (non-blog) pages — home, corporate,
+// products, certificates, contact. `key` matches an entry in
+// lib/data/page-registry.ts (e.g. "home", "corporate/about", "products/pvc-rigid").
+// Any field left blank falls back to that page's dictionary-driven default.
+model PageMeta {
+  id                String   @id @default(cuid())
+  key               String   @unique
+  metaTitleEn       String?
+  metaTitleFr       String?
+  metaTitleAr       String?
+  metaDescriptionEn String?
+  metaDescriptionFr String?
+  metaDescriptionAr String?
+  updatedAt         DateTime @updatedAt
 }
 
 model Certificate {

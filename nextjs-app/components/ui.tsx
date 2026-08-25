@@ -1,5 +1,8 @@
 import Link from "next/link";
 import type { TFunc } from "@/lib/i18n/t";
+import type { Locale } from "@/lib/i18n/config";
+import { buildBreadcrumbJsonLd, SITE_URL } from "@/lib/seo";
+import { JsonLd } from "./JsonLd";
 import { ArrowRightIcon } from "./Icons";
 
 export function Container({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -36,8 +39,13 @@ export function SectionHead({
 }
 
 export function Breadcrumb({ t, locale, items }: { t: TFunc; locale: string; items: { labelKey: string; href?: string }[] }) {
+  const jsonLd = buildBreadcrumbJsonLd(
+    locale as Locale,
+    items.map((item) => ({ name: t(item.labelKey), url: item.href ? `${SITE_URL}${item.href}` : undefined }))
+  );
   return (
     <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-2 text-xs text-white/70">
+      <JsonLd data={jsonLd} />
       <Link href={`/${locale}`} className="font-semibold hover:text-white">{t("breadcrumb.home")}</Link>
       {items.map((item, i) => (
         <span key={i} className="flex items-center gap-2">

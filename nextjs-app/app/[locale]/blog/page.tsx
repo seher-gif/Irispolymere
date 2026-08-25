@@ -4,8 +4,9 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/lib/data/blog";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta, buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
 import { BlogCard } from "@/components/BlogCard";
+import { JsonLd } from "@/components/JsonLd";
 import { Container, PageHero, CTABand } from "@/components/ui";
 
 export function generateStaticParams() {
@@ -17,7 +18,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  return buildMetadata({ locale, segments: ["blog"], title: `${t("blog.hero.title")} — Iris Polymere`, description: t("blog.hero.lead") });
+  const { title, description } = resolvePageMeta("blog", locale as Locale, `${t("blog.hero.title")} — Iris Polymere`, t("blog.hero.lead"));
+  return buildMetadata({ locale, segments: ["blog"], title, description });
 }
 
 export default async function BlogIndexPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -26,9 +28,21 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
+  const collectionPageJsonLd = buildWebPageJsonLd({
+    locale,
+    segments: ["blog"],
+    type: "CollectionPage",
+    name: t("blog.hero.title"),
+    description: t("blog.hero.lead"),
+  });
+  const itemListJsonLd = buildItemListJsonLd(
+    blogPosts.map((post) => ({ name: post.title[locale], url: `${SITE_URL}/${locale}/blog/${post.slug}` }))
+  );
 
   return (
     <>
+      <JsonLd data={collectionPageJsonLd} />
+      <JsonLd data={itemListJsonLd} />
       <PageHero t={t} locale={locale} eyebrowKey="blog.hero.eyebrow" titleKey="blog.hero.title" leadKey="blog.hero.lead" crumbs={[{ labelKey: "nav.blog" }]} />
       <section className="py-16 sm:py-20">
         <Container>

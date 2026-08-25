@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { useEffect } from "react";
+import { MediaPicker } from "./MediaPicker";
 
 function ToolbarButton({
   onClick,
@@ -39,7 +40,9 @@ export function RichTextEditor({
 }) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      // StarterKit v3 bundles its own Link extension; disable it so the
+      // explicit, configured instance below is the only one registered.
+      StarterKit.configure({ link: false }),
       Link.configure({ openOnClick: false, autolink: true }),
       Image,
     ],
@@ -52,11 +55,13 @@ export function RichTextEditor({
     },
   });
 
-  // Keep a hidden input in sync so this works inside a plain <form action={...}>
+  // Keep a hidden input in sync so this works inside a plain <form action={...}>.
+  // Only sync on user-driven "update" events — syncing on mount too would
+  // overwrite an untouched locale tab's blank value with Tiptap's empty-doc
+  // HTML ("<p></p>"), breaking the "leave blank to fall back to English" flow.
   useEffect(() => {
     if (!editor) return;
     const hidden = document.getElementById(`${name}-hidden`) as HTMLInputElement | null;
-    if (hidden) hidden.value = editor.getHTML();
     const update = () => {
       if (hidden) hidden.value = editor.getHTML();
     };
@@ -68,16 +73,19 @@ export function RichTextEditor({
 
   function addLink() {
     if (!editor) return;
-    const url = window.prompt("Link URL (e.g. /uploads/file.pdf or https://…)");
+    const url = window.prompt("Link URL (e.g. https://… — or use the PDF button to link a Media Library file)");
     if (!url) return;
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
   }
 
-  function addImage() {
+  function linkPdf(url: string) {
     if (!editor) return;
-    const url = window.prompt("Image URL (upload via Media Library first, then paste the URL)");
-    if (!url) return;
-    editor.chain().focus().setImage({ src: url }).run();
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+  }
+
+  function insertImage(url: string, altText: string | null) {
+    if (!editor) return;
+    editor.chain().focus().setImage({ src: url, alt: altText ?? undefined }).run();
   }
 
   if (!editor) {
@@ -94,8 +102,9 @@ export function RichTextEditor({
         <ToolbarButton label="Bullet list" active={editor.isActive("bulletList")} onClick={() => editor.chain().focus().toggleBulletList().run()}>••</ToolbarButton>
         <ToolbarButton label="Numbered list" active={editor.isActive("orderedList")} onClick={() => editor.chain().focus().toggleOrderedList().run()}>1.</ToolbarButton>
         <ToolbarButton label="Quote" active={editor.isActive("blockquote")} onClick={() => editor.chain().focus().toggleBlockquote().run()}>&ldquo;</ToolbarButton>
-        <ToolbarButton label="Link (PDF or URL)" active={editor.isActive("link")} onClick={addLink}>🔗</ToolbarButton>
-        <ToolbarButton label="Image" onClick={addImage}>🖼</ToolbarButton>
+        <ToolbarButton label="Link (external URL)" active={editor.isActive("link")} onClick={addLink}>🔗</ToolbarButton>
+        <MediaPicker kind="pdf" label="📎" triggerClassName="min-w-[32px] border border-line px-2 py-1.5 text-xs font-bold text-ink-soft hover:border-brand hover:text-brand" onSelect={linkPdf} />
+        <MediaPicker kind="image" label="🖼" triggerClassName="min-w-[32px] border border-line px-2 py-1.5 text-xs font-bold text-ink-soft hover:border-brand hover:text-brand" onSelect={insertImage} />
         <ToolbarButton label="Undo" onClick={() => editor.chain().focus().undo().run()}>↶</ToolbarButton>
         <ToolbarButton label="Redo" onClick={() => editor.chain().focus().redo().run()}>↷</ToolbarButton>
       </div>

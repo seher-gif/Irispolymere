@@ -5,9 +5,10 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { products, productsByCategory, productsBySlug, appKeys, benKeys, type ProductCategory } from "@/lib/data/products";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, buildProductJsonLd, resolvePageMeta, buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
 import { ProductCard } from "@/components/ProductCard";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
+import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, CableIcon, ProfileIcon, InjectionIcon, ExtrusionIcon } from "@/components/Icons";
 import { Container, PageHero, CTABand, SectionHead } from "@/components/ui";
 import Image from "next/image";
@@ -33,11 +34,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   if ((CATEGORY_SLUGS as readonly string[]).includes(slug)) {
     const meta = CATEGORY_META[slug as keyof typeof CATEGORY_META];
-    return buildMetadata({ locale, segments: ["products", slug], title: `${t(`${meta.heroKey}.title`)} — Iris Polymere`, description: t(`${meta.heroKey}.lead`) });
+    const { title, description } = resolvePageMeta(
+      `products/${slug}`,
+      locale,
+      `${t(`${meta.heroKey}.title`)} — Iris Polymere`,
+      t(`${meta.heroKey}.lead`)
+    );
+    return buildMetadata({ locale, segments: ["products", slug], title, description });
   }
   const product = productsBySlug[slug];
   if (!product) return {};
-  return buildMetadata({ locale, segments: ["products", slug], title: `${t(product.titleKey)} — Iris Polymere`, description: t(product.descKey) });
+  const { title, description } = resolvePageMeta(`products/${slug}`, locale, `${t(product.titleKey)} — Iris Polymere`, t(product.descKey));
+  return buildMetadata({ locale, segments: ["products", slug], title, description });
 }
 
 export default async function ProductRoute({ params }: { params: Promise<{ locale: string; slug: string }> }) {
@@ -61,8 +69,21 @@ function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<t
   const items = productsByCategory[category];
   const isMasterbatch = category === "masterbatch";
 
+  const collectionPageJsonLd = buildWebPageJsonLd({
+    locale,
+    segments: ["products", category],
+    type: "CollectionPage",
+    name: t(`${meta.heroKey}.title`),
+    description: t(`${meta.heroKey}.lead`),
+  });
+  const itemListJsonLd = buildItemListJsonLd(
+    items.map((p) => ({ name: t(p.titleKey), url: `${SITE_URL}/${locale}/products/${p.slug}` }))
+  );
+
   return (
     <>
+      <JsonLd data={collectionPageJsonLd} />
+      <JsonLd data={itemListJsonLd} />
       <PageHero t={t} locale={locale} eyebrowKey={`${meta.heroKey}.eyebrow`} titleKey={`${meta.heroKey}.title`} leadKey={`${meta.heroKey}.lead`} crumbs={[{ labelKey: `mega.${category}.title` }]} />
 
       {isMasterbatch && (
@@ -120,9 +141,17 @@ function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<t
 
 function DetailPage({ locale, t, product }: { locale: Locale; t: ReturnType<typeof tFrom>; product: (typeof products)[number] }) {
   const related = products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 4);
+  const productJsonLd = buildProductJsonLd({
+    locale,
+    slug: product.slug,
+    name: t(product.titleKey),
+    description: t(product.descKey),
+    category: t(product.categoryTitleKey),
+  });
 
   return (
     <>
+      <JsonLd data={productJsonLd} />
       <PageHero
         t={t}
         locale={locale}

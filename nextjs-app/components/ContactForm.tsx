@@ -11,8 +11,10 @@ export function ContactForm() {
   const [state, formAction, pending] = useActionState(submitContactForm, initialState);
   const errors = state.errors ?? {};
 
+  // text-base (16px), not text-sm — anything smaller triggers iOS Safari's
+  // automatic zoom-on-focus on this form.
   const fieldClass = (name: string) =>
-    `w-full rounded-sm border px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand ${
+    `w-full rounded-sm border px-4 py-2.5 text-base outline-none transition-colors focus:border-brand ${
       errors[name] ? "border-red-400" : "border-line"
     }`;
 

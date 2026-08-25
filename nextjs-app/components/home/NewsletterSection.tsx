@@ -19,7 +19,7 @@ export function NewsletterSection() {
       <Container>
         <div className="flex flex-col items-center justify-between gap-6 rounded-md border border-line bg-white p-8 sm:flex-row">
           <div className="text-center sm:text-start">
-            <h3 className="text-lg font-bold text-ink">{t("newsletter.title")}</h3>
+            <h2 className="text-lg font-bold text-ink">{t("newsletter.title")}</h2>
             <p className="mt-1 text-sm text-muted">{t("newsletter.text")}</p>
           </div>
           {sent ? (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,6 +26,18 @@ export function Header() {
 
   const home = `/${locale}`;
   const isActive = (href: string) => pathname === `/${locale}/${href}` || pathname === `/${locale}/${href}/`;
+
+  // Lock background scroll while the mobile menu overlay is open — without
+  // this, iOS Safari lets touch-scroll pass through to the page behind a
+  // `fixed` overlay, causing the classic scroll-under/jump glitch.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, [mobileOpen]);
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-[0_1px_0_0_var(--color-line)]">

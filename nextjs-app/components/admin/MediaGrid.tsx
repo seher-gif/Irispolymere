@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { deleteMedia } from "@/lib/actions/media";
+import { deleteMedia, updateMediaAltText } from "@/lib/actions/media";
 
 type MediaItem = {
   id: string;
@@ -10,6 +10,7 @@ type MediaItem = {
   kind: string;
   sizeBytes: number;
   uploadedAt: Date;
+  altText: string | null;
 };
 
 function formatSize(bytes: number) {
@@ -34,6 +35,10 @@ export function MediaGrid({ items }: { items: MediaItem[] }) {
     });
   }
 
+  function handleAltTextBlur(id: string, value: string) {
+    startTransition(() => updateMediaAltText(id, value));
+  }
+
   if (items.length === 0) {
     return <p className="mt-6 border border-dashed border-line bg-white p-8 text-center text-sm text-muted">No files uploaded yet.</p>;
   }
@@ -45,7 +50,7 @@ export function MediaGrid({ items }: { items: MediaItem[] }) {
           <div className="mb-2 flex h-28 items-center justify-center bg-surface-alt">
             {m.kind === "image" ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={m.url} alt={m.originalName} className="max-h-28 max-w-full object-contain" />
+              <img src={m.url} alt={m.altText || m.originalName} className="max-h-28 max-w-full object-contain" />
             ) : (
               <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" strokeWidth="1.6" className="text-brand">
                 <path d="M6 2h9l5 5v13a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2z" />
@@ -55,6 +60,15 @@ export function MediaGrid({ items }: { items: MediaItem[] }) {
           </div>
           <p className="truncate text-xs font-semibold text-ink" title={m.originalName}>{m.originalName}</p>
           <p className="text-[11px] text-muted">{formatSize(m.sizeBytes)}</p>
+          {m.kind === "image" && (
+            <input
+              type="text"
+              defaultValue={m.altText ?? ""}
+              placeholder="Alt text…"
+              onBlur={(e) => handleAltTextBlur(m.id, e.target.value)}
+              className="mt-2 w-full border border-line px-2 py-1 text-[11px] outline-none focus:border-brand"
+            />
+          )}
           <div className="mt-2 flex gap-2">
             <button onClick={() => handleCopy(m.url, m.id)} className="flex-1 border border-line py-1 text-[11px] font-bold text-ink-soft hover:border-brand hover:text-brand">
               {copiedId === m.id ? "Copied!" : "Copy URL"}

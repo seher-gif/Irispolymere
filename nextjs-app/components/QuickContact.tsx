@@ -18,7 +18,7 @@ export function QuickContact() {
 
   return (
     <>
-      <div className="fixed bottom-6 end-6 z-40 flex flex-col items-end gap-3">
+      <div className="fixed end-6 z-40 flex flex-col items-end gap-3 bottom-[max(1.5rem,env(safe-area-inset-bottom))]">
         <a
           href={whatsappHref()}
           target="_blank"
@@ -62,10 +62,10 @@ export function QuickContact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6">
-                <input required placeholder={t("quickContact.name")} className="rounded-sm border border-line px-4 py-2.5 text-sm outline-none focus:border-brand" />
-                <input required placeholder={t("quickContact.phone")} className="rounded-sm border border-line px-4 py-2.5 text-sm outline-none focus:border-brand" />
-                <input required type="email" placeholder={t("quickContact.email")} className="rounded-sm border border-line px-4 py-2.5 text-sm outline-none focus:border-brand" />
-                <textarea required rows={4} placeholder={t("quickContact.message")} className="rounded-sm border border-line px-4 py-2.5 text-sm outline-none focus:border-brand" />
+                <input required placeholder={t("quickContact.name")} className="rounded-sm border border-line px-4 py-2.5 text-base outline-none focus:border-brand" />
+                <input required placeholder={t("quickContact.phone")} className="rounded-sm border border-line px-4 py-2.5 text-base outline-none focus:border-brand" />
+                <input required type="email" placeholder={t("quickContact.email")} className="rounded-sm border border-line px-4 py-2.5 text-base outline-none focus:border-brand" />
+                <textarea required rows={4} placeholder={t("quickContact.message")} className="rounded-sm border border-line px-4 py-2.5 text-base outline-none focus:border-brand" />
                 <button type="submit" className="mt-1 rounded-sm bg-brand py-2.5 text-sm font-bold text-white hover:bg-brand-hover">
                   {t("quickContact.send")}
                 </button>

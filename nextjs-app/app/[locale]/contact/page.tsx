@@ -4,10 +4,11 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
-import { contactInfo, telHref } from "@/lib/contact-info";
-import { buildMetadata } from "@/lib/seo";
-import { PinIcon, PhoneIcon, MailIcon, MapIcon } from "@/components/Icons";
+import { contactInfo, telHref, mapEmbedSrc } from "@/lib/contact-info";
+import { buildMetadata, resolvePageMeta, buildWebPageJsonLd } from "@/lib/seo";
+import { PinIcon, PhoneIcon, MailIcon } from "@/components/Icons";
 import { ContactForm } from "@/components/ContactForm";
+import { JsonLd } from "@/components/JsonLd";
 import { Container, PageHero } from "@/components/ui";
 
 export function generateStaticParams() {
@@ -19,7 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  return buildMetadata({ locale, segments: ["contact"], title: `${t("contact.hero.title")} — Iris Polymere`, description: t("contact.hero.lead") });
+  const { title, description } = resolvePageMeta("contact", locale as Locale, `${t("contact.hero.title")} — Iris Polymere`, t("contact.hero.lead"));
+  return buildMetadata({ locale, segments: ["contact"], title, description });
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -28,16 +30,24 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
+  const contactPageJsonLd = buildWebPageJsonLd({
+    locale,
+    segments: ["contact"],
+    type: "ContactPage",
+    name: t("contact.hero.title"),
+    description: t("contact.hero.lead"),
+  });
 
   return (
     <>
+      <JsonLd data={contactPageJsonLd} />
       <PageHero t={t} locale={locale} eyebrowKey="contact.hero.eyebrow" titleKey="contact.hero.title" leadKey="contact.hero.lead" crumbs={[{ labelKey: "nav.contact" }]} />
 
       <section className="py-16 sm:py-20">
         <Container className="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div>
             <h2 className="text-xl font-bold text-ink">{t("contact.info.title")}</h2>
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <address className="mt-6 grid grid-cols-1 gap-4 not-italic sm:grid-cols-2">
               <div className="flex gap-3.5 rounded-md border border-line bg-white p-5">
                 <PinIcon className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
                 <div>
@@ -69,16 +79,17 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                   <span className="text-xs text-muted">{contactInfo.website}</span>
                 </div>
               </div>
-            </div>
+            </address>
 
             <h2 className="mt-10 text-xl font-bold text-ink">{t("contact.map.title")}</h2>
-            <div className="mt-6 aspect-video overflow-hidden rounded-md border border-line bg-brand-darker">
-              {/* Google Maps iframe placeholder: embed here once the exact factory address is confirmed by the client, e.g.
-                  <iframe src="https://www.google.com/maps/embed?pb=..." loading="lazy" className="h-full w-full border-0" /> */}
-              <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center text-white/70">
-                <MapIcon className="h-10 w-10" />
-                <p className="text-sm">{t("contact.map.placeholder")}</p>
-              </div>
+            <div className="mt-6 aspect-video overflow-hidden rounded-md border border-line">
+              <iframe
+                src={mapEmbedSrc()}
+                title={t("contact.map.title")}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-full w-full border-0"
+              />
             </div>
           </div>
 

@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { HeroSlider } from "@/components/HeroSlider";
+import { banners } from "@/lib/data/banners";
 import { AboutSection } from "@/components/home/AboutSection";
 import { ProductsSection } from "@/components/home/ProductsSection";
 import { BenefitsSection } from "@/components/home/BenefitsSection";
@@ -18,13 +19,10 @@ import { CTABand } from "@/components/ui";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  return buildMetadata({
-    locale,
-    segments: [],
-    title: "Iris Polymere — Advanced Compound Solutions",
-    description:
-      "Iris Polymere develops high-performance PVC, HFFR, masterbatch, and filler compound solutions for cable, plastics, and industrial manufacturing.",
-  });
+  const dict = await getDictionary(locale as Locale);
+  const t = tFrom(dict);
+  const { title, description } = resolvePageMeta("home", locale as Locale, t("home.meta.title"), t("home.meta.description"));
+  return buildMetadata({ locale, segments: [], title, description });
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -36,7 +34,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      <HeroSlider />
+      <HeroSlider banners={banners} />
       <AboutSection t={t} locale={locale} />
       <ProductsSection t={t} locale={locale} />
       <BenefitsSection t={t} />

@@ -20,7 +20,7 @@ export function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[80] border-t border-line bg-white p-5 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] sm:flex sm:items-center sm:justify-between sm:gap-6">
+    <div className="fixed inset-x-0 bottom-0 z-[80] border-t border-line bg-white px-5 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] sm:flex sm:items-center sm:justify-between sm:gap-6">
       <div className="mb-3 sm:mb-0">
         <p className="text-sm font-bold text-ink">{t("cookie.title")}</p>
         <p className="mt-1 max-w-xl text-xs text-muted">{t("cookie.text")}</p>

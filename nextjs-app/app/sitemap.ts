@@ -19,17 +19,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...blogPosts.map((p) => ["blog", p.slug]),
   ];
 
-  return segmentSets.map((segments) => {
+  // One <url> entry per locale per path (not just /en) so FR/AR pages are
+  // directly discoverable via the sitemap, each carrying the full reciprocal
+  // hreflang alternate set.
+  return segmentSets.flatMap((segments) => {
     const path = segments.length ? `/${segments.join("/")}` : "";
     const languages: Record<string, string> = {};
     for (const l of locales) languages[l] = `${SITE_URL}/${l}${path}`;
 
-    return {
-      url: `${SITE_URL}/en${path}`,
+    return locales.map((locale) => ({
+      url: `${SITE_URL}/${locale}${path}`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: segments.length === 0 ? 1 : 0.7,
       alternates: { languages },
-    };
+    }));
   });
 }
