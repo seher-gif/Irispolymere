@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import { ExportButton } from "@/components/admin/ExportButton";
 
 export default async function AdminDashboard() {
   const [postCount, publishedCount, categoryCount, mediaCount, unreadMessages] = await Promise.all([
@@ -35,10 +36,12 @@ export default async function AdminDashboard() {
       <div className="mt-10 border border-dashed border-line bg-white p-6">
         <h2 className="text-base font-bold text-ink">Publishing changes to the live site</h2>
         <p className="mt-2 text-sm text-muted">
-          This admin panel edits content in a local database. To make changes visible on the live site, run{" "}
-          <code className="bg-surface-alt px-1.5 py-0.5 text-xs">npm run export-content</code> to regenerate the
-          site&apos;s static data files, then rebuild and redeploy.
+          This admin panel edits content in a local database. To make changes visible on the live site, export the
+          content to the site&apos;s static data files below, then rebuild (<code className="bg-surface-alt px-1.5 py-0.5 text-xs">npm run build</code>) and redeploy.
         </p>
+        <div className="mt-4">
+          <ExportButton />
+        </div>
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3">

@@ -16,6 +16,12 @@ export function MediaUploadForm() {
   return (
     <form ref={formRef} action={formAction} className="flex flex-wrap items-center gap-3 border border-line bg-white p-4">
       <input type="file" name="file" required accept=".pdf,.png,.jpg,.jpeg,.webp,.svg" className="text-sm" />
+      <input
+        type="text"
+        name="altText"
+        placeholder="Alt text (for images — describe what's shown)"
+        className="min-w-[240px] flex-1 border border-line px-3 py-2 text-sm outline-none focus:border-brand"
+      />
       <button type="submit" disabled={pending} className="bg-brand px-4 py-2 text-sm font-bold text-white hover:bg-brand-hover disabled:opacity-60">
         {pending ? "Uploading…" : "Upload"}
       </button>

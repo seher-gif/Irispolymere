@@ -6,8 +6,10 @@ import { prisma } from "@/lib/db";
 
 const NAV = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/banners", label: "Homepage Banners" },
   { href: "/admin/posts", label: "Blog Posts" },
   { href: "/admin/categories", label: "Categories" },
+  { href: "/admin/pages", label: "Pages" },
   { href: "/admin/media", label: "Media Library" },
   { href: "/admin/certificates", label: "Certificates" },
   { href: "/admin/messages", label: "Messages" },

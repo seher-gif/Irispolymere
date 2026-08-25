@@ -25,6 +25,23 @@ async function uniqueSlug(base: string, ignoreId?: string) {
   }
 }
 
+// Tiptap's serialized "empty" document — treat it the same as a blank field
+// so an untouched locale tab still falls back to English at export time.
+const EMPTY_RICH_TEXT = new Set(["", "<p></p>"]);
+
+function richText(formData: FormData, key: string) {
+  const value = String(formData.get(key) ?? "").trim();
+  return EMPTY_RICH_TEXT.has(value) ? null : value;
+}
+
+const META_TITLE_MAX = 70;
+const META_DESCRIPTION_MAX = 165;
+
+function metaField(formData: FormData, key: string, max: number) {
+  const value = String(formData.get(key) ?? "").trim();
+  return value ? value.slice(0, max) : null;
+}
+
 function readPostFields(formData: FormData) {
   return {
     titleEn: String(formData.get("titleEn") ?? "").trim(),
@@ -33,18 +50,18 @@ function readPostFields(formData: FormData) {
     excerptEn: String(formData.get("excerptEn") ?? "").trim(),
     excerptFr: String(formData.get("excerptFr") ?? "").trim() || null,
     excerptAr: String(formData.get("excerptAr") ?? "").trim() || null,
-    bodyEn: String(formData.get("bodyEn") ?? "").trim(),
-    bodyFr: String(formData.get("bodyFr") ?? "").trim() || null,
-    bodyAr: String(formData.get("bodyAr") ?? "").trim() || null,
+    bodyEn: richText(formData, "bodyEn") ?? "",
+    bodyFr: richText(formData, "bodyFr"),
+    bodyAr: richText(formData, "bodyAr"),
     coverImage: String(formData.get("coverImage") ?? "").trim() || null,
     categoryId: String(formData.get("categoryId") ?? "").trim() || null,
     published: formData.get("published") === "on",
-    metaTitleEn: String(formData.get("metaTitleEn") ?? "").trim() || null,
-    metaTitleFr: String(formData.get("metaTitleFr") ?? "").trim() || null,
-    metaTitleAr: String(formData.get("metaTitleAr") ?? "").trim() || null,
-    metaDescriptionEn: String(formData.get("metaDescriptionEn") ?? "").trim() || null,
-    metaDescriptionFr: String(formData.get("metaDescriptionFr") ?? "").trim() || null,
-    metaDescriptionAr: String(formData.get("metaDescriptionAr") ?? "").trim() || null,
+    metaTitleEn: metaField(formData, "metaTitleEn", META_TITLE_MAX),
+    metaTitleFr: metaField(formData, "metaTitleFr", META_TITLE_MAX),
+    metaTitleAr: metaField(formData, "metaTitleAr", META_TITLE_MAX),
+    metaDescriptionEn: metaField(formData, "metaDescriptionEn", META_DESCRIPTION_MAX),
+    metaDescriptionFr: metaField(formData, "metaDescriptionFr", META_DESCRIPTION_MAX),
+    metaDescriptionAr: metaField(formData, "metaDescriptionAr", META_DESCRIPTION_MAX),
   };
 }
 

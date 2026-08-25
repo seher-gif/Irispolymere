@@ -37,6 +37,8 @@ export async function uploadMedia(_prev: UploadState, formData: FormData): Promi
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(path.join(UPLOAD_DIR, filename), buffer);
 
+  const altText = String(formData.get("altText") ?? "").trim() || null;
+
   await prisma.media.create({
     data: {
       filename,
@@ -45,6 +47,7 @@ export async function uploadMedia(_prev: UploadState, formData: FormData): Promi
       sizeBytes: file.size,
       kind: meta.kind,
       url: `/uploads/${filename}`,
+      altText,
     },
   });
 
@@ -62,4 +65,16 @@ export async function deleteMedia(id: string) {
     // file already gone — ignore
   }
   revalidatePath("/admin/media");
+}
+
+export async function updateMediaAltText(id: string, altText: string) {
+  await prisma.media.update({ where: { id }, data: { altText: altText.trim() || null } });
+  revalidatePath("/admin/media");
+}
+
+export async function listMedia(kind?: "image" | "pdf") {
+  return prisma.media.findMany({
+    where: kind ? { kind } : undefined,
+    orderBy: { uploadedAt: "desc" },
+  });
 }

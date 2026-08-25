@@ -2,6 +2,8 @@
 
 import { useActionState, useState } from "react";
 import { RichTextEditor } from "./RichTextEditor";
+import { MediaPicker } from "./MediaPicker";
+import { CounterField } from "./CounterField";
 import type { PostFormState } from "@/lib/actions/posts";
 
 type Category = { id: string; nameEn: string };
@@ -36,6 +38,7 @@ export function PostForm({
 }) {
   const [tab, setTab] = useState<"en" | "fr" | "ar">("en");
   const [state, formAction, pending] = useActionState(action, initialState);
+  const [coverImage, setCoverImage] = useState(post?.coverImage ?? "");
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -48,7 +51,7 @@ export function PostForm({
             defaultValue={post?.slug ?? ""}
             placeholder="auto-generated from title if left blank"
             className="flex-1 border border-line px-3 py-2 text-sm outline-none focus:border-brand"
-            pattern="[a-z0-9-]*"
+            pattern="[a-z0-9]+(-[a-z0-9]+)*"
             title="Lowercase letters, numbers and hyphens only"
           />
         </div>
@@ -92,11 +95,11 @@ export function PostForm({
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-bold text-ink-soft">Meta Title</label>
-                  <input name={`metaTitle${cap}`} defaultValue={get("metaTitle") ?? ""} maxLength={70} className="border border-line bg-white px-3 py-2 text-sm outline-none focus:border-brand" />
+                  <CounterField name={`metaTitle${cap}`} defaultValue={get("metaTitle") ?? ""} maxLength={70} />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-bold text-ink-soft">Meta Description</label>
-                  <textarea name={`metaDescription${cap}`} defaultValue={get("metaDescription") ?? ""} maxLength={165} rows={2} className="border border-line bg-white px-3 py-2 text-sm outline-none focus:border-brand" />
+                  <CounterField name={`metaDescription${cap}`} defaultValue={get("metaDescription") ?? ""} maxLength={165} multiline />
                 </div>
               </div>
             </div>
@@ -115,8 +118,21 @@ export function PostForm({
           </select>
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-bold text-ink">Cover Image URL</label>
-          <input name="coverImage" defaultValue={post?.coverImage ?? ""} placeholder="/uploads/… (from Media Library)" className="border border-line px-3 py-2.5 text-sm outline-none focus:border-brand" />
+          <label className="text-sm font-bold text-ink">Cover Image</label>
+          <div className="flex gap-2">
+            <input
+              name="coverImage"
+              value={coverImage}
+              onChange={(e) => setCoverImage(e.target.value)}
+              placeholder="/uploads/… (from Media Library)"
+              className="flex-1 border border-line px-3 py-2.5 text-sm outline-none focus:border-brand"
+            />
+            <MediaPicker kind="image" onSelect={(url) => setCoverImage(url)} label="Browse" />
+          </div>
+          {coverImage && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={coverImage} alt="Cover preview" className="mt-1 h-24 w-auto border border-line object-contain" />
+          )}
         </div>
       </div>
 

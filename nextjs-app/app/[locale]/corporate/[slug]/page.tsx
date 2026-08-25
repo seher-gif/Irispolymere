@@ -4,8 +4,9 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { corporatePages, corporatePagesBySlug } from "@/lib/data/corporate";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta, buildWebPageJsonLd } from "@/lib/seo";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
+import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, CostIcon, FlaskIcon, GaugeIcon, LayersIcon, GlobeIcon } from "@/components/Icons";
 import { Container, PageHero, CTABand } from "@/components/ui";
 
@@ -19,8 +20,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!page || !isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  const title = `${t(page.heroTitleKey)} — Iris Polymere`;
-  return buildMetadata({ locale: locale as Locale, segments: ["corporate", slug], title, description: t(page.metaDescriptionKey) });
+  const { title, description } = resolvePageMeta(
+    `corporate/${slug}`,
+    locale as Locale,
+    `${t(page.heroTitleKey)} — Iris Polymere`,
+    t(page.metaDescriptionKey)
+  );
+  return buildMetadata({ locale: locale as Locale, segments: ["corporate", slug], title, description });
 }
 
 export default async function CorporatePage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
@@ -33,9 +39,17 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
   const crumbs = [{ labelKey: "nav.corporate" }, { labelKey: page.navKey }];
+  const webPageJsonLd = buildWebPageJsonLd({
+    locale,
+    segments: ["corporate", slug],
+    type: slug === "about" ? "AboutPage" : "WebPage",
+    name: t(page.heroTitleKey),
+    description: t(page.metaDescriptionKey),
+  });
 
   return (
     <>
+      <JsonLd data={webPageJsonLd} />
       <PageHero t={t} locale={locale} eyebrowKey="nav.corporate" titleKey={page.heroTitleKey} leadKey={page.heroLeadKey} crumbs={crumbs} />
 
       {slug === "about" && (
