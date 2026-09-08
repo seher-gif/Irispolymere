@@ -6,6 +6,7 @@ import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
 import { contactInfo, telHref, mapEmbedSrc } from "@/lib/contact-info";
 import { buildMetadata, resolvePageMeta, buildWebPageJsonLd } from "@/lib/seo";
+import { siteAssetOverrides } from "@/lib/data/site-assets";
 import { PinIcon, PhoneIcon, MailIcon } from "@/components/Icons";
 import { ContactForm } from "@/components/ContactForm";
 import { JsonLd } from "@/components/JsonLd";
@@ -73,7 +74,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 </div>
               </div>
               <div className="flex items-center gap-4 rounded-md border border-line bg-white p-5">
-                <Image src="/brand/qr-code.png" alt="Iris Polymere WhatsApp / contact QR code" width={72} height={72} className="rounded-sm border border-line" />
+                <Image src={siteAssetOverrides["qr-code"] ?? "/brand/qr-code.png"} alt="Iris Polymere WhatsApp / contact QR code" width={72} height={72} className="rounded-sm border border-line" />
                 <div>
                   <strong className="block text-sm text-ink">{t("contact.info.qr.label")}</strong>
                   <span className="text-xs text-muted">{contactInfo.website}</span>

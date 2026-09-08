@@ -77,8 +77,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
         </Container>
       </section>
 
+      <Container className="relative -mt-8 aspect-[21/9] overflow-hidden shadow-lg sm:-mt-10">
+        {post.coverImage ? (
+          <Image
+            src={post.coverImage}
+            alt={post.title[locale]}
+            fill
+            sizes="(min-width: 1320px) 1320px, 100vw"
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <IndustrialVisual accent="#105191" variant="panel" className="h-full w-full" />
+        )}
+      </Container>
+
       <section className="py-16 sm:py-20">
-        <Container className="grid grid-cols-1 gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+        <Container className="mx-auto max-w-3xl">
           <article>
             <div
               className="prose prose-sm max-w-none text-muted [&_p]:mb-4 [&_p]:leading-relaxed [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-ink [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-ink [&_a]:text-brand [&_a]:font-semibold [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:ps-5 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:ps-5"
@@ -88,13 +103,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
               ← {t("blog.backToBlog")}
             </Link>
           </article>
-          <div className="overflow-hidden shadow-sm">
-            {post.coverImage ? (
-              <Image src={post.coverImage} alt={post.title[locale]} width={640} height={480} className="h-full w-full object-cover" />
-            ) : (
-              <IndustrialVisual accent="#105191" variant="panel" className="h-full w-full" />
-            )}
-          </div>
         </Container>
       </section>
 

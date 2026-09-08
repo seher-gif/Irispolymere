@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { locales, type Locale } from "./i18n/config";
 import { pageMetaOverrides } from "./data/page-meta";
+import { siteAssetOverrides } from "./data/site-assets";
 import { contactInfo } from "./contact-info";
+
+const OG_IMAGE = siteAssetOverrides["og-image"] ?? "/brand/og-image.png";
 
 const SITE_URL = "https://www.irispolymere.com";
 const SITE_NAME = "Iris Polymere";
@@ -51,13 +54,13 @@ export function buildMetadata({
       siteName: SITE_NAME,
       locale: OG_LOCALE[locale],
       type: "website",
-      images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: SITE_NAME }],
+      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: SITE_NAME }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: ["/brand/og-image.png"],
+      images: [OG_IMAGE],
     },
     robots: {
       index: true,

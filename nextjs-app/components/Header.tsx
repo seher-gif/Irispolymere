@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { corporateLinks, productLinks } from "@/lib/nav-data";
 import { contactInfo, telHref, whatsappHref } from "@/lib/contact-info";
+import { siteAssetOverrides } from "@/lib/data/site-assets";
 import { useI18n } from "./providers/i18n-provider";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WhatsAppIcon } from "./Icons";
@@ -26,6 +27,7 @@ export function Header() {
 
   const home = `/${locale}`;
   const isActive = (href: string) => pathname === `/${locale}/${href}` || pathname === `/${locale}/${href}/`;
+  const logoMark = siteAssetOverrides["logo-mark"] ?? "/brand/logo-mark.webp";
 
   // Lock background scroll while the mobile menu overlay is open — without
   // this, iOS Safari lets touch-scroll pass through to the page behind a
@@ -61,7 +63,7 @@ export function Header() {
       {/* Main nav */}
       <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-6 px-6 py-4">
         <Link href={home} className="flex shrink-0 items-center gap-2.5">
-          <Image src="/brand/logo-mark.webp" alt="" width={40} height={38} className="h-9 w-auto" priority />
+          <Image src={logoMark} alt="" width={40} height={38} className="h-9 w-auto" priority />
           <span className="flex flex-col leading-none">
             <span className="text-lg font-extrabold tracking-tight text-ink">IRIS POLYMERE</span>
             <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand">Compound Solutions</span>
@@ -127,7 +129,7 @@ export function Header() {
         <div className="fixed inset-0 z-[60] flex xl:hidden">
           <div className="w-full max-w-sm overflow-y-auto bg-white p-6 shadow-2xl">
             <div className="mb-6 flex items-center justify-between">
-              <Image src="/brand/logo-mark.webp" alt="" width={36} height={34} className="h-8 w-auto" />
+              <Image src={logoMark} alt="" width={36} height={34} className="h-8 w-auto" />
               <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="flex h-9 w-9 items-center justify-center rounded-full border border-line">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M18 6L6 18M6 6l12 12" />

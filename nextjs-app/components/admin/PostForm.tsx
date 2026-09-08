@@ -119,6 +119,7 @@ export function PostForm({
         </div>
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-bold text-ink">Cover Image</label>
+          <p className="text-xs text-muted">One image, used both in the blog list and as the featured banner at the top of this post. Wide photos work best (roughly 21:9).</p>
           <div className="flex gap-2">
             <input
               name="coverImage"
