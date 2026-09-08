@@ -1,7 +1,8 @@
 # Iris Polymere — Admin CMS
 
 A local content-management backend for blog posts, categories, media (PDF/image
-uploads) and certificates. Runs alongside the public Next.js site.
+uploads), certificates, homepage banners, site-wide brand assets, and
+per-page SEO. Runs alongside the public Next.js site.
 
 ## Running locally
 
@@ -43,6 +44,23 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
 
 ## What's editable
 
+- **Homepage Banners** — the images that rotate in the homepage hero. 1 to
+  5 images; at least 1 is required (the last one can't be deleted), up to 5
+  (upload is disabled past that). Shown full-bleed, in upload order — no
+  text, gradient or logo is placed on top of them by the site.
+- **Site Assets** — the brand-wide images used across the whole site: the
+  header logo mark, the full logo lockup on the footer, the social-share
+  (Open Graph) image, and the Contact page QR code, plus the favicon and
+  Apple touch icon. Each has one current image (bundled default, or an
+  admin-uploaded replacement) with a "Replace" upload and, once replaced, a
+  "Reset to default" button. The favicon and Apple touch icon are a special
+  case: Next.js reads `app/icon.png` / `app/apple-icon.png` directly from
+  disk at build time, so uploading those writes straight to those files
+  (with the original backed up once, automatically, so "Reset to default"
+  has something to restore) — a **rebuild + redeploy** is required for a
+  favicon/icon change to actually appear, same as any other publish.
+  Certificate badges (ISO, REACH, RoHS…) aren't listed here — they're coded
+  as SVG icons in the site, not uploaded images.
 - **Blog Posts** — title/excerpt/body (rich text) in English, French and
   Arabic; category; published toggle; URL slug; and per-locale SEO meta
   title / meta description. French/Arabic content fields fall back to the

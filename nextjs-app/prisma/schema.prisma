@@ -75,6 +75,18 @@ model Media {
   uploadedAt   DateTime @default(now())
 }
 
+// Site-wide brand assets (logo, favicon, OG image, QR code) — one row per
+// fixed `key` (see lib/data/site-asset-registry.ts). Overrides the bundled
+// default in public/brand/ when present. favicon/apple-icon are additionally
+// mirrored to app/icon.png / app/apple-icon.png at upload time, since Next's
+// icon convention reads those files directly at build time.
+model SiteAsset {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  url       String // relative /uploads path
+  updatedAt DateTime @updatedAt
+}
+
 // Homepage hero banners — 1 to 5, rotate on the public site. Enforced in
 // lib/actions/banners.ts (max 5 on create, min 1 on delete), not here.
 model Banner {

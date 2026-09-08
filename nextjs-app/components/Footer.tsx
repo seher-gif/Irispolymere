@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { corporateLinks, productLinks } from "@/lib/nav-data";
+import { siteAssetOverrides } from "@/lib/data/site-assets";
 import { useI18n } from "./providers/i18n-provider";
 
 function SocialIcon({ path }: { path: string }) {
@@ -23,6 +24,7 @@ const SOCIAL = [
 export function Footer() {
   const { locale, t } = useI18n();
   const home = `/${locale}`;
+  const logoFull = siteAssetOverrides["logo-full"] ?? "/brand/logo-full-white.webp";
 
   return (
     <footer className="bg-brand text-white">
@@ -30,7 +32,7 @@ export function Footer() {
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_2fr_1fr]">
           <div className="flex justify-center lg:justify-start">
             <Link href={home}>
-              <Image src="/brand/logo-full-white.webp" alt="Iris Polymere" width={220} height={104} className="h-16 w-auto" />
+              <Image src={logoFull} alt="Iris Polymere" width={220} height={104} className="h-16 w-auto" />
             </Link>
           </div>
           <nav className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-center">
