@@ -103,6 +103,12 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   and on the dashboard. Click a row to expand full details (and mark it
   read); "Delete" removes it permanently. "Reply by Email" opens a
   `mailto:` link to the sender.
+- **Settings** — currently just the Contact Form Notification Email: the
+  address new Contact page submissions are meant to notify. It's stored so
+  it can be changed without a code change, but as of now nothing sends to
+  it — new submissions still only show up under Messages above. Wire up
+  actual email delivery (e.g. a transactional email API, or the existing
+  mailbox's SMTP) separately, reading whatever address is saved here.
 
 ## Contact form submissions
 

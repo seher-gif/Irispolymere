@@ -127,6 +127,15 @@ model PageMeta {
   updatedAt         DateTime @updatedAt
 }
 
+// Generic key-value store for small site-wide settings (currently just the
+// contact-form notification address). Add new settings here by key rather
+// than a new model/migration each time.
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
 model Certificate {
   id        String   @id @default(cuid())
   key       String   @unique // "iso" | "eco" | "reach" | "rohs"
