@@ -25,15 +25,6 @@ export function PvcIcon({ className = "h-8 w-8" }: IconProps) {
   );
 }
 
-export function HffrIcon({ className = "h-8 w-8" }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
-      <path d="M12 3c2.5 3 3.5 5 3.5 7a3.5 3.5 0 11-7 0c0-.9.3-1.7.8-2.5.3.9 1 1.5 1.7 1.5.9 0 1.5-.7 1.5-1.6C12.5 6.4 11.7 5 12 3z" />
-      <path d="M6 20h12" />
-    </svg>
-  );
-}
-
 export function MasterbatchIcon({ className = "h-8 w-8" }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>

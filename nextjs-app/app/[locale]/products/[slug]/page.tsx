@@ -13,11 +13,10 @@ import { CheckIcon, CableIcon, ProfileIcon, InjectionIcon, ExtrusionIcon } from 
 import { Container, PageHero, CTABand, SectionHead } from "@/components/ui";
 import Image from "next/image";
 
-const CATEGORY_SLUGS = ["pvc", "hffr", "masterbatch"] as const;
+const CATEGORY_SLUGS = ["pvc", "masterbatch"] as const;
 
 const CATEGORY_META: Record<(typeof CATEGORY_SLUGS)[number], { heroKey: string; introKey: string }> = {
   pvc: { heroKey: "pvc.hero", introKey: "pvc.intro" },
-  hffr: { heroKey: "hffr.hero", introKey: "hffr.intro" },
   masterbatch: { heroKey: "mb.hero", introKey: "mb.intro" },
 };
 
@@ -92,7 +91,7 @@ function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<t
             <div className="overflow-hidden rounded-md border border-line shadow-sm">
               <Image
                 src="/assets/masterbatch-banner.webp"
-                alt="Iris Polymere masterbatch product range — color, white, black and filler masterbatch"
+                alt="Iris Polymere masterbatch product range"
                 width={1393}
                 height={679}
                 className="h-auto w-full"
@@ -168,15 +167,6 @@ function DetailPage({ locale, t, product }: { locale: Locale; t: ReturnType<type
           <div>
             {product.subtitleKey && <p className="mb-4 text-lg font-semibold text-brand">{t(product.subtitleKey)}</p>}
 
-            {product.variantGroup && (
-              <div className="mb-6 flex gap-2">
-                <span className="rounded-full border border-brand bg-brand-tint px-4 py-1.5 text-sm font-bold text-brand">{product.variantLabel}</span>
-                <Link href={`/${locale}/products/${product.variantSiblingSlug}`} className="rounded-full border border-line px-4 py-1.5 text-sm font-bold text-ink-soft hover:border-brand hover:text-brand">
-                  {product.variantSiblingLabel}
-                </Link>
-              </div>
-            )}
-
             <h2 className="text-xl font-bold text-ink">{t("label.applications")}</h2>
             <ul className="mt-4 grid gap-2.5">
               {appKeys(product).map((key) => (
@@ -203,12 +193,6 @@ function DetailPage({ locale, t, product }: { locale: Locale; t: ReturnType<type
               </div>
             )}
             {product.noteKey && <p className="mt-4 text-sm text-muted">{t(product.noteKey)}</p>}
-            {product.cautionKey && (
-              <div className="mt-6 rounded-md border border-dashed border-brand-muted bg-brand-tint p-5 text-sm text-ink-soft">
-                <strong className="mb-1 block text-ink">{t("hffr.cpr.title")}</strong>
-                {t(product.cautionKey)}
-              </div>
-            )}
 
             <div className="mt-8 rounded-md border border-dashed border-line bg-surface-alt p-5 text-sm text-muted">
               <strong className="mb-1 block text-ink">{t("label.technicalData")}</strong>
@@ -230,19 +214,21 @@ function DetailPage({ locale, t, product }: { locale: Locale; t: ReturnType<type
         </Container>
       </section>
 
-      <section className="bg-surface-alt py-16 sm:py-20">
-        <Container>
-          <SectionHead title={t("label.relatedProducts")} />
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {related.map((r) => (
-              <Link key={r.slug} href={`/${locale}/products/${r.slug}`} className="rounded-md border border-line bg-white p-5 transition-colors hover:border-brand">
-                <strong className="block text-sm text-ink">{t(r.titleKey)}</strong>
-                <span className="mt-1 block text-xs text-muted">{t("btn.viewProduct")}</span>
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </section>
+      {related.length > 0 && (
+        <section className="bg-surface-alt py-16 sm:py-20">
+          <Container>
+            <SectionHead title={t("label.relatedProducts")} />
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {related.map((r) => (
+                <Link key={r.slug} href={`/${locale}/products/${r.slug}`} className="rounded-md border border-line bg-white p-5 transition-colors hover:border-brand">
+                  <strong className="block text-sm text-ink">{t(r.titleKey)}</strong>
+                  <span className="mt-1 block text-xs text-muted">{t("btn.viewProduct")}</span>
+                </Link>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
       <CTABand t={t} locale={locale} />
     </>

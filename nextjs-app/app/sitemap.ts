@@ -5,7 +5,7 @@ import { corporatePages } from "@/lib/data/corporate";
 import { products } from "@/lib/data/products";
 import { blogPosts } from "@/lib/data/blog";
 
-const CATEGORY_SLUGS = ["pvc", "hffr", "masterbatch"];
+const CATEGORY_SLUGS = ["pvc", "masterbatch"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const segmentSets: string[][] = [

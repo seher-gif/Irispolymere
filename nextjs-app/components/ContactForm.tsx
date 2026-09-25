@@ -64,8 +64,6 @@ export function ContactForm() {
         <select name="productInterest" className={fieldClass("productInterest")} defaultValue="">
           <option value="" disabled>{t("contact.form.productInterest.select")}</option>
           <option value="pvc">{t("contact.form.productInterest.pvc")}</option>
-          <option value="hffr">{t("contact.form.productInterest.hffr")}</option>
-          <option value="masterbatch">{t("contact.form.productInterest.masterbatch")}</option>
           <option value="filler">{t("contact.form.productInterest.filler")}</option>
           <option value="technical">{t("contact.form.productInterest.technical")}</option>
           <option value="other">{t("contact.form.productInterest.other")}</option>

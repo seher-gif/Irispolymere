@@ -27,7 +27,6 @@ async function main() {
   // --- Categories -------------------------------------------------------
   const categories = [
     { slug: "pvc-compounds", nameEn: "PVC Compounds", nameFr: "Compounds PVC", nameAr: "مركّبات PVC" },
-    { slug: "hffr-compounds", nameEn: "HFFR Compounds", nameFr: "Compounds HFFR", nameAr: "مركّبات HFFR" },
     { slug: "masterbatch", nameEn: "Masterbatch", nameFr: "Masterbatch", nameAr: "ماستربتش" },
   ];
   const categoryRecords: Record<string, string> = {};
@@ -52,17 +51,6 @@ async function main() {
       excerptFr: "Un regard pratique sur la manière dont les fabricants évaluent les options de compound PVC pour les profilés, tubes et applications câbles.",
       excerptAr: "نظرة عملية على كيفية تقييم المصنّعين لخيارات مركّبات PVC الخاصة بالبروفيلات والأنابيب وتطبيقات الكابلات.",
       bodyEn: `<p>Selecting between rigid and flexible PVC compounds usually starts with the end application rather than the material itself. Profiles, pipes and structural components generally call for rigid formulations that prioritize dimensional stability and mechanical strength, while hoses, seals and flexible cable applications call for compounds formulated around controlled flexibility and consistent surface quality.</p><p>Processing conditions matter as much as the end use. Extrusion speed, tooling and cooling all interact with a compound's formulation, which is why Iris Polymere develops PVC compounds around the practical requirements of each production line rather than a single generic specification.</p><p>For manufacturers evaluating a switch between rigid and flexible PVC — or looking to qualify a new compound for an existing line — our technical team can walk through formulation options based on the application, machinery and target performance.</p><p>Technical data for specific PVC compound grades will be added after client approval. Contact our team for detailed technical documentation.</p>`,
-    },
-    {
-      slug: "hffr-compounds-explained",
-      categorySlug: "hffr-compounds",
-      titleEn: "What Makes a Compound Halogen-Free Flame-Retardant?",
-      titleFr: "Qu'est-ce qui Rend un Compound Ignifuge Sans Halogène ?",
-      titleAr: "ما الذي يجعل المركّب مثبطًا للهب وخاليًا من الهالوجين؟",
-      excerptEn: "An introduction to HFFR compounds and why cable manufacturers consider them for specific applications.",
-      excerptFr: "Une introduction aux compounds HFFR et aux raisons pour lesquelles les fabricants de câbles les envisagent pour des applications spécifiques.",
-      excerptAr: "مقدمة حول مركّبات HFFR وأسباب اعتماد مصنّعي الكابلات عليها في تطبيقات معينة.",
-      bodyEn: `<p>Halogen-free flame-retardant (HFFR) compounds are formulated to reduce the amount of halogenated material in a cable jacket or insulation layer, generally in support of applications where fire performance and smoke behavior are a priority alongside standard mechanical and electrical requirements.</p><p>An HFFR compound's fire performance is only one part of the picture. Processability, mechanical properties and consistency across production runs all need to be balanced within the same formulation, which is why Iris Polymere's HFFR range — HM-2, HM-4, HM-5, Bedding and Filler — is organized around different production and application profiles rather than a single all-purpose grade.</p><p>It's worth being clear about scope: no single compound automatically guarantees a finished cable's regulatory compliance, including CPR-related requirements. Final cable performance depends on the complete formulation, cable design, processing conditions and testing carried out on the finished product.</p><p>Manufacturers working through CPR-related or other fire-performance-focused projects are welcome to contact our technical team to discuss compound options relevant to their formulation and testing plans.</p>`,
     },
     {
       slug: "masterbatch-guide",

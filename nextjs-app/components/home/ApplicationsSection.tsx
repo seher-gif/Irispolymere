@@ -8,8 +8,8 @@ export function ApplicationsSection({ t, locale }: { t: TFunc; locale: string })
     { Icon: CableIcon, key: "home.applications.cable", href: `/${locale}/products/pvc-cable` },
     { Icon: ProfileIcon, key: "home.applications.profiles", href: `/${locale}/products/pvc-rigid` },
     { Icon: PlasticsIcon, key: "home.applications.plastics", href: `/${locale}/products/masterbatch` },
-    { Icon: PackagingIcon, key: "home.applications.packaging", href: `/${locale}/products/masterbatch-white-50` },
-    { Icon: InjectionIcon, key: "home.applications.injection", href: `/${locale}/products/masterbatch-color` },
+    { Icon: PackagingIcon, key: "home.applications.packaging", href: `/${locale}/products/masterbatch-filler` },
+    { Icon: InjectionIcon, key: "home.applications.injection", href: `/${locale}/products/masterbatch-filler` },
     { Icon: ExtrusionIcon, key: "home.applications.extrusion", href: `/${locale}/products/pvc` },
   ];
   return (
