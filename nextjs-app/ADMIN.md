@@ -91,7 +91,7 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   public page renders whatever certificates exist, no fixed set required.
 - **Pages** — per-locale meta title/description overrides for every static
   (non-blog) page: Home, Contact, Blog index, Certificates, the 5 Corporate
-  pages, the 3 product category pages, and all 15 individual product pages.
+  pages, the 2 product category pages (PVC, Filler Masterbatch), and all 4 individual product pages.
   Each page shows its dictionary-driven default copy for reference; leaving
   a field blank keeps using that default. The list shows a "Custom"/"Default"
   badge per page. Backed by the `PageMeta` table, keyed by the page's entry

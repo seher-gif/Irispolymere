@@ -5,5 +5,5 @@
 export type Banner = { url: string; altText: string | null };
 
 export const banners: Banner[] = [
-  { url: "/assets/masterbatch-banner.webp", altText: "Iris Polymere masterbatch product range — color, white, black and filler masterbatch" }
+  { url: "/assets/masterbatch-banner.webp", altText: "Iris Polymere filler masterbatch and PVC compound range" }
 ];

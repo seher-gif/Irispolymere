@@ -8,6 +8,5 @@ export const corporateLinks = [
 
 export const productLinks = [
   { key: "mega.pvc.title", descKey: "mega.pvc.desc", href: "products/pvc" },
-  { key: "mega.hffr.title", descKey: "mega.hffr.desc", href: "products/hffr" },
   { key: "mega.masterbatch.title", descKey: "mega.masterbatch.desc", href: "products/masterbatch" },
 ];

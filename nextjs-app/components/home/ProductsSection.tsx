@@ -6,7 +6,6 @@ import { Container, SectionHead } from "../ui";
 
 const ACCENTS: Record<string, string> = {
   "products/pvc": "#105191",
-  "products/hffr": "#1a63ab",
   "products/masterbatch": "#0b3a68",
 };
 
@@ -15,7 +14,7 @@ export function ProductsSection({ t, locale }: { t: TFunc; locale: string }) {
     <section className="bg-surface-alt py-16 sm:py-20">
       <Container>
         <SectionHead center title={t("home.products.title")} eyebrow={t("home.categories.eyebrow")} lead={t("home.categories.lead")} />
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
           {productLinks.map((p) => (
             <ProductCard
               key={p.href}

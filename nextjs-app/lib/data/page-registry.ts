@@ -12,7 +12,6 @@ export type PageRegistryEntry = {
 
 const CATEGORY_META: Record<string, { titleKey: string; heroKey: string }> = {
   pvc: { titleKey: "mega.pvc.title", heroKey: "pvc.hero" },
-  hffr: { titleKey: "mega.hffr.title", heroKey: "hffr.hero" },
   masterbatch: { titleKey: "mega.masterbatch.title", heroKey: "mb.hero" },
 };
 
