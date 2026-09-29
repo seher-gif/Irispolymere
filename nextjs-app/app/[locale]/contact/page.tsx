@@ -74,7 +74,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 </div>
               </div>
               <div className="flex items-center gap-4 rounded-md border border-line bg-white p-5">
-                <Image src={siteAssetOverrides["qr-code"] ?? "/brand/qr-code.png"} alt="Iris Polymere WhatsApp / contact QR code" width={72} height={72} className="rounded-sm border border-line" />
+                <Image src={siteAssetOverrides[`qr-code-${locale}`] ?? `/brand/qr-code-${locale}.png`} alt="Iris Polymere WhatsApp / contact QR code" width={72} height={72} className="rounded-sm border border-line" />
                 <div>
                   <strong className="block text-sm text-ink">{t("contact.info.qr.label")}</strong>
                   <span className="text-xs text-muted">{contactInfo.website}</span>

@@ -4,11 +4,13 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { corporatePages, corporatePagesBySlug } from "@/lib/data/corporate";
+import { corporateHeroImages } from "@/lib/data/corporate-images";
 import { buildMetadata, resolvePageMeta, buildWebPageJsonLd } from "@/lib/seo";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
 import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, CostIcon, FlaskIcon, GaugeIcon, LayersIcon, GlobeIcon } from "@/components/Icons";
 import { Container, PageHero, CTABand } from "@/components/ui";
+import Image from "next/image";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) => corporatePages.map((p) => ({ locale, slug: p.slug })));
@@ -61,7 +63,11 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
               <p className="mt-4 text-muted">{t("about.focus.p2")}</p>
             </div>
             <div className="order-1 overflow-hidden rounded-md shadow-lg lg:order-2">
-              <IndustrialVisual accent="#105191" variant="panel" className="h-full w-full" label="Replace with client-provided corporate / facility photograph" />
+              {corporateHeroImages.about ? (
+                <Image src={corporateHeroImages.about[locale]} alt={t(page.heroTitleKey)} width={1200} height={560} className="h-full w-full object-cover" />
+              ) : (
+                <IndustrialVisual accent="#105191" variant="panel" className="h-full w-full" label="Replace with client-provided corporate / facility photograph" />
+              )}
             </div>
           </Container>
         </section>

@@ -14,7 +14,7 @@ type PostData = {
   bodyEn: string; bodyFr: string | null; bodyAr: string | null;
   metaTitleEn: string | null; metaTitleFr: string | null; metaTitleAr: string | null;
   metaDescriptionEn: string | null; metaDescriptionFr: string | null; metaDescriptionAr: string | null;
-  coverImage: string | null;
+  coverImageEn: string | null; coverImageFr: string | null; coverImageAr: string | null;
   categoryId: string | null;
   published: boolean;
 };
@@ -38,7 +38,11 @@ export function PostForm({
 }) {
   const [tab, setTab] = useState<"en" | "fr" | "ar">("en");
   const [state, formAction, pending] = useActionState(action, initialState);
-  const [coverImage, setCoverImage] = useState(post?.coverImage ?? "");
+  const [coverImages, setCoverImages] = useState({
+    en: post?.coverImageEn ?? "",
+    fr: post?.coverImageFr ?? "",
+    ar: post?.coverImageAr ?? "",
+  });
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -88,6 +92,29 @@ export function PostForm({
               <RichTextEditor name={`body${cap}`} defaultValue={get("body") ?? ""} />
             </div>
 
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-bold text-ink">Cover Image</label>
+              <p className="text-xs text-muted">
+                Used both in the blog list and as the featured banner at the top of this post (roughly 21:9). This
+                photo has {l.label} text on it, so it's set per language
+                {l.required ? "" : " — leave blank to fall back to the English cover"}.
+              </p>
+              <div className="flex gap-2">
+                <input
+                  name={`coverImage${cap}`}
+                  value={coverImages[l.code]}
+                  onChange={(e) => setCoverImages((prev) => ({ ...prev, [l.code]: e.target.value }))}
+                  placeholder="/uploads/… (from Media Library)"
+                  className="flex-1 border border-line px-3 py-2.5 text-sm outline-none focus:border-brand"
+                />
+                <MediaPicker kind="image" onSelect={(url) => setCoverImages((prev) => ({ ...prev, [l.code]: url }))} label="Browse" />
+              </div>
+              {coverImages[l.code] && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={coverImages[l.code]} alt="Cover preview" className="mt-1 h-24 w-auto border border-line object-contain" />
+              )}
+            </div>
+
             <div className="mt-2 border border-dashed border-line bg-surface-alt p-4">
               <p className="mb-3 text-xs font-bold uppercase tracking-wide text-muted">
                 SEO (optional — falls back to Title / Excerpt above when blank)
@@ -107,8 +134,8 @@ export function PostForm({
         );
       })}
 
-      <div className="grid grid-cols-1 gap-4 border-t border-line pt-6 sm:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
+      <div className="border-t border-line pt-6">
+        <div className="flex max-w-xs flex-col gap-1.5">
           <label className="text-sm font-bold text-ink">Category</label>
           <select name="categoryId" defaultValue={post?.categoryId ?? ""} className="border border-line px-3 py-2.5 text-sm">
             <option value="">— None —</option>
@@ -116,24 +143,6 @@ export function PostForm({
               <option key={c.id} value={c.id}>{c.nameEn}</option>
             ))}
           </select>
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-bold text-ink">Cover Image</label>
-          <p className="text-xs text-muted">One image, used both in the blog list and as the featured banner at the top of this post. Wide photos work best (roughly 21:9).</p>
-          <div className="flex gap-2">
-            <input
-              name="coverImage"
-              value={coverImage}
-              onChange={(e) => setCoverImage(e.target.value)}
-              placeholder="/uploads/… (from Media Library)"
-              className="flex-1 border border-line px-3 py-2.5 text-sm outline-none focus:border-brand"
-            />
-            <MediaPicker kind="image" onSelect={(url) => setCoverImage(url)} label="Browse" />
-          </div>
-          {coverImage && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={coverImage} alt="Cover preview" className="mt-1 h-24 w-auto border border-line object-contain" />
-          )}
         </div>
       </div>
 

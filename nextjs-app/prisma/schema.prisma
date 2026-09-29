@@ -46,7 +46,11 @@ model Post {
   bodyFr      String?
   bodyAr      String?
 
-  coverImage  String? // relative /uploads path
+  // Locale-specific — the source photography has language text baked in.
+  // French/Arabic fall back to the English image at export time if blank.
+  coverImageEn String? // relative /uploads path
+  coverImageFr String?
+  coverImageAr String?
 
   // SEO — optional overrides. When blank, the public site falls back to
   // title / excerpt (see lib/seo.ts + the blog detail page).
@@ -89,12 +93,41 @@ model SiteAsset {
 
 // Homepage hero banners — 1 to 5, rotate on the public site. Enforced in
 // lib/actions/banners.ts (max 5 on create, min 1 on delete), not here.
+// Each banner's artwork has locale-specific text baked in, so it's uploaded
+// per language; French/Arabic fall back to the English image at export time
+// if left blank (same convention as Post's localized text fields).
 model Banner {
+  id         String   @id @default(cuid())
+  urlEn      String // relative /uploads path
+  urlFr      String?
+  urlAr      String?
+  altTextEn  String?
+  altTextFr  String?
+  altTextAr  String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+// Hero image for a corporate page (currently only "about") — locale-specific
+// like Banner, with the same English-fallback convention at export time.
+model CorporateHeroImage {
   id        String   @id @default(cuid())
-  url       String // relative /uploads path
-  altText   String?
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
+  slug      String   @unique
+  urlEn     String
+  urlFr     String?
+  urlAr     String?
+  updatedAt DateTime @updatedAt
+}
+
+// Real product photography, one image per product slug (see
+// lib/data/products.ts). Not locale-specific — these are plain product
+// shots with no on-image text. Falls back to the IndustrialVisual SVG
+// placeholder on the public site when no row exists for a slug.
+model ProductImage {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  url       String
+  updatedAt DateTime @updatedAt
 }
 
 model ContactSubmission {

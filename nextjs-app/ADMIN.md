@@ -35,7 +35,8 @@ After making changes in `/admin`, click **Export Content Now** on the
 Dashboard (runs `npm run export-content` for you), or run it yourself:
 
 ```bash
-npm run export-content   # regenerates lib/data/blog.ts and lib/data/certificates.ts
+npm run export-content   # regenerates the lib/data/*.ts files (blog, banners,
+                          # certificates, pages, site assets, product photos…)
 npm run build             # rebuilds the static site with the new content
 ```
 
@@ -47,25 +48,35 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
 - **Homepage Banners** — the images that rotate in the homepage hero. 1 to
   5 images; at least 1 is required (the last one can't be deleted), up to 5
   (upload is disabled past that). Shown full-bleed, in upload order — no
-  text, gradient or logo is placed on top of them by the site.
+  text, gradient or logo is placed on top of them by the site. Each banner
+  has its own artwork **per language** (English required, French/Arabic
+  optional — falls back to the English image if left blank), since the
+  source photography has language-specific text baked in.
+- **Product Photos** — one real photo per product (PVC and Filler
+  Masterbatch), shown on that product's detail page and its category-page
+  card. Not localized — plain product photography with no on-image text. A
+  product with no photo shows a placeholder graphic instead.
 - **Site Assets** — the brand-wide images used across the whole site: the
   header logo mark, the full logo lockup on the footer, the social-share
-  (Open Graph) image, and the Contact page QR code, plus the favicon and
-  Apple touch icon. Each has one current image (bundled default, or an
-  admin-uploaded replacement) with a "Replace" upload and, once replaced, a
-  "Reset to default" button. The favicon and Apple touch icon are a special
-  case: Next.js reads `app/icon.png` / `app/apple-icon.png` directly from
-  disk at build time, so uploading those writes straight to those files
-  (with the original backed up once, automatically, so "Reset to default"
-  has something to restore) — a **rebuild + redeploy** is required for a
-  favicon/icon change to actually appear, same as any other publish.
-  Certificate badges (ISO, REACH, RoHS…) aren't listed here — they're coded
-  as SVG icons in the site, not uploaded images.
+  (Open Graph) image, and the favicon and Apple touch icon — each with one
+  current image (bundled default, or an admin-uploaded replacement), a
+  "Replace" upload and, once replaced, a "Reset to default" button. The
+  Contact page **QR code** is the one exception: it's 3 separate slots (one
+  per language), since the QR artwork differs by language too. The favicon
+  and Apple touch icon are a special case: Next.js reads `app/icon.png` /
+  `app/apple-icon.png` directly from disk at build time, so uploading those
+  writes straight to those files (with the original backed up once,
+  automatically, so "Reset to default" has something to restore) — a
+  **rebuild + redeploy** is required for a favicon/icon change to actually
+  appear, same as any other publish. Certificate badges (ISO, REACH,
+  RoHS…) aren't listed here — they're coded as SVG icons, not images.
 - **Blog Posts** — title/excerpt/body (rich text) in English, French and
-  Arabic; category; published toggle; URL slug; and per-locale SEO meta
-  title / meta description. French/Arabic content fields fall back to the
-  English text at export time if left blank; meta title/description fall
-  back to the post's title/excerpt (in that locale) if left blank.
+  Arabic; category; published toggle; URL slug; per-locale SEO meta
+  title / meta description; and a per-locale **cover image** (used both in
+  the blog list and as the featured banner atop the post). French/Arabic
+  content and cover image fall back to the English version at export time
+  if left blank; meta title/description fall back to the post's
+  title/excerpt (in that locale) if left blank.
   - **URL Slug** is editable directly on the edit form (`/blog/<slug>`).
     Leave it blank on a new post to auto-generate from the English title.
     Changing it re-validates uniqueness and updates the post's live URL —
@@ -97,7 +108,10 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   badge per page. Backed by the `PageMeta` table, keyed by the page's entry
   in `lib/data/page-registry.ts` (e.g. `home`, `corporate/about`,
   `products/pvc-rigid`) — adding a new product or corporate page to its data
-  file automatically makes it manageable here too.
+  file automatically makes it manageable here too. The **About Us** page
+  (`/admin/pages/corporate/about`) additionally shows a **Hero Image** card
+  above its SEO fields — a full-width photo (English required, French/Arabic
+  optional with English fallback), independent of the SEO meta below it.
 - **Messages** — read-only inbox of submissions from the public Contact
   form (`/[locale]/contact`). Shows an unread-count badge in the sidebar
   and on the dashboard. Click a row to expand full details (and mark it

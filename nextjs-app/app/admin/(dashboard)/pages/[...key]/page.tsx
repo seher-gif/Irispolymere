@@ -6,6 +6,7 @@ import { tFrom } from "@/lib/i18n/t";
 import { pageRegistryByKey } from "@/lib/data/page-registry";
 import { updatePageMeta } from "@/lib/actions/pages";
 import { PageMetaForm } from "@/components/admin/PageMetaForm";
+import { CorporateHeroImageCard } from "@/components/admin/CorporateHeroImageCard";
 
 export default async function AdminPageMetaEdit({ params }: { params: Promise<{ key: string[] }> }) {
   const { key: keyParts } = await params;
@@ -13,11 +14,12 @@ export default async function AdminPageMetaEdit({ params }: { params: Promise<{ 
   const entry = pageRegistryByKey[key];
   if (!entry) notFound();
 
-  const [dictEn, dictFr, dictAr, existing] = await Promise.all([
+  const [dictEn, dictFr, dictAr, existing, heroImage] = await Promise.all([
     getDictionary("en"),
     getDictionary("fr"),
     getDictionary("ar"),
     prisma.pageMeta.findUnique({ where: { key } }),
+    key === "corporate/about" ? prisma.corporateHeroImage.findUnique({ where: { slug: "about" } }) : Promise.resolve(null),
   ]);
   const tEn = tFrom(dictEn);
   const tFr = tFrom(dictFr);
@@ -34,6 +36,12 @@ export default async function AdminPageMetaEdit({ params }: { params: Promise<{ 
       <Link href="/admin/pages" className="text-xs font-bold text-brand hover:text-brand-hover">← Back to Pages</Link>
       <h1 className="mt-2 text-2xl font-extrabold text-ink">{tEn(entry.labelKey)}</h1>
       <p className="mt-1 text-sm text-muted">/{entry.segments.join("/")}</p>
+
+      {key === "corporate/about" && (
+        <div className="mt-6 max-w-2xl">
+          <CorporateHeroImageCard slug="about" current={heroImage} />
+        </div>
+      )}
 
       <div className="mt-6 max-w-2xl">
         <PageMetaForm action={updatePageMeta.bind(null, key)} data={existing} defaults={defaults} />

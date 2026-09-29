@@ -12,7 +12,7 @@ export function BlogCard({ t, locale, post }: { t: TFunc; locale: Locale; post: 
       <div className="relative aspect-[16/10] overflow-hidden">
         {post.coverImage ? (
           <Image
-            src={post.coverImage}
+            src={post.coverImage[locale]}
             alt={post.title[locale]}
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
