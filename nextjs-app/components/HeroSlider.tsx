@@ -12,7 +12,7 @@ export function HeroSlider({ banners }: { banners: HeroBanner[] }) {
 
   useEffect(() => {
     if (banners.length <= 1) return;
-    const id = setInterval(() => setActive((a) => (a + 1) % banners.length), 7000);
+    const id = setInterval(() => setActive((a) => (a + 1) % banners.length), 3750);
     return () => clearInterval(id);
   }, [banners.length]);
 

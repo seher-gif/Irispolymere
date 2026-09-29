@@ -10,7 +10,7 @@ export default async function AdminBannersPage() {
       <h1 className="text-2xl font-extrabold text-ink">Homepage Banners</h1>
       <p className="mt-1 text-sm text-muted">
         The images that rotate in the homepage hero. Up to 5, at least 1 required. Shown full-bleed, in the order added
-        — no text or overlay is placed on top of them.
+        — no text or overlay is placed on top of them. Each rotates at a fixed pace, independent of language.
       </p>
       <div className="mt-6">
         <BannerUploadForm atMax={banners.length >= 5} />

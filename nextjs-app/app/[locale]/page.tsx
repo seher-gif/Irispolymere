@@ -31,10 +31,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
+  const heroBanners = banners.map((b) => ({ url: b.url[locale], altText: b.altText[locale] }));
 
   return (
     <>
-      <HeroSlider banners={banners} />
+      <HeroSlider banners={heroBanners} />
       <AboutSection t={t} locale={locale} />
       <ProductsSection t={t} locale={locale} />
       <BenefitsSection t={t} />

@@ -5,9 +5,19 @@ import { deleteBanner } from "@/lib/actions/banners";
 
 type BannerItem = {
   id: string;
-  url: string;
-  altText: string | null;
+  urlEn: string;
+  urlFr: string | null;
+  urlAr: string | null;
+  altTextEn: string | null;
+  altTextFr: string | null;
+  altTextAr: string | null;
 };
+
+const VARIANTS = [
+  { key: "En", label: "EN" },
+  { key: "Fr", label: "FR" },
+  { key: "Ar", label: "AR" },
+] as const;
 
 export function BannerGrid({ items }: { items: BannerItem[] }) {
   const [pending, startTransition] = useTransition();
@@ -15,7 +25,7 @@ export function BannerGrid({ items }: { items: BannerItem[] }) {
 
   function handleDelete(id: string) {
     if (!canDelete) return;
-    if (!confirm("Delete this banner? This cannot be undone.")) return;
+    if (!confirm("Delete this banner (all language versions)? This cannot be undone.")) return;
     startTransition(() => deleteBanner(id));
   }
 
@@ -23,11 +33,23 @@ export function BannerGrid({ items }: { items: BannerItem[] }) {
     <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((banner) => (
         <div key={banner.id} className="border border-line bg-white p-3">
-          <div className="mb-2 flex h-32 items-center justify-center overflow-hidden bg-surface-alt">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={banner.url} alt={banner.altText || "Homepage banner"} className="h-full w-full object-cover" />
+          <div className="grid grid-cols-3 gap-1.5">
+            {VARIANTS.map((v) => {
+              const url = (banner as never as Record<string, string | null>)[`url${v.key}`] ?? banner.urlEn;
+              const alt = (banner as never as Record<string, string | null>)[`altText${v.key}`] ?? banner.altTextEn;
+              const isFallback = v.key !== "En" && !(banner as never as Record<string, string | null>)[`url${v.key}`];
+              return (
+                <div key={v.key} className="flex flex-col gap-1">
+                  <div className="flex h-16 items-center justify-center overflow-hidden bg-surface-alt">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt={alt || "Homepage banner"} className="h-full w-full object-cover" />
+                  </div>
+                  <span className="text-center text-[10px] font-bold text-muted">{v.label}{isFallback ? " (EN)" : ""}</span>
+                </div>
+              );
+            })}
           </div>
-          <p className="truncate text-xs text-muted" title={banner.altText ?? ""}>{banner.altText || "No alt text"}</p>
+          <p className="mt-2 truncate text-xs text-muted" title={banner.altTextEn ?? ""}>{banner.altTextEn || "No alt text"}</p>
           <button
             onClick={() => handleDelete(banner.id)}
             disabled={!canDelete || pending}

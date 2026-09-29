@@ -30,13 +30,6 @@ export const siteAssetRegistry: SiteAssetSlot[] = [
     accept: "image/png",
   },
   {
-    key: "qr-code",
-    label: "QR Code",
-    hint: "Shown on the Contact page. PNG, square. Replace if contact details change.",
-    defaultUrl: "/brand/qr-code.png",
-    accept: "image/png",
-  },
-  {
     key: "favicon",
     label: "Favicon",
     hint: "Browser tab icon. PNG, exactly 512×512. Requires a rebuild + redeploy to take effect.",
@@ -51,6 +44,30 @@ export const siteAssetRegistry: SiteAssetSlot[] = [
     defaultUrl: "/apple-icon.png",
     accept: "image/png",
     buildTime: true,
+  },
+  // QR code has locale-specific text baked into the artwork, so it's one
+  // slot per language rather than a single global image (see
+  // qrCodeLocaleSlots below, used to group these 3 in the admin UI).
+  {
+    key: "qr-code-en",
+    label: "QR Code (English)",
+    hint: "Shown on the Contact page for English visitors. PNG, square.",
+    defaultUrl: "/brand/qr-code-en.png",
+    accept: "image/png",
+  },
+  {
+    key: "qr-code-fr",
+    label: "QR Code (Français)",
+    hint: "Shown on the Contact page for French visitors. PNG, square.",
+    defaultUrl: "/brand/qr-code-fr.png",
+    accept: "image/png",
+  },
+  {
+    key: "qr-code-ar",
+    label: "QR Code (العربية)",
+    hint: "Shown on the Contact page for Arabic visitors. PNG, square.",
+    defaultUrl: "/brand/qr-code-ar.png",
+    accept: "image/png",
   },
 ];
 

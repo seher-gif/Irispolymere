@@ -5,6 +5,7 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { products, productsByCategory, productsBySlug, appKeys, benKeys, type ProductCategory } from "@/lib/data/products";
+import { productImages } from "@/lib/data/product-images";
 import { buildMetadata, buildProductJsonLd, resolvePageMeta, buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
 import { ProductCard } from "@/components/ProductCard";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
@@ -85,30 +86,23 @@ function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<t
       <JsonLd data={itemListJsonLd} />
       <PageHero t={t} locale={locale} eyebrowKey={`${meta.heroKey}.eyebrow`} titleKey={`${meta.heroKey}.title`} leadKey={`${meta.heroKey}.lead`} crumbs={[{ labelKey: `mega.${category}.title` }]} />
 
-      {isMasterbatch && (
-        <section className="py-10">
-          <Container>
-            <div className="overflow-hidden rounded-md border border-line shadow-sm">
-              <Image
-                src="/assets/masterbatch-banner.webp"
-                alt="Iris Polymere masterbatch product range"
-                width={1393}
-                height={679}
-                className="h-auto w-full"
-              />
-            </div>
-          </Container>
-        </section>
-      )}
-
       <section className="py-16 sm:py-20">
         <Container>
           <p className="mx-auto mb-10 max-w-2xl text-center text-muted">{t(meta.introKey)}</p>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((p) => (
-              <ProductCard key={p.slug} t={t} href={`/${locale}/products/${p.slug}`} titleKey={p.titleKey} descKey={p.descKey} accent={p.accent} labelKey="btn.viewProduct" />
+              <ProductCard key={p.slug} t={t} href={`/${locale}/products/${p.slug}`} titleKey={p.titleKey} descKey={p.descKey} accent={p.accent} labelKey="btn.viewProduct" imageUrl={productImages[p.slug]} />
             ))}
           </div>
+          {isMasterbatch && (
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+              {["masterbatch-filler", "masterbatch-color", "masterbatch-black"].map((key) => (
+                <div key={key} className="aspect-[4/3] overflow-hidden rounded-md border border-line">
+                  <Image src={`/assets/${key}.jpg`} alt="" width={800} height={600} className="h-full w-full object-cover" />
+                </div>
+              ))}
+            </div>
+          )}
         </Container>
       </section>
 
@@ -209,7 +203,11 @@ function DetailPage({ locale, t, product }: { locale: Locale; t: ReturnType<type
             </div>
           </div>
           <div className="overflow-hidden rounded-md shadow-lg">
-            <IndustrialVisual accent={product.accent} variant="panel" className="h-full w-full" label={`Replace with client-provided ${product.slug} product visual`} />
+            {productImages[product.slug] ? (
+              <Image src={productImages[product.slug]} alt={t(product.titleKey)} width={1200} height={1200} className="h-full w-full object-cover" />
+            ) : (
+              <IndustrialVisual accent={product.accent} variant="panel" className="h-full w-full" label={`Replace with client-provided ${product.slug} product visual`} />
+            )}
           </div>
         </Container>
       </section>

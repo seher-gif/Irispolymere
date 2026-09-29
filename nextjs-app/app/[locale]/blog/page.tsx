@@ -8,6 +8,7 @@ import { buildMetadata, resolvePageMeta, buildWebPageJsonLd, buildItemListJsonLd
 import { BlogCard } from "@/components/BlogCard";
 import { JsonLd } from "@/components/JsonLd";
 import { Container, PageHero, CTABand } from "@/components/ui";
+import Image from "next/image";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -44,6 +45,13 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
       <JsonLd data={collectionPageJsonLd} />
       <JsonLd data={itemListJsonLd} />
       <PageHero t={t} locale={locale} eyebrowKey="blog.hero.eyebrow" titleKey="blog.hero.title" leadKey="blog.hero.lead" crumbs={[{ labelKey: "nav.blog" }]} />
+      <section className="py-10">
+        <Container>
+          <div className="overflow-hidden rounded-md border border-line shadow-sm">
+            <Image src="/assets/blog-banner.jpg" alt="" width={2400} height={1050} className="h-auto w-full" />
+          </div>
+        </Container>
+      </section>
       <section className="py-16 sm:py-20">
         <Container>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

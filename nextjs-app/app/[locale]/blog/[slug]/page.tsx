@@ -49,7 +49,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
     title: post.title[locale],
     description: post.excerpt[locale],
     datePublished: post.publishedAt,
-    imageUrl: post.coverImage,
+    imageUrl: post.coverImage?.[locale] ?? null,
   });
 
   return (
@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
       <Container className="relative -mt-8 aspect-[21/9] overflow-hidden shadow-lg sm:-mt-10">
         {post.coverImage ? (
           <Image
-            src={post.coverImage}
+            src={post.coverImage[locale]}
             alt={post.title[locale]}
             fill
             sizes="(min-width: 1320px) 1320px, 100vw"
