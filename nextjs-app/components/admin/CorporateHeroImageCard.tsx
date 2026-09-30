@@ -40,7 +40,7 @@ export function CorporateHeroImageCard({
         </span>
       </div>
       <p className="mt-1 text-xs text-muted">
-        Full-width photo shown on this page (roughly 21:9). Each language's photo has its own text baked in — English
+        Full-width photo shown on this page — roughly 2400×1050px (21:9). Each language's photo has its own text baked in — English
         is required, French and Arabic fall back to it if left blank.
       </p>
 
