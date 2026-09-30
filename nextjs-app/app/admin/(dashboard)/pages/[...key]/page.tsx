@@ -14,12 +14,14 @@ export default async function AdminPageMetaEdit({ params }: { params: Promise<{ 
   const entry = pageRegistryByKey[key];
   if (!entry) notFound();
 
+  const corporateSlug = key.startsWith("corporate/") ? key.slice("corporate/".length) : null;
+
   const [dictEn, dictFr, dictAr, existing, heroImage] = await Promise.all([
     getDictionary("en"),
     getDictionary("fr"),
     getDictionary("ar"),
     prisma.pageMeta.findUnique({ where: { key } }),
-    key === "corporate/about" ? prisma.corporateHeroImage.findUnique({ where: { slug: "about" } }) : Promise.resolve(null),
+    corporateSlug ? prisma.corporateHeroImage.findUnique({ where: { slug: corporateSlug } }) : Promise.resolve(null),
   ]);
   const tEn = tFrom(dictEn);
   const tFr = tFrom(dictFr);
@@ -37,9 +39,9 @@ export default async function AdminPageMetaEdit({ params }: { params: Promise<{ 
       <h1 className="mt-2 text-2xl font-extrabold text-ink">{tEn(entry.labelKey)}</h1>
       <p className="mt-1 text-sm text-muted">/{entry.segments.join("/")}</p>
 
-      {key === "corporate/about" && (
+      {corporateSlug && (
         <div className="mt-6 max-w-2xl">
-          <CorporateHeroImageCard slug="about" current={heroImage} />
+          <CorporateHeroImageCard slug={corporateSlug} current={heroImage} />
         </div>
       )}
 

@@ -54,6 +54,16 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
       <JsonLd data={webPageJsonLd} />
       <PageHero t={t} locale={locale} eyebrowKey="nav.corporate" titleKey={page.heroTitleKey} leadKey={page.heroLeadKey} crumbs={crumbs} />
 
+      {slug !== "about" && corporateHeroImages[slug] && (
+        <section className="py-10">
+          <Container>
+            <div className="overflow-hidden rounded-md border border-line shadow-sm">
+              <Image src={corporateHeroImages[slug][locale]} alt={t(page.heroTitleKey)} width={2400} height={1050} className="h-auto w-full" />
+            </div>
+          </Container>
+        </section>
+      )}
+
       {slug === "about" && (
         <section className="py-16 sm:py-20">
           <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">

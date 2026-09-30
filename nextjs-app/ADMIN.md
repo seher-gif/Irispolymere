@@ -108,10 +108,14 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   badge per page. Backed by the `PageMeta` table, keyed by the page's entry
   in `lib/data/page-registry.ts` (e.g. `home`, `corporate/about`,
   `products/pvc-rigid`) — adding a new product or corporate page to its data
-  file automatically makes it manageable here too. The **About Us** page
-  (`/admin/pages/corporate/about`) additionally shows a **Hero Image** card
-  above its SEO fields — a full-width photo (English required, French/Arabic
-  optional with English fallback), independent of the SEO meta below it.
+  file automatically makes it manageable here too. Every **Corporate** page
+  (`/admin/pages/corporate/<slug>` — About Us, Vision and Mission, Quality
+  Policy, Sustainability, Production and Technology) additionally shows a
+  **Hero Image** card above its SEO fields — a full-width photo, roughly
+  2400×1050px (21:9), English required and French/Arabic optional (falls
+  back to the English image), independent of the SEO meta below it. On the
+  public page it's optional: nothing renders there until an image is
+  uploaded, so a page with no photo yet just looks like it does today.
 - **Messages** — read-only inbox of submissions from the public Contact
   form (`/[locale]/contact`). Shows an unread-count badge in the sidebar
   and on the dashboard. Click a row to expand full details (and mark it
