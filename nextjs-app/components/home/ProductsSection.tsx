@@ -1,12 +1,20 @@
 import Link from "next/link";
 import type { TFunc } from "@/lib/i18n/t";
 import { productLinks } from "@/lib/nav-data";
+import { productImages } from "@/lib/data/product-images";
 import { ProductCard } from "../ProductCard";
 import { Container, SectionHead } from "../ui";
 
 const ACCENTS: Record<string, string> = {
   "products/pvc": "#105191",
   "products/masterbatch": "#0b3a68",
+};
+
+// Representative product photo for each category card below (categories
+// themselves have no single photo — this picks the lead product's).
+const CATEGORY_IMAGE_SLUG: Record<string, string> = {
+  "products/pvc": "pvc-rigid",
+  "products/masterbatch": "masterbatch-filler",
 };
 
 export function ProductsSection({ t, locale }: { t: TFunc; locale: string }) {
@@ -23,6 +31,7 @@ export function ProductsSection({ t, locale }: { t: TFunc; locale: string }) {
               titleKey={p.key}
               descKey={p.descKey}
               accent={ACCENTS[p.href]}
+              imageUrl={productImages[CATEGORY_IMAGE_SLUG[p.href]]}
             />
           ))}
         </div>
