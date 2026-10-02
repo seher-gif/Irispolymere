@@ -18,9 +18,13 @@ const LOCALES = [
 export function CorporateHeroImageCard({
   slug,
   current,
+  title,
+  description,
 }: {
   slug: string;
   current: { urlEn: string; urlFr: string | null; urlAr: string | null } | null;
+  title: string;
+  description: string;
 }) {
   const action = uploadCorporateHeroImage.bind(null, slug);
   const [state, formAction, pending] = useActionState(action, initialState);
@@ -34,15 +38,12 @@ export function CorporateHeroImageCard({
   return (
     <div className="border border-line bg-white p-5">
       <div className="flex items-center gap-2">
-        <h2 className="text-sm font-bold text-ink">Hero Image</h2>
+        <h2 className="text-sm font-bold text-ink">{title}</h2>
         <span className={`px-2 py-0.5 text-[11px] font-bold ${current ? "bg-green-100 text-green-700" : "bg-surface-alt text-muted"}`}>
           {current ? "Custom" : "Default"}
         </span>
       </div>
-      <p className="mt-1 text-xs text-muted">
-        Full-width photo shown on this page — roughly 2400×1050px (21:9). Each language's photo has its own text baked in — English
-        is required, French and Arabic fall back to it if left blank.
-      </p>
+      <p className="mt-1 text-xs text-muted">{description}</p>
 
       {current && (
         <div className="mt-3 grid grid-cols-3 gap-2">

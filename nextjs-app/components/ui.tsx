@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { TFunc } from "@/lib/i18n/t";
 import type { Locale } from "@/lib/i18n/config";
@@ -68,6 +69,7 @@ export function PageHero({
   titleKey,
   leadKey,
   crumbs,
+  backgroundImage,
 }: {
   t: TFunc;
   locale: string;
@@ -75,9 +77,19 @@ export function PageHero({
   titleKey: string;
   leadKey: string;
   crumbs: { labelKey: string; href?: string }[];
+  backgroundImage?: string;
 }) {
   return (
-    <section className="bg-brand-darker px-6 py-14 text-white">
+    <section className="relative isolate overflow-hidden bg-brand-darker px-6 py-14 text-white">
+      {backgroundImage && (
+        <>
+          <Image src={backgroundImage} alt="" fill priority sizes="100vw" className="-z-20 object-cover object-right rtl:object-left" />
+          <div
+            aria-hidden
+            className="absolute inset-0 -z-10 bg-gradient-to-r rtl:bg-gradient-to-l from-brand-darker/95 via-brand-darker/85 via-40% to-brand-darker/15"
+          />
+        </>
+      )}
       <Container>
         <Breadcrumb t={t} locale={locale} items={crumbs} />
         <span className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-white/70">

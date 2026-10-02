@@ -119,6 +119,17 @@ model CorporateHeroImage {
   updatedAt DateTime @updatedAt
 }
 
+// Background photo for a page's navy PageHero band (currently the 5 Corporate
+// pages, keyed by corporate slug). One image per page, not locale-specific —
+// the page title/lead are rendered on top by the site, so the artwork carries
+// no text. Falls back to the plain navy band when no row exists.
+model PageHeroImage {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  url       String
+  updatedAt DateTime @updatedAt
+}
+
 // Real product photography, one image per product slug (see
 // lib/data/products.ts). Not locale-specific — these are plain product
 // shots with no on-image text. Falls back to the IndustrialVisual SVG

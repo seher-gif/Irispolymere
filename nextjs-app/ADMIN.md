@@ -110,12 +110,17 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   `products/pvc-rigid`) — adding a new product or corporate page to its data
   file automatically makes it manageable here too. Every **Corporate** page
   (`/admin/pages/corporate/<slug>` — About Us, Vision and Mission, Quality
-  Policy, Sustainability, Production and Technology) additionally shows a
-  **Hero Image** card above its SEO fields — a full-width photo, roughly
-  2400×1050px (21:9), English required and French/Arabic optional (falls
-  back to the English image), independent of the SEO meta below it. On the
-  public page it's optional: nothing renders there until an image is
-  uploaded, so a page with no photo yet just looks like it does today.
+  Policy, Sustainability, Production and Technology) also has a **Header
+  Background Image** card above its SEO fields: a photo behind the navy
+  title band at the top of the page, **2400×600px** (4:1), JPG/WEBP/PNG, one
+  image per page (not per language). The title/text are drawn over it and a
+  dark-navy fade is added on the text side (left, or right in Arabic), so the
+  artwork should have no text/logos, a calm text-side, and its subject on the
+  opposite side within the vertical middle. Until one is uploaded the band
+  stays plain navy. **About Us** additionally has an **About Section Photo**
+  (the side photo in its body, ~2400×1050, per language), and the **Home**
+  page has an optional **About Section Photo (homepage)** — leave it empty
+  and the homepage About text is simply centered with no image.
 - **Messages** — read-only inbox of submissions from the public Contact
   form (`/[locale]/contact`). Shows an unread-count badge in the sidebar
   and on the dashboard. Click a row to expand full details (and mark it
