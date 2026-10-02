@@ -5,6 +5,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { corporatePages, corporatePagesBySlug } from "@/lib/data/corporate";
 import { corporateHeroImages } from "@/lib/data/corporate-images";
+import { pageHeroImages } from "@/lib/data/page-hero-images";
 import { buildMetadata, resolvePageMeta, buildWebPageJsonLd } from "@/lib/seo";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
 import { JsonLd } from "@/components/JsonLd";
@@ -52,17 +53,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
   return (
     <>
       <JsonLd data={webPageJsonLd} />
-      <PageHero t={t} locale={locale} eyebrowKey="nav.corporate" titleKey={page.heroTitleKey} leadKey={page.heroLeadKey} crumbs={crumbs} />
-
-      {slug !== "about" && corporateHeroImages[slug] && (
-        <section className="py-10">
-          <Container>
-            <div className="overflow-hidden rounded-md border border-line shadow-sm">
-              <Image src={corporateHeroImages[slug][locale]} alt={t(page.heroTitleKey)} width={2400} height={1050} className="h-auto w-full" />
-            </div>
-          </Container>
-        </section>
-      )}
+      <PageHero t={t} locale={locale} eyebrowKey="nav.corporate" titleKey={page.heroTitleKey} leadKey={page.heroLeadKey} crumbs={crumbs} backgroundImage={pageHeroImages[slug]} />
 
       {slug === "about" && (
         <section className="py-16 sm:py-20">

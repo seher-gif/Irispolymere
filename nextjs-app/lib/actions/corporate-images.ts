@@ -24,6 +24,11 @@ async function saveFile(file: File) {
   return `/uploads/${filename}`;
 }
 
+// "home-about" is the homepage About section's photo; every other slug is a corporate page.
+function adminPath(slug: string) {
+  return slug === "home-about" ? "/admin/pages/home" : `/admin/pages/corporate/${slug}`;
+}
+
 export type CorporateHeroUploadState = { error?: string; success?: boolean };
 
 export async function uploadCorporateHeroImage(
@@ -67,7 +72,7 @@ export async function uploadCorporateHeroImage(
     update: { urlEn, urlFr, urlAr },
   });
 
-  revalidatePath(`/admin/pages/corporate/${slug}`);
+  revalidatePath(adminPath(slug));
   return { success: true };
 }
 
@@ -82,5 +87,5 @@ export async function resetCorporateHeroImage(slug: string) {
       } catch {}
     }
   }
-  revalidatePath(`/admin/pages/corporate/${slug}`);
+  revalidatePath(adminPath(slug));
 }
