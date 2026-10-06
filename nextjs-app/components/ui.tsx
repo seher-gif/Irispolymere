@@ -40,33 +40,22 @@ export function SectionHead({
   );
 }
 
-export function Breadcrumb({
-  t,
-  locale,
-  items,
-  adaptive = false,
-}: {
-  t: TFunc;
-  locale: string;
-  items: { labelKey: string; href?: string }[];
-  // On a PageHero that shows a (light) photo at xl+, switch from white to dark text there.
-  adaptive?: boolean;
-}) {
+export function Breadcrumb({ t, locale, items }: { t: TFunc; locale: string; items: { labelKey: string; href?: string }[] }) {
   const jsonLd = buildBreadcrumbJsonLd(
     locale as Locale,
     items.map((item) => ({ name: t(item.labelKey), url: item.href ? `${SITE_URL}${item.href}` : undefined }))
   );
   return (
-    <nav aria-label="Breadcrumb" className={`mb-5 flex flex-wrap items-center gap-2 text-xs text-white/70 ${adaptive ? "xl:text-ink-soft" : ""}`}>
+    <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-2 text-xs text-white/70">
       <JsonLd data={jsonLd} />
-      <Link href={`/${locale}`} className={`font-semibold hover:text-white ${adaptive ? "xl:hover:text-brand" : ""}`}>{t("breadcrumb.home")}</Link>
+      <Link href={`/${locale}`} className="font-semibold hover:text-white">{t("breadcrumb.home")}</Link>
       {items.map((item, i) => (
         <span key={i} className="flex items-center gap-2">
           <span className="opacity-50">/</span>
           {item.href ? (
-            <Link href={item.href} className={`font-semibold hover:text-white ${adaptive ? "xl:hover:text-brand" : ""}`}>{t(item.labelKey)}</Link>
+            <Link href={item.href} className="font-semibold hover:text-white">{t(item.labelKey)}</Link>
           ) : (
-            <span className={`font-semibold text-white ${adaptive ? "xl:text-brand-darker" : ""}`}>{t(item.labelKey)}</span>
+            <span className="font-semibold text-white">{t(item.labelKey)}</span>
           )}
         </span>
       ))}
@@ -91,43 +80,37 @@ export function PageHero({
   crumbs: { labelKey: string; href?: string }[];
   backgroundImage?: ImageRef;
 }) {
+  const content = (
+    <Container className="w-full">
+      <div className="max-w-2xl rtl:ml-0 rtl:mr-auto">
+        <Breadcrumb t={t} locale={locale} items={crumbs} />
+        <span className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-white/70">
+          <span className="h-[2px] w-6 bg-white/70" />
+          {t(eyebrowKey)}
+        </span>
+        <h1 className="text-3xl font-extrabold sm:text-4xl">{t(titleKey)}</h1>
+        <p className="mt-4 text-white/80">{t(leadKey)}</p>
+      </div>
+    </Container>
+  );
+
   if (!backgroundImage) {
-    return (
-      <section className="bg-brand-darker px-6 py-14 text-white">
-        <Container>
-          <Breadcrumb t={t} locale={locale} items={crumbs} />
-          <span className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-white/70">
-            <span className="h-[2px] w-6 bg-white/70" />
-            {t(eyebrowKey)}
-          </span>
-          <h1 className="max-w-2xl text-3xl font-extrabold sm:text-4xl">{t(titleKey)}</h1>
-          <p className="mt-4 max-w-2xl text-white/80">{t(leadKey)}</p>
-        </Container>
-      </section>
-    );
+    return <section className="bg-brand-darker px-6 py-14 text-white">{content}</section>;
   }
 
-  // With a photo the artwork is never cropped or tinted. Below xl the navy title band sits
-  // on top and the photo is shown whole underneath; at xl+ the title is laid over the photo's
-  // empty (text) side in dark type, and the photo keeps its own shape (any ratio works).
+  // Photo behind the navy title band, with a navy fade on the title side (always the left —
+  // the artwork keeps its empty space there, also for Arabic, where the title block moves
+  // left to stay on it).
   return (
-    <section className="grid overflow-hidden bg-brand-darker xl:bg-white">
-      <div className="px-6 py-14 text-white xl:relative xl:z-10 xl:col-start-1 xl:row-start-1 xl:self-center xl:py-8 xl:text-brand-darker">
-        <Container>
-          <div className="max-w-2xl rtl:xl:ml-0 rtl:xl:mr-auto">
-            <Breadcrumb t={t} locale={locale} items={crumbs} adaptive />
-            <span className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-white/70 xl:text-brand">
-              <span className="h-[2px] w-6 bg-white/70 xl:bg-brand" />
-              {t(eyebrowKey)}
-            </span>
-            <h1 className="text-3xl font-extrabold sm:text-4xl">{t(titleKey)}</h1>
-            <p className="mt-4 text-white/80 xl:text-ink-soft">{t(leadKey)}</p>
-          </div>
-        </Container>
-      </div>
-      <div className="relative xl:col-start-1 xl:row-start-1 xl:self-stretch" style={{ aspectRatio: backgroundImage.width / backgroundImage.height }}>
-        <Image src={backgroundImage.src} alt="" fill priority sizes="100vw" className="object-cover" />
-      </div>
+    <section className="relative isolate grid grid-cols-1 overflow-hidden bg-brand-darker text-white">
+      <Image src={backgroundImage.src} alt="" fill priority sizes="100vw" className="-z-20 object-cover object-right" />
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(8,28,58,.97)_0%,rgba(8,28,58,.88)_38%,rgba(8,28,58,.35)_75%,rgba(8,28,58,.15)_100%)]"
+      />
+      {/* Spacer: the band is never shorter than the photo's own shape, but grows to fit the title. */}
+      <div aria-hidden className="col-start-1 row-start-1" style={{ aspectRatio: backgroundImage.width / backgroundImage.height }} />
+      <div className="col-start-1 row-start-1 self-center px-6 py-12">{content}</div>
     </section>
   );
 }
