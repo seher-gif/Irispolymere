@@ -32,7 +32,7 @@ export function Footer() {
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.1fr_2fr_1fr]">
           <div className="flex justify-center lg:justify-start">
             <Link href={home}>
-              <Image src={logoFull} alt="Iris Polymere" width={220} height={104} className="h-16 w-auto" />
+              <Image src={logoFull} alt="Iris Polymere" width={220} height={90} className="h-14 w-auto" />
             </Link>
           </div>
           <nav className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-center">

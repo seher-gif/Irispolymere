@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-surface-alt px-4">
       <div className="w-full max-w-sm border border-line bg-white p-8 shadow-sm">
         <div className="mb-6 flex flex-col items-center gap-2 text-center">
-          <Image src="/brand/logo-mark.webp" alt="Iris Polymere" width={44} height={42} className="h-10 w-auto" />
+          <Image src="/brand/logo-mark.webp" alt="Iris Polymere" width={110} height={45} className="h-12 w-auto" />
           <h1 className="text-lg font-bold text-ink">Admin Panel</h1>
           <p className="text-sm text-muted">Sign in to manage blog posts, categories, media and certificates.</p>
         </div>

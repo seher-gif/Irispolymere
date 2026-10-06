@@ -62,12 +62,8 @@ export function Header() {
 
       {/* Main nav */}
       <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-6 px-6 py-4">
-        <Link href={home} className="flex shrink-0 items-center gap-2.5">
-          <Image src={logoMark} alt="" width={40} height={38} className="h-9 w-auto" priority />
-          <span className="flex flex-col leading-none">
-            <span className="text-lg font-extrabold tracking-tight text-ink">IRIS POLYMERE</span>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand">Compound Solutions</span>
-          </span>
+        <Link href={home} className="flex shrink-0 items-center" aria-label="Iris Polymere — Compound Solutions">
+          <Image src={logoMark} alt="Iris Polymere — Compound Solutions" width={234} height={96} className="h-11 w-auto sm:h-12" priority />
         </Link>
 
         <nav className="hidden xl:flex items-center gap-8" aria-label="Primary">
@@ -129,7 +125,7 @@ export function Header() {
         <div className="fixed inset-0 z-[60] flex xl:hidden">
           <div className="w-full max-w-sm overflow-y-auto bg-white p-6 shadow-2xl">
             <div className="mb-6 flex items-center justify-between">
-              <Image src={logoMark} alt="" width={36} height={34} className="h-8 w-auto" />
+              <Image src={logoMark} alt="Iris Polymere" width={234} height={96} className="h-9 w-auto" />
               <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="flex h-9 w-9 items-center justify-center rounded-full border border-line">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M18 6L6 18M6 6l12 12" />
