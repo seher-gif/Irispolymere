@@ -28,7 +28,7 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
     <div className="flex min-h-screen bg-surface-alt">
       <aside className="flex w-60 shrink-0 flex-col border-r border-line bg-white">
         <div className="flex items-center gap-2 border-b border-line p-5">
-          <Image src="/brand/logo-mark.webp" alt="Iris Polymere" width={30} height={28} className="h-7 w-auto" />
+          <Image src="/brand/logo-mark.webp" alt="Iris Polymere" width={70} height={29} className="h-8 w-auto" />
           <span className="text-sm font-bold text-ink">Admin</span>
         </div>
         <nav className="flex-1 p-3">

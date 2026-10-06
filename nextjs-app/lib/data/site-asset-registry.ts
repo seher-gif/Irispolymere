@@ -11,14 +11,14 @@ export const siteAssetRegistry: SiteAssetSlot[] = [
   {
     key: "logo-mark",
     label: "Logo Mark",
-    hint: "The icon alone, no wordmark — shown ~36px tall in the header. PNG or WEBP, transparent, near-square (min 800×720).",
+    hint: "Header logo (icon, or icon + wordmark) — shown ~48px tall. PNG or WEBP on a transparent background; empty transparent margins are trimmed automatically, so no cropping or resizing is needed.",
     defaultUrl: "/brand/logo-mark.webp",
     accept: "image/png,image/webp",
   },
   {
     key: "logo-full",
     label: "Full Logo Lockup",
-    hint: "Icon + wordmark, white-on-transparent — sits on the navy footer. PNG or WEBP (min 2400×1140).",
+    hint: "Icon + wordmark, white-on-transparent — sits on the navy footer. PNG or WEBP; empty transparent margins are trimmed automatically, no resizing needed.",
     defaultUrl: "/brand/logo-full-white.webp",
     accept: "image/png,image/webp",
   },

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { randomUUID } from "crypto";
 import { writeFile, unlink, mkdir, copyFile, access } from "fs/promises";
 import path from "path";
+import sharp from "sharp";
 import { prisma } from "@/lib/db";
 import { siteAssetRegistryByKey } from "@/lib/data/site-asset-registry";
 
@@ -25,6 +26,35 @@ const BUILD_TIME_TARGETS: Record<string, string> = {
 
 // Backup path for the pristine bundled file, made once before the first
 // overwrite, so "Reset to default" has something real to restore.
+// Logos come in with generous transparent padding; trim it so the logo fills its box on the
+// site without anyone having to crop or resize the file. Opaque images are left untouched.
+async function trimTransparentMargins(input: Buffer, ext: string): Promise<Buffer> {
+  try {
+    const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    let minX = info.width, minY = info.height, maxX = -1, maxY = -1;
+    for (let y = 0; y < info.height; y++) {
+      for (let x = 0; x < info.width; x++) {
+        if (data[(y * info.width + x) * 4 + 3] > 8) {
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (maxX < 0) return input;
+    const width = maxX - minX + 1;
+    const height = maxY - minY + 1;
+    if (width === info.width && height === info.height) return input;
+    const cropped = sharp(input).extract({ left: minX, top: minY, width, height });
+    return ext === "png" ? await cropped.png().toBuffer() : await cropped.webp({ lossless: true }).toBuffer();
+  } catch {
+    return input;
+  }
+}
+
+const TRIMMED_KEYS = new Set(["logo-mark", "logo-full"]);
+
 function backupPath(target: string) {
   return target.replace(/\.png$/, ".default.png");
 }
@@ -59,7 +89,8 @@ export async function uploadSiteAsset(key: string, _prev: SiteAssetUploadState, 
     return { error: "This asset must be a PNG." };
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
+  let buffer: Buffer = Buffer.from(await file.arrayBuffer());
+  if (TRIMMED_KEYS.has(key)) buffer = await trimTransparentMargins(buffer, ext);
 
   await mkdir(UPLOAD_DIR, { recursive: true });
   const filename = `${randomUUID()}.${ext}`;
