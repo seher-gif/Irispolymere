@@ -13,7 +13,7 @@ export function AboutSection({ t, locale }: { t: TFunc; locale: Locale }) {
       <Container className={photo ? "grid grid-cols-1 items-center gap-10 lg:grid-cols-2" : ""}>
         {photo && (
           <div className="overflow-hidden rounded-md shadow-lg">
-            <Image src={photo[locale]} alt={t("home.about.title")} width={1200} height={560} className="h-full w-full object-cover" />
+            <Image src={photo[locale].src} alt={t("home.about.title")} width={photo[locale].width} height={photo[locale].height} sizes="(min-width: 1024px) 50vw, 100vw" className="h-auto w-full" />
           </div>
         )}
         <div className={photo ? "" : "mx-auto max-w-3xl text-center"}>

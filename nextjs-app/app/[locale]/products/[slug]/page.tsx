@@ -91,14 +91,14 @@ function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<t
           <p className="mx-auto mb-10 max-w-2xl text-center text-muted">{t(meta.introKey)}</p>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((p) => (
-              <ProductCard key={p.slug} t={t} href={`/${locale}/products/${p.slug}`} titleKey={p.titleKey} descKey={p.descKey} accent={p.accent} labelKey="btn.viewProduct" imageUrl={productImages[p.slug]} />
+              <ProductCard key={p.slug} t={t} href={`/${locale}/products/${p.slug}`} titleKey={p.titleKey} descKey={p.descKey} accent={p.accent} labelKey="btn.viewProduct" image={productImages[p.slug]} />
             ))}
           </div>
           {isMasterbatch && (
             <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
               {["masterbatch-filler", "masterbatch-color", "masterbatch-black"].map((key) => (
-                <div key={key} className="aspect-[4/3] overflow-hidden rounded-md border border-line">
-                  <Image src={`/assets/${key}.jpg`} alt="" width={800} height={600} className="h-full w-full object-cover" />
+                <div key={key} className="overflow-hidden rounded-md border border-line">
+                  <Image src={`/assets/${key}.jpg`} alt="" width={2400} height={1050} sizes="(min-width: 640px) 33vw, 100vw" className="h-auto w-full" />
                 </div>
               ))}
             </div>
@@ -202,9 +202,16 @@ function DetailPage({ locale, t, product }: { locale: Locale; t: ReturnType<type
               </Link>
             </div>
           </div>
-          <div className="overflow-hidden rounded-md shadow-lg">
+          <div className="self-start overflow-hidden rounded-md shadow-lg">
             {productImages[product.slug] ? (
-              <Image src={productImages[product.slug]} alt={t(product.titleKey)} width={1200} height={1200} className="h-full w-full object-cover" />
+              <Image
+                src={productImages[product.slug].src}
+                alt={t(product.titleKey)}
+                width={productImages[product.slug].width}
+                height={productImages[product.slug].height}
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="h-auto w-full"
+              />
             ) : (
               <IndustrialVisual accent={product.accent} variant="panel" className="h-full w-full" label={`Replace with client-provided ${product.slug} product visual`} />
             )}

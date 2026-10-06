@@ -49,7 +49,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
     title: post.title[locale],
     description: post.excerpt[locale],
     datePublished: post.publishedAt,
-    imageUrl: post.coverImage?.[locale] ?? null,
+    imageUrl: post.coverImage?.[locale].src ?? null,
   });
 
   return (
@@ -77,19 +77,24 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
         </Container>
       </section>
 
-      <Container className="relative -mt-8 aspect-[21/9] overflow-hidden shadow-lg sm:-mt-10">
-        {post.coverImage ? (
-          <Image
-            src={post.coverImage[locale]}
-            alt={post.title[locale]}
-            fill
-            sizes="(min-width: 1320px) 1320px, 100vw"
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <IndustrialVisual accent="#105191" variant="panel" className="h-full w-full" />
-        )}
+      <Container className="relative -mt-8 sm:-mt-10">
+        <div className="overflow-hidden shadow-lg">
+          {post.coverImage ? (
+            <Image
+              src={post.coverImage[locale].src}
+              alt={post.title[locale]}
+              width={post.coverImage[locale].width}
+              height={post.coverImage[locale].height}
+              sizes="(min-width: 1320px) 1272px, 100vw"
+              className="h-auto w-full"
+              priority
+            />
+          ) : (
+            <div className="aspect-[21/9]">
+              <IndustrialVisual accent="#105191" variant="panel" className="h-full w-full" />
+            </div>
+          )}
+        </div>
       </Container>
 
       <section className="py-16 sm:py-20">

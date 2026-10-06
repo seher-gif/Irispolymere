@@ -40,9 +40,9 @@ export function BannerGrid({ items }: { items: BannerItem[] }) {
               const isFallback = v.key !== "En" && !(banner as never as Record<string, string | null>)[`url${v.key}`];
               return (
                 <div key={v.key} className="flex flex-col gap-1">
-                  <div className="flex h-16 items-center justify-center overflow-hidden bg-surface-alt">
+                  <div className="overflow-hidden bg-surface-alt">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={url} alt={alt || "Homepage banner"} className="h-full w-full object-cover" />
+                    <img src={url} alt={alt || "Homepage banner"} className="block h-auto w-full" />
                   </div>
                   <span className="text-center text-[10px] font-bold text-muted">{v.label}{isFallback ? " (EN)" : ""}</span>
                 </div>

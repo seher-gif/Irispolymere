@@ -31,7 +31,8 @@ export function BannerUploadForm({ atMax }: { atMax: boolean }) {
     <form ref={formRef} action={formAction} className="flex flex-col gap-4 border border-line bg-white p-4">
       <p className="text-xs text-muted">
         Each banner's artwork has its own language-specific text, so upload it per language. English is required —
-        French and Arabic fall back to the English image if left blank.
+        French and Arabic fall back to the English image if left blank. Upload at original size (recommended
+        2400×1050px): banners are shown whole and fit every screen automatically, nothing is cropped.
       </p>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {LOCALES.map((l) => (

@@ -51,9 +51,9 @@ export function CorporateHeroImageCard({
             const url = (current as never as Record<string, string | null>)[`url${l.code}`] ?? current.urlEn;
             return (
               <div key={l.code} className="flex flex-col gap-1">
-                <div className="flex h-16 items-center justify-center overflow-hidden border border-line bg-surface-alt">
+                <div className="overflow-hidden border border-line bg-surface-alt">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt={`${l.label} hero`} className="h-full w-full object-cover" />
+                  <img src={url} alt={`${l.label} photo`} className="block h-auto w-full" />
                 </div>
                 <span className="text-center text-[10px] font-bold text-muted">{l.label}</span>
               </div>

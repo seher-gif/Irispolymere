@@ -9,17 +9,20 @@ import { CardLink } from "./ui";
 export function BlogCard({ t, locale, post }: { t: TFunc; locale: Locale; post: BlogPost }) {
   return (
     <Link href={`/${locale}/blog/${post.slug}`} className="group flex h-full flex-col overflow-hidden border border-line bg-white transition-colors hover:border-brand">
-      <div className="relative aspect-[16/10] overflow-hidden">
+      <div className="overflow-hidden">
         {post.coverImage ? (
           <Image
-            src={post.coverImage[locale]}
+            src={post.coverImage[locale].src}
             alt={post.title[locale]}
-            fill
+            width={post.coverImage[locale].width}
+            height={post.coverImage[locale].height}
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-auto w-full transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <IndustrialVisual accent="#105191" variant="card" className="h-full w-full" />
+          <div className="aspect-[16/10]">
+            <IndustrialVisual accent="#105191" variant="card" className="h-full w-full" />
+          </div>
         )}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-6">

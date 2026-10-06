@@ -31,7 +31,7 @@ export function ProductsSection({ t, locale }: { t: TFunc; locale: string }) {
               titleKey={p.key}
               descKey={p.descKey}
               accent={ACCENTS[p.href]}
-              imageUrl={productImages[CATEGORY_IMAGE_SLUG[p.href]]}
+              image={productImages[CATEGORY_IMAGE_SLUG[p.href]]}
             />
           ))}
         </div>

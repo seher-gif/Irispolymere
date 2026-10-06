@@ -24,15 +24,17 @@ export function PageHeroImageCard({ slug, currentUrl }: { slug: string; currentU
         </span>
       </div>
       <p className="mt-1 text-xs text-muted">
-        Photo behind the navy title area at the top of this page — <strong>2400×600px</strong> (4:1), JPG/WEBP/PNG.
-        The title and text are placed on top automatically, so keep the artwork free of text/logos, the left ~55%
-        calm (a dark-navy fade is added there), the subject on the right, and key content within the vertical middle.
+        Photo for the title area at the top of this page. Upload it at its original size — recommended{" "}
+        <strong>2400×600px</strong> (4:1), JPG/WEBP/PNG, but any size works: the site shows the whole image, never
+        cropped or tinted, and fits it to every screen (no resizing needed). On large screens the page title is
+        placed over the image, so leave its left side empty/light for the text; on phones and tablets the title sits
+        above the image.
       </p>
 
       {currentUrl && (
-        <div className="mt-3 h-24 w-full overflow-hidden border border-line bg-brand-darker">
+        <div className="mt-3 w-full overflow-hidden border border-line bg-surface-alt">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={currentUrl} alt="Header background" className="h-full w-full object-cover object-right" />
+          <img src={currentUrl} alt="Header background" className="block h-auto w-full" />
         </div>
       )}
 
