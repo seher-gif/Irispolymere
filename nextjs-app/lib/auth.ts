@@ -1,7 +1,7 @@
 import "server-only";
 import bcrypt from "bcryptjs";
 import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 const SESSION_COOKIE = "iris_admin_session";
 const SESSION_DURATION = 60 * 60 * 24 * 7; // 7 days, in seconds
@@ -32,10 +32,14 @@ export async function createSession(payload: SessionPayload) {
     .setExpirationTime(`${SESSION_DURATION}s`)
     .sign(getSecretKey());
 
+  // Mark the cookie Secure only when the request really came over HTTPS. Keying this on
+  // NODE_ENV broke login in Safari for a local production run (`npm start` on
+  // http://localhost): Safari discards Secure cookies on plain http, Chrome doesn't.
+  const proto = (await headers()).get("x-forwarded-proto") ?? "http";
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: proto === "https",
     sameSite: "lax",
     maxAge: SESSION_DURATION,
     path: "/",
