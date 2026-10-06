@@ -2,29 +2,29 @@
 // Source of truth: the local admin database (/admin/banners). Re-run the
 // export after publishing changes there, then rebuild and redeploy.
 
-import type { LocalizedText } from "./blog";
+import type { LocalizedImage } from "./image-types";
 
-export type Banner = { url: LocalizedText; altText: { en: string | null; fr: string | null; ar: string | null } };
+export type Banner = { url: LocalizedImage; altText: { en: string | null; fr: string | null; ar: string | null } };
 
 export const banners: Banner[] = [
   {
-    url: { en: `/uploads/bb9486d5-178f-40df-b5bf-b1ba551ae68e.jpg`, fr: `/uploads/2cb58cfe-6340-4e2a-8c50-be4ae38aa813.jpg`, ar: `/uploads/a57e31e2-0ac9-48ad-9ae4-60370cfe4d27.jpg` },
+    url: { en: { src: "/uploads/bb9486d5-178f-40df-b5bf-b1ba551ae68e.jpg", width: 2400, height: 1050 }, fr: { src: "/uploads/2cb58cfe-6340-4e2a-8c50-be4ae38aa813.jpg", width: 2400, height: 1050 }, ar: { src: "/uploads/a57e31e2-0ac9-48ad-9ae4-60370cfe4d27.jpg", width: 2400, height: 1050 } },
     altText: { en: "Compound & Masterbatch Solutions — made to perform, formulated to last", fr: "Compound & Masterbatch Solutions — made to perform, formulated to last", ar: "Compound & Masterbatch Solutions — made to perform, formulated to last" },
   },
   {
-    url: { en: `/uploads/d9dbd7c0-f6a0-425f-b5ff-2d04fca367e5.png`, fr: `/uploads/79893610-4844-42d3-bd2d-7448f037ffc5.png`, ar: `/uploads/4e9ba76e-5d81-48b2-8f0a-f73a44153748.png` },
+    url: { en: { src: "/uploads/d9dbd7c0-f6a0-425f-b5ff-2d04fca367e5.png", width: 2400, height: 1050 }, fr: { src: "/uploads/79893610-4844-42d3-bd2d-7448f037ffc5.png", width: 2400, height: 1050 }, ar: { src: "/uploads/4e9ba76e-5d81-48b2-8f0a-f73a44153748.png", width: 2400, height: 1050 } },
     altText: { en: "Shaping a stronger tomorrow — our compound range", fr: "Shaping a stronger tomorrow — our compound range", ar: "Shaping a stronger tomorrow — our compound range" },
   },
   {
-    url: { en: `/uploads/ec77a769-ec75-4149-b3db-ce78b7117e4c.jpg`, fr: `/uploads/f110c929-c587-476d-90cc-5e3c4d2b667f.jpg`, ar: `/uploads/842f29ce-f381-4373-ba52-87411c8cbee6.jpg` },
+    url: { en: { src: "/uploads/ec77a769-ec75-4149-b3db-ce78b7117e4c.jpg", width: 2400, height: 1050 }, fr: { src: "/uploads/f110c929-c587-476d-90cc-5e3c4d2b667f.jpg", width: 2400, height: 1050 }, ar: { src: "/uploads/842f29ce-f381-4373-ba52-87411c8cbee6.jpg", width: 2400, height: 1050 } },
     altText: { en: "Compound solutions for a sustainable tomorrow", fr: "Compound solutions for a sustainable tomorrow", ar: "Compound solutions for a sustainable tomorrow" },
   },
   {
-    url: { en: `/uploads/2026866a-6b57-487f-99e0-ef3e8f31de37.png`, fr: `/uploads/095dbb8a-7d8c-42df-920c-cb31cc17b447.png`, ar: `/uploads/f3aa15fc-e59f-46a9-814f-210128c987e4.png` },
+    url: { en: { src: "/uploads/2026866a-6b57-487f-99e0-ef3e8f31de37.png", width: 2400, height: 1050 }, fr: { src: "/uploads/095dbb8a-7d8c-42df-920c-cb31cc17b447.png", width: 2400, height: 1050 }, ar: { src: "/uploads/f3aa15fc-e59f-46a9-814f-210128c987e4.png", width: 2400, height: 1050 } },
     altText: { en: "Polymere compound solutions — made to perform, formulated to last", fr: "Polymere compound solutions — made to perform, formulated to last", ar: "Polymere compound solutions — made to perform, formulated to last" },
   },
   {
-    url: { en: `/uploads/5df961ec-f24d-4323-a1a6-6e63c410d3bc.jpg`, fr: `/uploads/e703d80a-3488-4d49-a9aa-6b69a4b02bea.jpg`, ar: `/uploads/d63c5ede-27e3-44b7-929c-f16c7911fbfa.jpg` },
+    url: { en: { src: "/uploads/5df961ec-f24d-4323-a1a6-6e63c410d3bc.jpg", width: 2400, height: 1050 }, fr: { src: "/uploads/e703d80a-3488-4d49-a9aa-6b69a4b02bea.jpg", width: 2400, height: 1050 }, ar: { src: "/uploads/d63c5ede-27e3-44b7-929c-f16c7911fbfa.jpg", width: 2400, height: 1050 } },
     altText: { en: "Shaping a stronger tomorrow", fr: "Shaping a stronger tomorrow", ar: "Shaping a stronger tomorrow" },
   }
 ];

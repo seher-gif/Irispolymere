@@ -95,7 +95,7 @@ export function PostForm({
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-ink">Cover Image</label>
               <p className="text-xs text-muted">
-                Used both in the blog list and as the featured banner at the top of this post (roughly 21:9). This
+                Used both in the blog list and as the featured banner at the top of this post. Upload at original size (recommended 2400×1050px) — it is shown whole and fits every screen, nothing is cropped. This
                 photo has {l.label} text on it, so it's set per language
                 {l.required ? "" : " — leave blank to fall back to the English cover"}.
               </p>

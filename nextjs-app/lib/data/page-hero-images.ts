@@ -2,6 +2,12 @@
 // Source of truth: the local admin database (/admin/pages/corporate/*). Re-run
 // the export after publishing changes there, then rebuild and redeploy.
 
-export const pageHeroImages: Record<string, string> = {
+import type { ImageRef } from "./image-types";
 
+export const pageHeroImages: Record<string, ImageRef> = {
+  "about": { src: "/uploads/ccf2c545-eeb5-48e4-a24d-803b63f1c2c4.jpg", width: 2400, height: 600 },
+  "vision-mission": { src: "/uploads/d86b0af7-01de-4b7f-ba99-ee335f936fc8.jpg", width: 2400, height: 600 },
+  "quality": { src: "/uploads/3b6755a2-8f6b-46a7-85eb-450d5626c585.jpg", width: 2400, height: 600 },
+  "sustainability": { src: "/uploads/56e26c71-d91e-409e-a2bd-e4b4063848a1.jpg", width: 2400, height: 600 },
+  "production": { src: "/uploads/20f90644-6a99-4e2b-b795-b66dccda9f8d.jpg", width: 2400, height: 600 }
 };

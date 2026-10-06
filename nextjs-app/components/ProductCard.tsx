@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { TFunc } from "@/lib/i18n/t";
+import type { ImageRef } from "@/lib/data/image-types";
 import { IndustrialVisual } from "./IndustrialVisual";
 import { CardLink } from "./ui";
 
@@ -11,7 +12,7 @@ export function ProductCard({
   descKey,
   accent,
   labelKey,
-  imageUrl,
+  image,
 }: {
   t: TFunc;
   href: string;
@@ -19,15 +20,24 @@ export function ProductCard({
   descKey: string;
   accent: string;
   labelKey?: string;
-  imageUrl?: string;
+  image?: ImageRef;
 }) {
   return (
     <Link href={href} className="group flex h-full flex-col overflow-hidden border border-line bg-white transition-colors hover:border-brand">
-      <div className="relative aspect-[16/10] overflow-hidden">
-        {imageUrl ? (
-          <Image src={imageUrl} alt={t(titleKey)} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-300 group-hover:scale-105" />
+      <div className="overflow-hidden">
+        {image ? (
+          <Image
+            src={image.src}
+            alt={t(titleKey)}
+            width={image.width}
+            height={image.height}
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="h-auto w-full transition-transform duration-300 group-hover:scale-105"
+          />
         ) : (
-          <IndustrialVisual accent={accent} variant="card" className="h-full w-full" />
+          <div className="aspect-[16/10]">
+            <IndustrialVisual accent={accent} variant="card" className="h-full w-full" />
+          </div>
         )}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-6">

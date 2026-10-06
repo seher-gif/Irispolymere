@@ -57,8 +57,8 @@ export default async function AdminPageMetaEdit({ params }: { params: Promise<{ 
             title={sideImageSlug === "home-about" ? "About Section Photo (homepage)" : "About Section Photo"}
             description={
               sideImageSlug === "home-about"
-                ? "Optional photo shown beside the About text on the homepage, roughly 2400×1050px. Leave empty and the text is simply centered. Each language's photo can carry its own text — English is required, French/Arabic fall back to it."
-                : "Photo beside the text in this page's body section, roughly 2400×1050px. Each language's photo can carry its own text — English is required, French/Arabic fall back to it."
+                ? "Optional photo shown beside the About text on the homepage. Upload at original size (recommended 2400×1050px) — it is shown whole and fits every screen, no resizing needed. Leave empty and the text is simply centered. Each language's photo can carry its own text — English is required, French/Arabic fall back to it."
+                : "Photo beside the text in this page's body section. Upload at original size (recommended 2400×1050px) — it is shown whole and fits every screen, no resizing needed. Each language's photo can carry its own text — English is required, French/Arabic fall back to it."
             }
           />
         </div>

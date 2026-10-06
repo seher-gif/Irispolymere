@@ -65,7 +65,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
             </div>
             <div className="order-1 overflow-hidden rounded-md shadow-lg lg:order-2">
               {corporateHeroImages.about ? (
-                <Image src={corporateHeroImages.about[locale]} alt={t(page.heroTitleKey)} width={1200} height={560} className="h-full w-full object-cover" />
+                <Image src={corporateHeroImages.about[locale].src} alt={t(page.heroTitleKey)} width={corporateHeroImages.about[locale].width} height={corporateHeroImages.about[locale].height} sizes="(min-width: 1024px) 50vw, 100vw" className="h-auto w-full" />
               ) : (
                 <IndustrialVisual accent="#105191" variant="panel" className="h-full w-full" label="Replace with client-provided corporate / facility photograph" />
               )}

@@ -111,16 +111,30 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   file automatically makes it manageable here too. Every **Corporate** page
   (`/admin/pages/corporate/<slug>` — About Us, Vision and Mission, Quality
   Policy, Sustainability, Production and Technology) also has a **Header
-  Background Image** card above its SEO fields: a photo behind the navy
-  title band at the top of the page, **2400×600px** (4:1), JPG/WEBP/PNG, one
-  image per page (not per language). The title/text are drawn over it and a
-  dark-navy fade is added on the text side (left, or right in Arabic), so the
-  artwork should have no text/logos, a calm text-side, and its subject on the
-  opposite side within the vertical middle. Until one is uploaded the band
-  stays plain navy. **About Us** additionally has an **About Section Photo**
-  (the side photo in its body, ~2400×1050, per language), and the **Home**
-  page has an optional **About Section Photo (homepage)** — leave it empty
-  and the homepage About text is simply centered with no image.
+  Background Image** card above its SEO fields: a photo for the page's title
+  band, one image per page (not per language). Recommended 2400×600px (4:1)
+  but any size works. On screens ≥1280px the title is laid over the photo's
+  empty (left) side in dark type — the photo is shown whole and untinted;
+  on tablets/phones the navy title band sits on top and the photo is shown
+  whole underneath. Until one is uploaded the band stays plain navy.
+  **About Us** additionally has an **About Section Photo** (the side photo in
+  its body, per language), and the **Home** page has an optional **About
+  Section Photo (homepage)** — leave it empty and the homepage About text is
+  simply centered with no image.
+
+### Images fit themselves — no resizing needed
+
+Every uploaded image (homepage banners, blog covers, product photos, Corporate
+header/side photos) is shown at its **own shape, whole, never cropped** — wide,
+square or tall all work, on every device. The recommended sizes in the admin
+are just what the designs were made at, not requirements. How: `npm run
+export-content` reads each uploaded file's real pixel size (via `sharp`) and
+writes it next to the URL in `lib/data/*.ts` (`{ src, width, height }`), and
+the pages render with that ratio. So after uploading in the admin, run the
+export (the dashboard button) like for any other content change. The
+homepage slider takes the shape of the tallest banner; banners of the same
+shape (the normal case) fill it exactly, a differently shaped one is
+centered on navy rather than cropped.
 - **Messages** — read-only inbox of submissions from the public Contact
   form (`/[locale]/contact`). Shows an unread-count badge in the sidebar
   and on the dashboard. Click a row to expand full details (and mark it

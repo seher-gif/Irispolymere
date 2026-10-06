@@ -31,7 +31,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
-  const heroBanners = banners.map((b) => ({ url: b.url[locale], altText: b.altText[locale] }));
+  const heroBanners = banners.map((b) => ({ ...b.url[locale], altText: b.altText[locale] }));
 
   return (
     <>

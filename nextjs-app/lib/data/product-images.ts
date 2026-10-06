@@ -2,9 +2,11 @@
 // Source of truth: the local admin database (/admin/product-images). Re-run
 // the export after publishing changes there, then rebuild and redeploy.
 
-export const productImages: Record<string, string> = {
-  "pvc-rigid": "/uploads/d973cd38-e143-47c4-bd77-1b42244be0d6.jpg",
-  "pvc-flexible": "/uploads/4c3d587e-91bb-484d-bebe-be84029b85b2.jpg",
-  "pvc-cable": "/uploads/892723ef-2da1-4c00-aba3-6594ff0f2af5.jpg",
-  "masterbatch-filler": "/uploads/e7c187cb-ba62-4e80-ae06-088d4a86fb3c.jpg"
+import type { ImageRef } from "./image-types";
+
+export const productImages: Record<string, ImageRef> = {
+  "pvc-rigid": { src: "/uploads/d973cd38-e143-47c4-bd77-1b42244be0d6.jpg", width: 2400, height: 1050 },
+  "pvc-flexible": { src: "/uploads/4c3d587e-91bb-484d-bebe-be84029b85b2.jpg", width: 2400, height: 1050 },
+  "pvc-cable": { src: "/uploads/892723ef-2da1-4c00-aba3-6594ff0f2af5.jpg", width: 2400, height: 1050 },
+  "masterbatch-filler": { src: "/uploads/e7c187cb-ba62-4e80-ae06-088d4a86fb3c.jpg", width: 2400, height: 1050 }
 };

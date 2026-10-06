@@ -40,7 +40,7 @@ export function ProductImageCard({
             {currentUrl ? "Custom" : "Placeholder"}
           </span>
         </div>
-        <p className="mt-1 text-xs text-muted">Shown on this product's detail page. PNG, JPG or WEBP.</p>
+        <p className="mt-1 text-xs text-muted">Shown on this product's page and card at its original shape — any size works (recommended 2400×1050px), no cropping or resizing needed. PNG, JPG or WEBP.</p>
 
         <form ref={formRef} action={formAction} className="mt-3 flex flex-wrap items-center gap-3">
           <input type="file" name="file" required accept="image/png,image/jpeg,image/webp" className="text-xs" />
