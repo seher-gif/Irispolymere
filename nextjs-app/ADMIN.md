@@ -113,10 +113,12 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   Policy, Sustainability, Production and Technology) also has a **Header
   Background Image** card above its SEO fields: a photo for the page's title
   band, one image per page (not per language). Recommended 2400×600px (4:1)
-  but any size works. On screens ≥1280px the title is laid over the photo's
-  empty (left) side in dark type — the photo is shown whole and untinted;
-  on tablets/phones the navy title band sits on top and the photo is shown
-  whole underneath. Until one is uploaded the band stays plain navy.
+  but any size works. The page title is white text over the photo with a
+  dark-navy fade on its left side (the artwork keeps that side empty; the
+  title block moves left in Arabic too), and the subject on the right. The
+  band is at least the photo's own shape, so on wide screens the whole image
+  shows; on narrow screens only its empty left edge is trimmed. Until one is
+  uploaded the band stays plain navy.
   **About Us** additionally has an **About Section Photo** (the side photo in
   its body, per language), and the **Home** page has an optional **About
   Section Photo (homepage)** — leave it empty and the homepage About text is

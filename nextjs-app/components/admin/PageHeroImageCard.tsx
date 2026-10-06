@@ -24,11 +24,10 @@ export function PageHeroImageCard({ slug, currentUrl }: { slug: string; currentU
         </span>
       </div>
       <p className="mt-1 text-xs text-muted">
-        Photo for the title area at the top of this page. Upload it at its original size — recommended{" "}
-        <strong>2400×600px</strong> (4:1), JPG/WEBP/PNG, but any size works: the site shows the whole image, never
-        cropped or tinted, and fits it to every screen (no resizing needed). On large screens the page title is
-        placed over the image, so leave its left side empty/light for the text; on phones and tablets the title sits
-        above the image.
+        Photo behind the navy title area at the top of this page. Upload it at its original size — recommended{" "}
+        <strong>2400×600px</strong> (4:1), JPG/WEBP/PNG, but any size works and no resizing is needed. The title is
+        white text over the image's left side with a dark-navy fade added there, so keep the left ~55% calm and the
+        subject on the right; on narrow screens only the empty left edge is trimmed.
       </p>
 
       {currentUrl && (
