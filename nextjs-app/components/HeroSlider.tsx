@@ -17,13 +17,14 @@ export function HeroSlider({ banners }: { banners: HeroBanner[] }) {
   }, [banners.length]);
 
   // The slider takes the shape of the tallest banner (lowest width/height), so every
-  // banner is shown whole — nothing is cropped at any screen width. Banners of the
-  // same shape (the normal case) fill it exactly; a differently shaped one is
-  // centred on the navy background.
+  // banner is shown whole — nothing is cropped at any screen width. Its height is also
+  // capped to what's left of the screen under the sticky header, so the whole banner is
+  // visible on first load; on short screens it shrinks to fit and the side margins are
+  // filled with a blurred copy of the banner itself.
   const aspectRatio = Math.min(...banners.map((b) => b.width / b.height));
 
   return (
-    <section className="relative w-full overflow-hidden bg-brand-darker" style={{ aspectRatio }}>
+    <section className="relative w-full overflow-hidden bg-brand-darker max-h-[calc(100svh-5rem)] md:max-h-[calc(100svh-7.5rem)]" style={{ aspectRatio }}>
       {/* Admin-managed banner images (see /admin/banners): shown as-is, full
           bleed, no gradient scrim or text layered on top of them. */}
       <h1 className="sr-only">{t("hero.slide1.title")}</h1>
@@ -34,6 +35,14 @@ export function HeroSlider({ banners }: { banners: HeroBanner[] }) {
           aria-hidden={i !== active}
           className={`absolute inset-0 transition-opacity duration-700 ${i === active ? "opacity-100" : "pointer-events-none opacity-0"}`}
         >
+          <Image
+            src={banner.src}
+            alt=""
+            aria-hidden
+            fill
+            sizes="25vw"
+            className="scale-110 object-cover opacity-70 blur-2xl"
+          />
           <Image
             src={banner.src}
             alt={banner.altText || t("hero.slide1.eyebrow")}
