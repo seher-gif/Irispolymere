@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { corporateLinks, productLinks } from "@/lib/nav-data";
+import { corporateLinks } from "@/lib/nav-data";
 import { useI18n } from "./providers/i18n-provider";
 
 function SocialIcon({ path }: { path: string }) {
@@ -20,7 +20,7 @@ const SOCIAL = [
   { label: "X", href: "#", path: "M4 4l7.1 9.5L4.3 20h1.9l6-6.6 4.9 6.6h4l-7.4-9.9L19.7 4h-1.9l-5.6 6.1L8 4H4zm2.9 1.5h1.8l9.4 12.9h-1.8L6.9 5.5z" },
 ];
 
-export function Footer({ logoSrc }: { logoSrc: string }) {
+export function Footer({ logoSrc, productLinks }: { logoSrc: string; productLinks: { key: string; href: string }[] }) {
   const { locale, t } = useI18n();
   const home = `/${locale}`;
   const logoFull = logoSrc;
@@ -37,7 +37,9 @@ export function Footer({ logoSrc }: { logoSrc: string }) {
           <nav className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-center">
             <Link href={home} className="text-sm font-semibold text-white/90 hover:text-white">{t("nav.home")}</Link>
             <Link href={`${home}/corporate/about`} className="text-sm font-semibold text-white/90 hover:text-white">{t("nav.corporate.about")}</Link>
-            <Link href={`${home}/products/pvc`} className="text-sm font-semibold text-white/90 hover:text-white">{t("nav.products")}</Link>
+            {productLinks.length > 0 && (
+              <Link href={`${home}/${productLinks[0].href}`} className="text-sm font-semibold text-white/90 hover:text-white">{t("nav.products")}</Link>
+            )}
             <Link href={`${home}/certificates`} className="text-sm font-semibold text-white/90 hover:text-white">{t("nav.certificates")}</Link>
             <Link href={`${home}/blog`} className="text-sm font-semibold text-white/90 hover:text-white">{t("nav.blog")}</Link>
             <Link href={`${home}/contact`} className="text-sm font-semibold text-white/90 hover:text-white">{t("nav.contact")}</Link>

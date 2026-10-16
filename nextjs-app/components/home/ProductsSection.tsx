@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { TFunc } from "@/lib/i18n/t";
 import { productLinks } from "@/lib/nav-data";
-import { getProductImages } from "@/lib/content";
+import { filterProductLinks } from "@/lib/data/visibility";
+import { getProductImages, getHiddenProductPages } from "@/lib/content";
 import { ProductCard } from "../ProductCard";
 import { Container, SectionHead } from "../ui";
 
@@ -20,13 +21,15 @@ const CATEGORY_IMAGE_SLUG: Record<string, string> = {
 };
 
 export async function ProductsSection({ t, locale }: { t: TFunc; locale: string }) {
-  const productImages = await getProductImages();
+  const [productImages, hidden] = await Promise.all([getProductImages(), getHiddenProductPages()]);
+  const links = filterProductLinks(productLinks, hidden);
+  if (links.length === 0) return null;
   return (
     <section className="bg-surface-alt py-16 sm:py-20">
       <Container>
         <SectionHead center title={t("home.products.title")} eyebrow={t("home.categories.eyebrow")} lead={t("home.categories.lead")} />
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {productLinks.map((p) => (
+          {links.map((p) => (
             <ProductCard
               key={p.href}
               t={t}
@@ -39,7 +42,7 @@ export async function ProductsSection({ t, locale }: { t: TFunc; locale: string 
           ))}
         </div>
         <div className="mt-10 text-center">
-          <Link href={`/${locale}/products/pvc`} className="inline-block rounded-sm bg-brand px-7 py-3 text-sm font-bold text-white hover:bg-brand-hover">
+          <Link href={`/${locale}/${links[0].href}`} className="inline-block rounded-sm bg-brand px-7 py-3 text-sm font-bold text-white hover:bg-brand-hover">
             {t("nav.allProducts")}
           </Link>
         </div>
