@@ -1,11 +1,12 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/config";
 import type { TFunc } from "@/lib/i18n/t";
-import { blogPosts } from "@/lib/data/blog";
+import { getBlogPosts } from "@/lib/content";
 import { BlogCard } from "../BlogCard";
 import { Container, SectionHead } from "../ui";
 
-export function BlogSection({ t, locale }: { t: TFunc; locale: Locale }) {
+export async function BlogSection({ t, locale }: { t: TFunc; locale: Locale }) {
+  const blogPosts = await getBlogPosts();
   return (
     <section className="bg-surface-alt py-16 sm:py-20">
       <Container>

@@ -1,4 +1,4 @@
-export type ProductCategory = "pvc" | "masterbatch";
+export type ProductCategory = "pvc" | "masterbatch" | "color-masterbatch";
 
 export type Product = {
   slug: string;
@@ -30,6 +30,10 @@ export const products: Product[] = [
     titleKey: "pvc.cable.title", descKey: "pvc.cable.desc", accent: "#0b3a68", appCount: 5, benCount: 5,
   },
   {
+    slug: "masterbatch-color", category: "color-masterbatch", categoryHref: "products/color-masterbatch", categoryTitleKey: "mega.colormb.title",
+    titleKey: "mb.color.title", descKey: "mb.color.desc", accent: "#105191", appCount: 5, benCount: 5,
+  },
+  {
     slug: "masterbatch-filler", category: "masterbatch", categoryHref: "products/masterbatch", categoryTitleKey: "mega.masterbatch.title",
     titleKey: "mb.filler.title", descKey: "mb.filler.desc", subtitleKey: "mb.filler.subtitle",
     formulationKey: "mb.filler.formulation", noteKey: "mb.filler.note",
@@ -41,6 +45,7 @@ export const productsBySlug = Object.fromEntries(products.map((p) => [p.slug, p]
 export const productsByCategory: Record<ProductCategory, Product[]> = {
   pvc: products.filter((p) => p.category === "pvc"),
   masterbatch: products.filter((p) => p.category === "masterbatch"),
+  "color-masterbatch": products.filter((p) => p.category === "color-masterbatch"),
 };
 
 export function appKeys(p: Product) {

@@ -1,13 +1,13 @@
 "use client";
 
-import { useActionState, useTransition, useRef, useEffect } from "react";
+import {useTransition, useRef, useEffect} from "react";
+import { useUploadAction } from "./UploadMode";
 import { uploadPageHeroImage, resetPageHeroImage, type PageHeroUploadState } from "@/lib/actions/page-hero-images";
 
-const initialState: PageHeroUploadState = {};
 
 export function PageHeroImageCard({ slug, currentUrl }: { slug: string; currentUrl: string | null }) {
   const action = uploadPageHeroImage.bind(null, slug);
-  const [state, formAction, pending] = useActionState(action, initialState);
+  const { state, submit: formAction, pending } = useUploadAction(action);
   const [resetting, startReset] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 

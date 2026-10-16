@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
-import { buildMetadata, resolvePageMeta } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta } from "@/lib/seo-meta";
 import { notFound } from "next/navigation";
 import { HeroSlider } from "@/components/HeroSlider";
-import { banners } from "@/lib/data/banners";
+import { getBanners } from "@/lib/content";
 import { AboutSection } from "@/components/home/AboutSection";
 import { ProductsSection } from "@/components/home/ProductsSection";
 import { BenefitsSection } from "@/components/home/BenefitsSection";
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  const { title, description } = resolvePageMeta("home", locale as Locale, t("home.meta.title"), t("home.meta.description"));
+  const { title, description } = await resolvePageMeta("home", locale as Locale, t("home.meta.title"), t("home.meta.description"));
   return buildMetadata({ locale, segments: [], title, description });
 }
 
@@ -31,6 +31,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
+  const banners = await getBanners();
   const heroBanners = banners.map((b) => ({ ...b.url[locale], altText: b.altText[locale] }));
 
   return (

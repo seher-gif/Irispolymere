@@ -1,9 +1,9 @@
 "use client";
 
-import { useActionState, useTransition, useRef, useEffect } from "react";
+import {useTransition, useRef, useEffect} from "react";
+import { useUploadAction } from "./UploadMode";
 import { uploadProductImage, resetProductImage, type ProductImageUploadState } from "@/lib/actions/product-images";
 
-const initialState: ProductImageUploadState = {};
 
 export function ProductImageCard({
   slug,
@@ -15,7 +15,7 @@ export function ProductImageCard({
   currentUrl: string | null;
 }) {
   const action = uploadProductImage.bind(null, slug);
-  const [state, formAction, pending] = useActionState(action, initialState);
+  const { state, submit: formAction, pending } = useUploadAction(action);
   const [resetting, startReset] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 

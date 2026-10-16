@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { publishContent } from "@/lib/publish";
 import { prisma } from "@/lib/db";
 import { pageRegistryByKey } from "@/lib/data/page-registry";
 
@@ -41,6 +42,9 @@ export async function updatePageMeta(key: string, _prev: PageMetaFormState, form
   });
 
   revalidatePath("/admin/pages");
+
+  publishContent();
   revalidatePath(`/admin/pages/${key}`);
+  publishContent();
   return { success: true };
 }

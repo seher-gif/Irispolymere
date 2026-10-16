@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getSession } from "@/lib/auth";
 import { logoutAction } from "@/lib/actions/auth";
 import { prisma } from "@/lib/db";
+import { blobEnabled } from "@/lib/storage";
+import { UploadModeProvider } from "@/components/admin/UploadMode";
 
 const NAV = [
   { href: "/admin", label: "Dashboard" },
@@ -50,7 +52,9 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
           </form>
         </div>
       </aside>
-      <main className="flex-1 p-8">{children}</main>
+      <main className="flex-1 p-8">
+        <UploadModeProvider direct={blobEnabled}>{children}</UploadModeProvider>
+      </main>
     </div>
   );
 }

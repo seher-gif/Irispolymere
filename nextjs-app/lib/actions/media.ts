@@ -1,52 +1,28 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { randomUUID } from "crypto";
-import { writeFile, unlink, mkdir } from "fs/promises";
-import path from "path";
 import { prisma } from "@/lib/db";
-
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
-const MAX_SIZE = 20 * 1024 * 1024; // 20MB
-
-const ALLOWED = new Map<string, { ext: string; kind: string }>([
-  ["application/pdf", { ext: "pdf", kind: "pdf" }],
-  ["image/png", { ext: "png", kind: "image" }],
-  ["image/jpeg", { ext: "jpg", kind: "image" }],
-  ["image/webp", { ext: "webp", kind: "image" }],
-  ["image/svg+xml", { ext: "svg", kind: "image" }],
-]);
+import { MEDIA_TYPES, deleteUpload, resolveUpload } from "@/lib/storage";
+import { publishContent } from "@/lib/publish";
 
 export type UploadState = { error?: string; success?: boolean };
 
 export async function uploadMedia(_prev: UploadState, formData: FormData): Promise<UploadState> {
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) {
-    return { error: "Choose a file to upload." };
-  }
-  if (file.size > MAX_SIZE) {
-    return { error: "File is too large (20MB max)." };
-  }
-  const meta = ALLOWED.get(file.type);
-  if (!meta) {
-    return { error: "Unsupported file type. Allowed: PDF, PNG, JPG, WEBP, SVG." };
-  }
-
-  await mkdir(UPLOAD_DIR, { recursive: true });
-  const filename = `${randomUUID()}.${meta.ext}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(UPLOAD_DIR, filename), buffer);
+  const result = await resolveUpload(formData, "file", MEDIA_TYPES);
+  if (!result) return { error: "Choose a file to upload." };
+  if ("error" in result) return { error: result.error };
+  const { url, name, type, size, ext } = result.upload;
 
   const altText = String(formData.get("altText") ?? "").trim() || null;
 
   await prisma.media.create({
     data: {
-      filename,
-      originalName: file.name,
-      mimeType: file.type,
-      sizeBytes: file.size,
-      kind: meta.kind,
-      url: `/uploads/${filename}`,
+      filename: url.split("/").pop() ?? `file.${ext}`,
+      originalName: name || `file.${ext}`,
+      mimeType: type,
+      sizeBytes: size,
+      kind: ext === "pdf" ? "pdf" : "image",
+      url,
       altText,
     },
   });
@@ -59,12 +35,9 @@ export async function deleteMedia(id: string) {
   const media = await prisma.media.findUnique({ where: { id } });
   if (!media) return;
   await prisma.media.delete({ where: { id } });
-  try {
-    await unlink(path.join(UPLOAD_DIR, media.filename));
-  } catch {
-    // file already gone — ignore
-  }
+  await deleteUpload(media.url);
   revalidatePath("/admin/media");
+  publishContent();
 }
 
 export async function updateMediaAltText(id: string, altText: string) {

@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Locale } from "@/lib/i18n/config";
 import type { TFunc } from "@/lib/i18n/t";
-import type { BlogPost } from "@/lib/data/blog";
+import type { BlogPost } from "@/lib/content";
 import { IndustrialVisual } from "./IndustrialVisual";
 import { CardLink } from "./ui";
 

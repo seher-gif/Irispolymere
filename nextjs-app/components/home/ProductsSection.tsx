@@ -1,13 +1,14 @@
 import Link from "next/link";
 import type { TFunc } from "@/lib/i18n/t";
 import { productLinks } from "@/lib/nav-data";
-import { productImages } from "@/lib/data/product-images";
+import { getProductImages } from "@/lib/content";
 import { ProductCard } from "../ProductCard";
 import { Container, SectionHead } from "../ui";
 
 const ACCENTS: Record<string, string> = {
   "products/pvc": "#105191",
   "products/masterbatch": "#0b3a68",
+  "products/color-masterbatch": "#1a63ab",
 };
 
 // Representative product photo for each category card below (categories
@@ -15,14 +16,16 @@ const ACCENTS: Record<string, string> = {
 const CATEGORY_IMAGE_SLUG: Record<string, string> = {
   "products/pvc": "pvc-rigid",
   "products/masterbatch": "masterbatch-filler",
+  "products/color-masterbatch": "masterbatch-color",
 };
 
-export function ProductsSection({ t, locale }: { t: TFunc; locale: string }) {
+export async function ProductsSection({ t, locale }: { t: TFunc; locale: string }) {
+  const productImages = await getProductImages();
   return (
     <section className="bg-surface-alt py-16 sm:py-20">
       <Container>
         <SectionHead center title={t("home.products.title")} eyebrow={t("home.categories.eyebrow")} lead={t("home.categories.lead")} />
-        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {productLinks.map((p) => (
             <ProductCard
               key={p.href}

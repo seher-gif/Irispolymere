@@ -3,8 +3,9 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
-import { buildMetadata, resolvePageMeta, buildWebPageJsonLd } from "@/lib/seo";
-import { certificates } from "@/lib/data/certificates";
+import { buildWebPageJsonLd } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta } from "@/lib/seo-meta";
+import { getCertificates } from "@/lib/content";
 import { CertShieldIcon, EcoIcon } from "@/components/Icons";
 import { CertModalTrigger } from "@/components/CertModal";
 import { JsonLd } from "@/components/JsonLd";
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  const { title, description } = resolvePageMeta("certificates", locale as Locale, `${t("certs.hero.title")} — Iris Polymere`, t("certs.hero.lead"));
+  const { title, description } = await resolvePageMeta("certificates", locale as Locale, `${t("certs.hero.title")} — Iris Polymere`, t("certs.hero.lead"));
   return buildMetadata({ locale, segments: ["certificates"], title, description });
 }
 
@@ -31,6 +32,7 @@ export default async function CertificatesPage({ params }: { params: Promise<{ l
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
+  const certificates = await getCertificates();
   const collectionPageJsonLd = buildWebPageJsonLd({
     locale,
     segments: ["certificates"],

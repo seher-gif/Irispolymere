@@ -1,13 +1,14 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/config";
 import type { TFunc } from "@/lib/i18n/t";
-import { certificates } from "@/lib/data/certificates";
+import { getCertificates } from "@/lib/content";
 import { CertShieldIcon, EcoIcon } from "../Icons";
 import { Container, SectionHead } from "../ui";
 
 const ICONS: Record<string, typeof CertShieldIcon> = { eco: EcoIcon };
 
-export function CertificatesPreview({ t, locale }: { t: TFunc; locale: Locale }) {
+export async function CertificatesPreview({ t, locale }: { t: TFunc; locale: Locale }) {
+  const certificates = await getCertificates();
   return (
     <section className="py-16 sm:py-20">
       <Container>
