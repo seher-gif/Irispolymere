@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { locales, localeMeta, isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "@/lib/seo";
-import { getSiteAssetOverrides } from "@/lib/content";
+import { getSiteAssetOverrides, getHiddenProductPages } from "@/lib/content";
+import { productLinks } from "@/lib/nav-data";
+import { filterProductLinks } from "@/lib/data/visibility";
 import { I18nProvider } from "@/components/providers/i18n-provider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -35,7 +37,8 @@ export default async function LocaleLayout({
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const dir = localeMeta[locale].dir;
-  const assets = await getSiteAssetOverrides();
+  const [assets, hidden] = await Promise.all([getSiteAssetOverrides(), getHiddenProductPages()]);
+  const visibleProductLinks = filterProductLinks(productLinks, hidden);
 
   return (
     <html lang={locale} dir={dir} className={`${inter.variable} ${cairo.variable} h-full`}>
@@ -43,9 +46,9 @@ export default async function LocaleLayout({
         <JsonLd data={buildOrganizationJsonLd()} />
         <JsonLd data={buildWebSiteJsonLd()} />
         <I18nProvider locale={locale} dict={dict}>
-          <Header logoSrc={assets["logo-mark"] ?? "/brand/logo-mark.webp"} />
+          <Header logoSrc={assets["logo-mark"] ?? "/brand/logo-mark.webp"} productLinks={visibleProductLinks} />
           <main className="flex-1">{children}</main>
-          <Footer logoSrc={assets["logo-full"] ?? "/brand/logo-full-white.webp"} />
+          <Footer logoSrc={assets["logo-full"] ?? "/brand/logo-full-white.webp"} productLinks={visibleProductLinks} />
           <QuickContact />
           <CookieBanner />
         </I18nProvider>

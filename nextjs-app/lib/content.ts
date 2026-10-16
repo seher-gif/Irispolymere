@@ -4,6 +4,7 @@ import path from "path";
 import sharp from "sharp";
 import { prisma } from "@/lib/db";
 import type { ImageRef, LocalizedImage } from "@/lib/data/image-types";
+import { HIDDEN_PAGES_KEY } from "@/lib/data/visibility";
 
 /**
  * Public-site content, read from the admin database (Turso when hosted, the local
@@ -180,4 +181,15 @@ export const getProductImages = cache(async (): Promise<Record<string, ImageRef>
 export const getPageHeroImages = cache(async (): Promise<Record<string, ImageRef>> => {
   const rows = await prisma.pageHeroImage.findMany();
   return Object.fromEntries(await Promise.all(rows.map(async (p) => [p.slug, await imgRef(p.url)] as const)));
+});
+
+export const getHiddenProductPages = cache(async (): Promise<string[]> => {
+  const row = await prisma.siteSetting.findUnique({ where: { key: HIDDEN_PAGES_KEY } });
+  if (!row) return [];
+  try {
+    const parsed = JSON.parse(row.value);
+    return Array.isArray(parsed) ? parsed.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
 });

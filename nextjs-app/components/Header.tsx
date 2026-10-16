@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { corporateLinks, productLinks } from "@/lib/nav-data";
+import { corporateLinks } from "@/lib/nav-data";
 import { contactInfo, telHref, whatsappHref } from "@/lib/contact-info";
 import { useI18n } from "./providers/i18n-provider";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -12,13 +12,13 @@ import { WhatsAppIcon } from "./Icons";
 
 function ChevronDown({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.4" className={className}>
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" className={className}>
       <path d="M6 9l6 6 6-6" />
     </svg>
   );
 }
 
-export function Header({ logoSrc }: { logoSrc: string }) {
+export function Header({ logoSrc, productLinks }: { logoSrc: string; productLinks: { key: string; href: string }[] }) {
   const { locale, t } = useI18n();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -62,47 +62,47 @@ export function Header({ logoSrc }: { logoSrc: string }) {
       {/* Main nav */}
       <div className="mx-auto flex max-w-[1320px] items-center justify-between gap-6 px-6 py-4">
         <Link href={home} className="flex shrink-0 items-center" aria-label="Iris Polymere — Compound Solutions">
-          <Image src={logoMark} alt="Iris Polymere — Compound Solutions" width={234} height={96} className="h-11 w-auto sm:h-12" priority />
+          <Image src={logoMark} alt="Iris Polymere — Compound Solutions" width={234} height={96} className="h-[66px] w-auto sm:h-[72px]" priority />
         </Link>
 
-        <nav className="hidden xl:flex items-center gap-8" aria-label="Primary">
-          <Link href={home} className="text-sm font-bold text-brand hover:text-brand-hover transition-colors">
+        <nav className="hidden xl:flex items-center gap-6" aria-label="Primary">
+          <Link href={home} className="text-[21px] font-bold text-brand hover:text-brand-hover transition-colors">
             {t("nav.home")}
           </Link>
 
           <div className="group relative">
-            <button className="flex items-center gap-1 text-sm font-bold text-ink hover:text-brand transition-colors">
+            <button className="flex items-center gap-1 text-[21px] font-bold text-ink hover:text-brand transition-colors">
               {t("nav.corporate")} <ChevronDown />
             </button>
-            <div className="invisible absolute start-0 top-full z-50 w-72 translate-y-1 rounded-sm border border-line bg-white py-2 opacity-0 shadow-xl transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="invisible absolute start-0 top-full z-50 w-[26rem] translate-y-1 rounded-sm border border-line bg-white py-2 opacity-0 shadow-xl transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
               {corporateLinks.map((item) => (
-                <Link key={item.href} href={`${home}/${item.href}`} className="block px-5 py-2.5 text-sm font-semibold text-ink-soft hover:bg-surface-alt hover:text-brand">
+                <Link key={item.href} href={`${home}/${item.href}`} className="block px-5 py-2.5 text-[21px] font-semibold text-ink-soft hover:bg-surface-alt hover:text-brand">
                   {t(item.key)}
                 </Link>
               ))}
             </div>
           </div>
 
-          <div className="group relative">
-            <button className="flex items-center gap-1 text-sm font-bold text-ink hover:text-brand transition-colors">
+          {productLinks.length > 0 && <div className="group relative">
+            <button className="flex items-center gap-1 text-[21px] font-bold text-ink hover:text-brand transition-colors">
               {t("nav.products")} <ChevronDown />
             </button>
-            <div className="invisible absolute start-0 top-full z-50 w-80 translate-y-1 rounded-sm border border-line bg-white py-2 opacity-0 shadow-xl transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+            <div className="invisible absolute start-0 top-full z-50 w-[28rem] translate-y-1 rounded-sm border border-line bg-white py-2 opacity-0 shadow-xl transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
               {productLinks.map((item) => (
-                <Link key={item.href} href={`${home}/${item.href}`} className="block px-5 py-2.5 text-sm font-semibold text-ink-soft hover:bg-surface-alt hover:text-brand">
+                <Link key={item.href} href={`${home}/${item.href}`} className="block px-5 py-2.5 text-[21px] font-semibold text-ink-soft hover:bg-surface-alt hover:text-brand">
                   {t(item.key)}
                 </Link>
               ))}
             </div>
-          </div>
+          </div>}
 
-          <Link href={`${home}/certificates`} className="text-sm font-bold text-ink hover:text-brand transition-colors">
+          <Link href={`${home}/certificates`} className="text-[21px] font-bold text-ink hover:text-brand transition-colors">
             {t("nav.certificates")}
           </Link>
-          <Link href={`${home}/blog`} className="text-sm font-bold text-ink hover:text-brand transition-colors">
+          <Link href={`${home}/blog`} className="text-[21px] font-bold text-ink hover:text-brand transition-colors">
             {t("nav.blog")}
           </Link>
-          <Link href={`${home}/contact`} className="text-sm font-bold text-ink hover:text-brand transition-colors">
+          <Link href={`${home}/contact`} className="text-[21px] font-bold text-ink hover:text-brand transition-colors">
             {t("nav.contact")}
           </Link>
         </nav>
@@ -124,7 +124,7 @@ export function Header({ logoSrc }: { logoSrc: string }) {
         <div className="fixed inset-0 z-[60] flex xl:hidden">
           <div className="w-full max-w-sm overflow-y-auto bg-white p-6 shadow-2xl">
             <div className="mb-6 flex items-center justify-between">
-              <Image src={logoMark} alt="Iris Polymere" width={234} height={96} className="h-9 w-auto" />
+              <Image src={logoMark} alt="Iris Polymere" width={234} height={96} className="h-[54px] w-auto" />
               <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="flex h-9 w-9 items-center justify-center rounded-full border border-line">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M18 6L6 18M6 6l12 12" />
@@ -132,50 +132,50 @@ export function Header({ logoSrc }: { logoSrc: string }) {
               </button>
             </div>
             <nav className="flex flex-col divide-y divide-line">
-              <Link href={home} onClick={() => setMobileOpen(false)} className="py-3.5 text-base font-bold text-ink">
+              <Link href={home} onClick={() => setMobileOpen(false)} className="py-3.5 text-2xl font-bold text-ink">
                 {t("nav.home")}
               </Link>
               <div>
                 <button
                   onClick={() => setMobileSection(mobileSection === "corp" ? null : "corp")}
-                  className="flex w-full items-center justify-between py-3.5 text-base font-bold text-ink"
+                  className="flex w-full items-center justify-between py-3.5 text-2xl font-bold text-ink"
                 >
                   {t("nav.corporate")} <ChevronDown className={mobileSection === "corp" ? "rotate-180" : ""} />
                 </button>
                 {mobileSection === "corp" && (
                   <div className="pb-2 ps-3">
                     {corporateLinks.map((item) => (
-                      <Link key={item.href} href={`${home}/${item.href}`} onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-semibold text-ink-soft">
+                      <Link key={item.href} href={`${home}/${item.href}`} onClick={() => setMobileOpen(false)} className="block py-2 text-[21px] font-semibold text-ink-soft">
                         {t(item.key)}
                       </Link>
                     ))}
                   </div>
                 )}
               </div>
-              <div>
+              {productLinks.length > 0 && <div>
                 <button
                   onClick={() => setMobileSection(mobileSection === "prod" ? null : "prod")}
-                  className="flex w-full items-center justify-between py-3.5 text-base font-bold text-ink"
+                  className="flex w-full items-center justify-between py-3.5 text-2xl font-bold text-ink"
                 >
                   {t("nav.products")} <ChevronDown className={mobileSection === "prod" ? "rotate-180" : ""} />
                 </button>
                 {mobileSection === "prod" && (
                   <div className="pb-2 ps-3">
                     {productLinks.map((item) => (
-                      <Link key={item.href} href={`${home}/${item.href}`} onClick={() => setMobileOpen(false)} className="block py-2 text-sm font-semibold text-ink-soft">
+                      <Link key={item.href} href={`${home}/${item.href}`} onClick={() => setMobileOpen(false)} className="block py-2 text-[21px] font-semibold text-ink-soft">
                         {t(item.key)}
                       </Link>
                     ))}
                   </div>
                 )}
-              </div>
-              <Link href={`${home}/certificates`} onClick={() => setMobileOpen(false)} className="py-3.5 text-base font-bold text-ink">
+              </div>}
+              <Link href={`${home}/certificates`} onClick={() => setMobileOpen(false)} className="py-3.5 text-2xl font-bold text-ink">
                 {t("nav.certificates")}
               </Link>
-              <Link href={`${home}/blog`} onClick={() => setMobileOpen(false)} className="py-3.5 text-base font-bold text-ink">
+              <Link href={`${home}/blog`} onClick={() => setMobileOpen(false)} className="py-3.5 text-2xl font-bold text-ink">
                 {t("nav.blog")}
               </Link>
-              <Link href={`${home}/contact`} onClick={() => setMobileOpen(false)} className="py-3.5 text-base font-bold text-ink">
+              <Link href={`${home}/contact`} onClick={() => setMobileOpen(false)} className="py-3.5 text-2xl font-bold text-ink">
                 {t("nav.contact")}
               </Link>
             </nav>

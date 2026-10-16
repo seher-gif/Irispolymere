@@ -1,9 +1,12 @@
 import Link from "next/link";
 import type { TFunc } from "@/lib/i18n/t";
 import { CableIcon, ProfileIcon, PlasticsIcon, PackagingIcon, InjectionIcon, ExtrusionIcon } from "../Icons";
+import { getHiddenProductPages } from "@/lib/content";
+import { isSlugHidden } from "@/lib/data/visibility";
 import { Container, SectionHead } from "../ui";
 
-export function ApplicationsSection({ t, locale }: { t: TFunc; locale: string }) {
+export async function ApplicationsSection({ t, locale }: { t: TFunc; locale: string }) {
+  const hidden = await getHiddenProductPages();
   const items = [
     { Icon: CableIcon, key: "home.applications.cable", href: `/${locale}/products/pvc-cable` },
     { Icon: ProfileIcon, key: "home.applications.profiles", href: `/${locale}/products/pvc-rigid` },
@@ -17,12 +20,19 @@ export function ApplicationsSection({ t, locale }: { t: TFunc; locale: string })
       <Container>
         <SectionHead eyebrow={t("home.applications.eyebrow")} title={t("home.applications.title")} />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {items.map(({ Icon, key, href }) => (
-            <Link key={key} href={href} className="flex items-center gap-4 border border-line bg-white p-5 transition-colors hover:border-brand hover:bg-brand-tint">
-              <Icon className="h-9 w-9 shrink-0 text-brand" />
-              <strong className="text-sm text-ink">{t(key)}</strong>
-            </Link>
-          ))}
+          {items.map(({ Icon, key, href }) =>
+            isSlugHidden(hidden, href.split("/").pop() ?? "") ? (
+              <div key={key} className="flex items-center gap-4 border border-line bg-white p-5">
+                <Icon className="h-9 w-9 shrink-0 text-brand" />
+                <strong className="text-sm text-ink">{t(key)}</strong>
+              </div>
+            ) : (
+              <Link key={key} href={href} className="flex items-center gap-4 border border-line bg-white p-5 transition-colors hover:border-brand hover:bg-brand-tint">
+                <Icon className="h-9 w-9 shrink-0 text-brand" />
+                <strong className="text-sm text-ink">{t(key)}</strong>
+              </Link>
+            )
+          )}
         </div>
       </Container>
     </section>

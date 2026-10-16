@@ -5,7 +5,8 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { products, productsByCategory, productsBySlug, appKeys, benKeys, type ProductCategory } from "@/lib/data/products";
-import { getProductImages } from "@/lib/content";
+import { getProductImages, getHiddenProductPages } from "@/lib/content";
+import { isCategoryHidden, isProductHidden } from "@/lib/data/visibility";
 import type { ImageRef } from "@/lib/data/image-types";
 import { buildProductJsonLd, buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
 import { buildMetadata, resolvePageMeta } from "@/lib/seo-meta";
@@ -57,20 +58,21 @@ export default async function ProductRoute({ params }: { params: Promise<{ local
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
-  const productImages = await getProductImages();
+  const [productImages, hidden] = await Promise.all([getProductImages(), getHiddenProductPages()]);
 
   if ((CATEGORY_SLUGS as readonly string[]).includes(slug)) {
-    return <CategoryPage locale={locale} t={t} category={slug as ProductCategory} productImages={productImages} />;
+    if (isCategoryHidden(hidden, slug)) notFound();
+    return <CategoryPage locale={locale} t={t} category={slug as ProductCategory} productImages={productImages} hidden={hidden} />;
   }
 
   const product = productsBySlug[slug];
-  if (!product) notFound();
-  return <DetailPage locale={locale} t={t} product={product} productImages={productImages} />;
+  if (!product || isProductHidden(hidden, product)) notFound();
+  return <DetailPage locale={locale} t={t} product={product} productImages={productImages} hidden={hidden} />;
 }
 
-function CategoryPage({ locale, t, category, productImages }: { locale: Locale; t: ReturnType<typeof tFrom>; category: ProductCategory; productImages: Record<string, ImageRef> }) {
+function CategoryPage({ locale, t, category, productImages, hidden }: { locale: Locale; t: ReturnType<typeof tFrom>; category: ProductCategory; productImages: Record<string, ImageRef>; hidden: string[] }) {
   const meta = CATEGORY_META[category];
-  const items = productsByCategory[category];
+  const items = productsByCategory[category].filter((p) => !isProductHidden(hidden, p));
   const isMasterbatch = category === "masterbatch";
 
   const collectionPageJsonLd = buildWebPageJsonLd({
@@ -145,8 +147,8 @@ function CategoryPage({ locale, t, category, productImages }: { locale: Locale; 
   );
 }
 
-function DetailPage({ locale, t, product, productImages }: { locale: Locale; t: ReturnType<typeof tFrom>; product: (typeof products)[number]; productImages: Record<string, ImageRef> }) {
-  const related = products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 4);
+function DetailPage({ locale, t, product, productImages, hidden }: { locale: Locale; t: ReturnType<typeof tFrom>; product: (typeof products)[number]; productImages: Record<string, ImageRef>; hidden: string[] }) {
+  const related = products.filter((p) => p.category === product.category && p.slug !== product.slug && !isProductHidden(hidden, p)).slice(0, 4);
   const productJsonLd = buildProductJsonLd({
     locale,
     slug: product.slug,
