@@ -65,6 +65,7 @@ export function ContactForm() {
           <option value="" disabled>{t("contact.form.productInterest.select")}</option>
           <option value="pvc">{t("contact.form.productInterest.pvc")}</option>
           <option value="filler">{t("contact.form.productInterest.filler")}</option>
+          <option value="color">{t("contact.form.productInterest.color")}</option>
           <option value="technical">{t("contact.form.productInterest.technical")}</option>
           <option value="other">{t("contact.form.productInterest.other")}</option>
         </select>

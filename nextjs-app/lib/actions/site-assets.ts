@@ -1,31 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { randomUUID } from "crypto";
-import { writeFile, unlink, mkdir, copyFile, access } from "fs/promises";
-import path from "path";
 import sharp from "sharp";
 import { prisma } from "@/lib/db";
 import { siteAssetRegistryByKey } from "@/lib/data/site-asset-registry";
+import { deleteUpload, readUpload, resolveUpload, storeBuffer } from "@/lib/storage";
+import { publishContent } from "@/lib/publish";
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
-const MAX_SIZE = 20 * 1024 * 1024; // 20MB
-
-const ALLOWED = new Map<string, string>([
-  ["image/png", "png"],
-  ["image/webp", "webp"],
-]);
-
-// Next.js reads these two files directly from the filesystem at build time
-// (its file-based icon convention) — there's no runtime data path for them,
-// so the upload has to land here instead of under /public/uploads.
-const BUILD_TIME_TARGETS: Record<string, string> = {
-  favicon: path.join(process.cwd(), "app", "icon.png"),
-  "apple-icon": path.join(process.cwd(), "app", "apple-icon.png"),
-};
-
-// Backup path for the pristine bundled file, made once before the first
-// overwrite, so "Reset to default" has something real to restore.
 // Logos come in with generous transparent padding; trim it so the logo fills its box on the
 // site without anyone having to crop or resize the file. Opaque images are left untouched.
 async function trimTransparentMargins(input: Buffer, ext: string): Promise<Buffer> {
@@ -55,64 +36,38 @@ async function trimTransparentMargins(input: Buffer, ext: string): Promise<Buffe
 
 const TRIMMED_KEYS = new Set(["logo-mark", "logo-full"]);
 
-function backupPath(target: string) {
-  return target.replace(/\.png$/, ".default.png");
-}
-
-async function fileExists(p: string) {
-  try {
-    await access(p);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 export type SiteAssetUploadState = { error?: string; success?: boolean };
 
 export async function uploadSiteAsset(key: string, _prev: SiteAssetUploadState, formData: FormData): Promise<SiteAssetUploadState> {
   const slot = siteAssetRegistryByKey[key];
   if (!slot) return { error: "Unknown asset." };
 
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) {
-    return { error: "Choose an image to upload." };
-  }
-  if (file.size > MAX_SIZE) {
-    return { error: "File is too large (20MB max)." };
-  }
-  const ext = ALLOWED.get(file.type);
-  if (!ext) {
-    return { error: "Unsupported file type. Allowed: PNG, WEBP." };
-  }
-  if (slot.buildTime && ext !== "png") {
-    return { error: "This asset must be a PNG." };
-  }
+  const allowed = new Map<string, string>();
+  for (const type of slot.accept.split(",")) allowed.set(type.trim(), type.trim().split("/")[1]);
 
-  let buffer: Buffer = Buffer.from(await file.arrayBuffer());
-  if (TRIMMED_KEYS.has(key)) buffer = await trimTransparentMargins(buffer, ext);
+  const result = await resolveUpload(formData, "file", allowed);
+  if (!result) return { error: "Choose an image to upload." };
+  if ("error" in result) return { error: result.error };
 
-  await mkdir(UPLOAD_DIR, { recursive: true });
-  const filename = `${randomUUID()}.${ext}`;
-  await writeFile(path.join(UPLOAD_DIR, filename), buffer);
-  const url = `/uploads/${filename}`;
+  let { url } = result.upload;
+  const { ext, type } = result.upload;
 
-  if (slot.buildTime) {
-    const target = BUILD_TIME_TARGETS[key];
-    const backup = backupPath(target);
-    if (!(await fileExists(backup))) {
-      await copyFile(target, backup);
+  if (TRIMMED_KEYS.has(key)) {
+    const original = await readUpload(url);
+    const trimmed = await trimTransparentMargins(original, ext);
+    if (trimmed !== original) {
+      const trimmedUrl = await storeBuffer(trimmed, ext, type);
+      await deleteUpload(url);
+      url = trimmedUrl;
     }
-    await writeFile(target, buffer);
   }
 
-  await prisma.siteAsset.upsert({
-    where: { key },
-    create: { key, url },
-    update: { url },
-  });
+  const existing = await prisma.siteAsset.findUnique({ where: { key } });
+  await prisma.siteAsset.upsert({ where: { key }, create: { key, url }, update: { url } });
+  if (existing) await deleteUpload(existing.url);
 
   revalidatePath("/admin/assets");
+  publishContent();
   return { success: true };
 }
 
@@ -120,21 +75,7 @@ export async function resetSiteAsset(key: string) {
   const existing = await prisma.siteAsset.findUnique({ where: { key } });
   if (!existing) return;
   await prisma.siteAsset.delete({ where: { key } });
-  if (existing.url.startsWith("/uploads/")) {
-    try {
-      await unlink(path.join(process.cwd(), "public", existing.url));
-    } catch {
-      // file already gone — ignore
-    }
-  }
-
-  const target = BUILD_TIME_TARGETS[key];
-  if (target) {
-    const backup = backupPath(target);
-    if (await fileExists(backup)) {
-      await copyFile(backup, target);
-    }
-  }
-
+  await deleteUpload(existing.url);
   revalidatePath("/admin/assets");
+  publishContent();
 }

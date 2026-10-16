@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { publishContent } from "@/lib/publish";
 import { prisma } from "@/lib/db";
 
 export async function updateCertificate(id: string, formData: FormData) {
@@ -15,6 +16,7 @@ export async function updateCertificate(id: string, formData: FormData) {
   };
   await prisma.certificate.update({ where: { id }, data });
   revalidatePath("/admin/certificates");
+  publishContent();
 }
 
 export type CreateCertificateState = { error?: string };
@@ -45,10 +47,12 @@ export async function createCertificate(_prev: CreateCertificateState, formData:
     },
   });
   revalidatePath("/admin/certificates");
+  publishContent();
   return {};
 }
 
 export async function deleteCertificate(id: string) {
   await prisma.certificate.delete({ where: { id } });
   revalidatePath("/admin/certificates");
+  publishContent();
 }

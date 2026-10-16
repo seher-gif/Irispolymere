@@ -3,11 +3,14 @@ import { locales } from "@/lib/i18n/config";
 import { SITE_URL } from "@/lib/seo";
 import { corporatePages } from "@/lib/data/corporate";
 import { products } from "@/lib/data/products";
-import { blogPosts } from "@/lib/data/blog";
+import { getBlogPosts } from "@/lib/content";
 
-const CATEGORY_SLUGS = ["pvc", "masterbatch"];
+const CATEGORY_SLUGS = ["pvc", "masterbatch", "color-masterbatch"];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 300;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const blogPosts = await getBlogPosts();
   const segmentSets: string[][] = [
     [],
     ["certificates"],

@@ -4,9 +4,9 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { corporatePages, corporatePagesBySlug } from "@/lib/data/corporate";
-import { corporateHeroImages } from "@/lib/data/corporate-images";
-import { pageHeroImages } from "@/lib/data/page-hero-images";
-import { buildMetadata, resolvePageMeta, buildWebPageJsonLd } from "@/lib/seo";
+import { getCorporateHeroImages, getPageHeroImages } from "@/lib/content";
+import { buildWebPageJsonLd } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta } from "@/lib/seo-meta";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
 import { JsonLd } from "@/components/JsonLd";
 import { CheckIcon, CostIcon, FlaskIcon, GaugeIcon, LayersIcon, GlobeIcon } from "@/components/Icons";
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!page || !isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  const { title, description } = resolvePageMeta(
+  const { title, description } = await resolvePageMeta(
     `corporate/${slug}`,
     locale as Locale,
     `${t(page.heroTitleKey)} — Iris Polymere`,
@@ -39,6 +39,7 @@ export default async function CorporatePage({ params }: { params: Promise<{ loca
   const page = corporatePagesBySlug[slug];
   if (!page) notFound();
 
+  const [corporateHeroImages, pageHeroImages] = await Promise.all([getCorporateHeroImages(), getPageHeroImages()]);
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
   const crumbs = [{ labelKey: "nav.corporate" }, { labelKey: page.navKey }];

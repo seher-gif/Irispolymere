@@ -4,7 +4,6 @@ export type SiteAssetSlot = {
   hint: string;
   defaultUrl: string; // bundled fallback shown when no admin override exists
   accept: string; // input[accept] + allowed MIME types
-  buildTime?: boolean; // written to app/icon.png or app/apple-icon.png instead of /public/uploads
 };
 
 export const siteAssetRegistry: SiteAssetSlot[] = [
@@ -32,18 +31,16 @@ export const siteAssetRegistry: SiteAssetSlot[] = [
   {
     key: "favicon",
     label: "Favicon",
-    hint: "Browser tab icon. PNG, exactly 512×512. Requires a rebuild + redeploy to take effect.",
-    defaultUrl: "/icon.png",
+    hint: "Browser tab icon. PNG, square (recommended 512×512). Browsers may take a while to refresh a cached favicon.",
+    defaultUrl: "/brand/favicon-512.png",
     accept: "image/png",
-    buildTime: true,
   },
   {
     key: "apple-icon",
     label: "Apple Touch Icon",
-    hint: "iOS home-screen icon. PNG, exactly 180×180, no rounded corners baked in. Requires a rebuild + redeploy to take effect.",
-    defaultUrl: "/apple-icon.png",
+    hint: "iOS home-screen icon. PNG, square (recommended 180×180), no rounded corners baked in.",
+    defaultUrl: "/brand/apple-touch-icon.png",
     accept: "image/png",
-    buildTime: true,
   },
   // QR code has locale-specific text baked into the artwork, so it's one
   // slot per language rather than a single global image (see

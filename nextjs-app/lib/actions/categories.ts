@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { publishContent } from "@/lib/publish";
 import { prisma } from "@/lib/db";
 
 function slugify(input: string) {
@@ -26,6 +27,7 @@ export async function createCategory(formData: FormData) {
 
   await prisma.category.create({ data: { slug, nameEn, nameFr, nameAr } });
   revalidatePath("/admin/categories");
+  publishContent();
 }
 
 export async function updateCategory(id: string, formData: FormData) {
@@ -36,6 +38,7 @@ export async function updateCategory(id: string, formData: FormData) {
 
   await prisma.category.update({ where: { id }, data: { nameEn, nameFr, nameAr } });
   revalidatePath("/admin/categories");
+  publishContent();
 }
 
 export async function deleteCategory(id: string) {
@@ -45,4 +48,5 @@ export async function deleteCategory(id: string) {
   }
   await prisma.category.delete({ where: { id } });
   revalidatePath("/admin/categories");
+  publishContent();
 }

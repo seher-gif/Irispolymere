@@ -1,10 +1,10 @@
 "use client";
 
-import { useActionState, useTransition, useRef, useEffect } from "react";
+import {useTransition, useRef, useEffect} from "react";
+import { useUploadAction } from "./UploadMode";
 import { uploadSiteAsset, resetSiteAsset, type SiteAssetUploadState } from "@/lib/actions/site-assets";
 import type { SiteAssetSlot } from "@/lib/data/site-asset-registry";
 
-const initialState: SiteAssetUploadState = {};
 
 export function SiteAssetCard({
   slot,
@@ -18,7 +18,7 @@ export function SiteAssetCard({
   updatedAt: string | null;
 }) {
   const action = uploadSiteAsset.bind(null, slot.key);
-  const [state, formAction, pending] = useActionState(action, initialState);
+  const { state, submit: formAction, pending } = useUploadAction(action);
   const [resetting, startReset] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -39,9 +39,6 @@ export function SiteAssetCard({
           <span className={`px-2 py-0.5 text-[11px] font-bold ${isOverridden ? "bg-green-100 text-green-700" : "bg-surface-alt text-muted"}`}>
             {isOverridden ? "Custom" : "Default"}
           </span>
-          {slot.buildTime && (
-            <span className="px-2 py-0.5 text-[11px] font-bold bg-brand-tint text-brand">Needs rebuild</span>
-          )}
         </div>
         <p className="mt-1 text-xs text-muted">{slot.hint}</p>
         {isOverridden && updatedAt && <p className="mt-1 text-[11px] text-muted">Updated {updatedAt}</p>}

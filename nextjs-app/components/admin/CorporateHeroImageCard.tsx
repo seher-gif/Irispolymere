@@ -1,13 +1,13 @@
 "use client";
 
-import { useActionState, useTransition, useRef, useEffect } from "react";
+import {useTransition, useRef, useEffect} from "react";
+import { useUploadAction } from "./UploadMode";
 import {
   uploadCorporateHeroImage,
   resetCorporateHeroImage,
   type CorporateHeroUploadState,
 } from "@/lib/actions/corporate-images";
 
-const initialState: CorporateHeroUploadState = {};
 
 const LOCALES = [
   { code: "En", label: "English", required: true },
@@ -27,7 +27,7 @@ export function CorporateHeroImageCard({
   description: string;
 }) {
   const action = uploadCorporateHeroImage.bind(null, slug);
-  const [state, formAction, pending] = useActionState(action, initialState);
+  const { state, submit: formAction, pending } = useUploadAction(action);
   const [resetting, startReset] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
 

@@ -3,8 +3,9 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
-import { blogPosts } from "@/lib/data/blog";
-import { buildMetadata, resolvePageMeta, buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
+import { getBlogPosts } from "@/lib/content";
+import { buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta } from "@/lib/seo-meta";
 import { BlogCard } from "@/components/BlogCard";
 import { JsonLd } from "@/components/JsonLd";
 import { Container, PageHero, CTABand } from "@/components/ui";
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  const { title, description } = resolvePageMeta("blog", locale as Locale, `${t("blog.hero.title")} — Iris Polymere`, t("blog.hero.lead"));
+  const { title, description } = await resolvePageMeta("blog", locale as Locale, `${t("blog.hero.title")} — Iris Polymere`, t("blog.hero.lead"));
   return buildMetadata({ locale, segments: ["blog"], title, description });
 }
 
@@ -29,6 +30,7 @@ export default async function BlogIndexPage({ params }: { params: Promise<{ loca
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
+  const blogPosts = await getBlogPosts();
   const collectionPageJsonLd = buildWebPageJsonLd({
     locale,
     segments: ["blog"],

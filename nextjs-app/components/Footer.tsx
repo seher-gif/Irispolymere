@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { corporateLinks, productLinks } from "@/lib/nav-data";
-import { siteAssetOverrides } from "@/lib/data/site-assets";
 import { useI18n } from "./providers/i18n-provider";
 
 function SocialIcon({ path }: { path: string }) {
@@ -21,10 +20,10 @@ const SOCIAL = [
   { label: "X", href: "#", path: "M4 4l7.1 9.5L4.3 20h1.9l6-6.6 4.9 6.6h4l-7.4-9.9L19.7 4h-1.9l-5.6 6.1L8 4H4zm2.9 1.5h1.8l9.4 12.9h-1.8L6.9 5.5z" },
 ];
 
-export function Footer() {
+export function Footer({ logoSrc }: { logoSrc: string }) {
   const { locale, t } = useI18n();
   const home = `/${locale}`;
-  const logoFull = siteAssetOverrides["logo-full"] ?? "/brand/logo-full-white.webp";
+  const logoFull = logoSrc;
 
   return (
     <footer className="bg-brand text-white">

@@ -1,5 +1,6 @@
 import { getContactNotificationEmail } from "@/lib/actions/settings";
 import { NotificationEmailForm } from "@/components/admin/NotificationEmailForm";
+import { ChangePasswordForm } from "@/components/admin/ChangePasswordForm";
 
 export default async function AdminSettingsPage() {
   const currentEmail = await getContactNotificationEmail();
@@ -19,6 +20,12 @@ export default async function AdminSettingsPage() {
           mailbox), and it will use whatever address is saved here.
         </p>
         <NotificationEmailForm currentEmail={currentEmail} />
+      </div>
+
+      <div className="mt-6 max-w-2xl border border-line bg-white p-5">
+        <h2 className="text-sm font-bold text-ink">Admin Password</h2>
+        <p className="mt-1 text-xs text-muted">Change the password you sign in to this panel with. Use something long and unique.</p>
+        <ChangePasswordForm />
       </div>
     </div>
   );

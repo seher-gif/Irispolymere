@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import type { TFunc } from "@/lib/i18n/t";
 import type { Locale } from "@/lib/i18n/config";
-import { corporateHeroImages } from "@/lib/data/corporate-images";
+import { getCorporateHeroImages } from "@/lib/content";
 import { Container, Eyebrow } from "../ui";
 
-export function AboutSection({ t, locale }: { t: TFunc; locale: Locale }) {
-  const photo = corporateHeroImages["home-about"];
+export async function AboutSection({ t, locale }: { t: TFunc; locale: Locale }) {
+  const photo = (await getCorporateHeroImages())["home-about"];
 
   return (
     <section className="py-16 sm:py-20">

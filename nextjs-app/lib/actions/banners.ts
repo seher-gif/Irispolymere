@@ -1,31 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { randomUUID } from "crypto";
-import { writeFile, unlink, mkdir } from "fs/promises";
-import path from "path";
 import { prisma } from "@/lib/db";
+import { IMAGE_TYPES, deleteUpload, resolveUpload } from "@/lib/storage";
+import { publishContent } from "@/lib/publish";
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
-const MAX_SIZE = 20 * 1024 * 1024; // 20MB
 const MAX_BANNERS = 5;
-
-const ALLOWED = new Map<string, string>([
-  ["image/png", "png"],
-  ["image/jpeg", "jpg"],
-  ["image/webp", "webp"],
-  ["image/svg+xml", "svg"],
-]);
-
-async function saveFile(file: File) {
-  const ext = ALLOWED.get(file.type);
-  if (!ext) return null;
-  await mkdir(UPLOAD_DIR, { recursive: true });
-  const filename = `${randomUUID()}.${ext}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(UPLOAD_DIR, filename), buffer);
-  return `/uploads/${filename}`;
-}
 
 export type BannerUploadState = { error?: string; success?: boolean };
 
@@ -35,31 +15,20 @@ export async function uploadBanner(_prev: BannerUploadState, formData: FormData)
     return { error: `You can have at most ${MAX_BANNERS} banners. Delete one first.` };
   }
 
-  const fileEn = formData.get("fileEn");
-  if (!(fileEn instanceof File) || fileEn.size === 0) {
-    return { error: "Choose an English image to upload — it's required." };
-  }
-  const fileFr = formData.get("fileFr");
-  const fileAr = formData.get("fileAr");
+  const en = await resolveUpload(formData, "fileEn", IMAGE_TYPES);
+  if (!en) return { error: "Choose an English image to upload — it's required." };
+  if ("error" in en) return { error: en.error };
 
-  for (const f of [fileEn, fileFr, fileAr]) {
-    if (f instanceof File && f.size > 0 && f.size > MAX_SIZE) {
-      return { error: "File is too large (20MB max)." };
-    }
+  const fr = await resolveUpload(formData, "fileFr", IMAGE_TYPES);
+  if (fr && "error" in fr) {
+    await deleteUpload(en.upload.url);
+    return { error: fr.error };
   }
-
-  const urlEn = await saveFile(fileEn);
-  if (!urlEn) return { error: "Unsupported file type. Allowed: PNG, JPG, WEBP, SVG." };
-
-  let urlFr: string | null = null;
-  if (fileFr instanceof File && fileFr.size > 0) {
-    urlFr = await saveFile(fileFr);
-    if (!urlFr) return { error: "Unsupported file type for the French image. Allowed: PNG, JPG, WEBP, SVG." };
-  }
-  let urlAr: string | null = null;
-  if (fileAr instanceof File && fileAr.size > 0) {
-    urlAr = await saveFile(fileAr);
-    if (!urlAr) return { error: "Unsupported file type for the Arabic image. Allowed: PNG, JPG, WEBP, SVG." };
+  const ar = await resolveUpload(formData, "fileAr", IMAGE_TYPES);
+  if (ar && "error" in ar) {
+    await deleteUpload(en.upload.url);
+    if (fr) await deleteUpload(fr.upload.url);
+    return { error: ar.error };
   }
 
   const altTextEn = String(formData.get("altTextEn") ?? "").trim() || null;
@@ -69,9 +38,9 @@ export async function uploadBanner(_prev: BannerUploadState, formData: FormData)
 
   await prisma.banner.create({
     data: {
-      urlEn,
-      urlFr,
-      urlAr,
+      urlEn: en.upload.url,
+      urlFr: fr?.upload.url ?? null,
+      urlAr: ar?.upload.url ?? null,
       altTextEn,
       altTextFr,
       altTextAr,
@@ -80,6 +49,7 @@ export async function uploadBanner(_prev: BannerUploadState, formData: FormData)
   });
 
   revalidatePath("/admin/banners");
+  publishContent();
   return { success: true };
 }
 
@@ -92,14 +62,7 @@ export async function deleteBanner(id: string) {
   const banner = await prisma.banner.findUnique({ where: { id } });
   if (!banner) return;
   await prisma.banner.delete({ where: { id } });
-  for (const url of [banner.urlEn, banner.urlFr, banner.urlAr]) {
-    if (url && url.startsWith("/uploads/")) {
-      try {
-        await unlink(path.join(process.cwd(), "public", url));
-      } catch {
-        // file already gone — ignore
-      }
-    }
-  }
+  for (const url of [banner.urlEn, banner.urlFr, banner.urlAr]) await deleteUpload(url);
   revalidatePath("/admin/banners");
+  publishContent();
 }

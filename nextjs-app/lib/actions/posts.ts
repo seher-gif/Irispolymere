@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { publishContent } from "@/lib/publish";
 import { prisma } from "@/lib/db";
 
 function slugify(input: string) {
@@ -87,6 +88,8 @@ export async function createPost(_prev: PostFormState, formData: FormData): Prom
   });
 
   revalidatePath("/admin/posts");
+
+  publishContent();
   redirect(`/admin/posts/${post.id}/edit`);
 }
 
@@ -117,11 +120,15 @@ export async function updatePost(id: string, _prev: PostFormState, formData: For
   });
 
   revalidatePath("/admin/posts");
+
+  publishContent();
   revalidatePath(`/admin/posts/${id}/edit`);
+  publishContent();
   return {};
 }
 
 export async function deletePost(id: string) {
   await prisma.post.delete({ where: { id } });
   revalidatePath("/admin/posts");
+  publishContent();
 }

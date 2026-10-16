@@ -5,19 +5,21 @@ import { notFound } from "next/navigation";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
-import { blogPosts, blogPostsBySlug } from "@/lib/data/blog";
-import { buildMetadata, buildBreadcrumbJsonLd, buildBlogPostingJsonLd, SITE_URL } from "@/lib/seo";
+import { getBlogPosts, getBlogPost } from "@/lib/content";
+import { buildBreadcrumbJsonLd, buildBlogPostingJsonLd, SITE_URL } from "@/lib/seo";
+import { buildMetadata } from "@/lib/seo-meta";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
 import { JsonLd } from "@/components/JsonLd";
 import { Container, PageHero, CTABand, SectionHead } from "@/components/ui";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const blogPosts = await getBlogPosts();
   return locales.flatMap((locale) => blogPosts.map((p) => ({ locale, slug: p.slug })));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = blogPostsBySlug[slug];
+  const post = await getBlogPost(slug);
   if (!post || !isLocale(locale)) return {};
   return buildMetadata({
     locale: locale as Locale,
@@ -31,11 +33,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
   const { locale: rawLocale, slug } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
-  const post = blogPostsBySlug[slug];
+  const post = await getBlogPost(slug);
   if (!post) notFound();
 
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
+  const blogPosts = await getBlogPosts();
   const otherPosts = blogPosts.filter((p) => p.slug !== slug).slice(0, 4);
   const publishedDate = new Date(post.publishedAt).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" });
 

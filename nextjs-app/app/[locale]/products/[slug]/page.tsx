@@ -5,8 +5,10 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { products, productsByCategory, productsBySlug, appKeys, benKeys, type ProductCategory } from "@/lib/data/products";
-import { productImages } from "@/lib/data/product-images";
-import { buildMetadata, buildProductJsonLd, resolvePageMeta, buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
+import { getProductImages } from "@/lib/content";
+import type { ImageRef } from "@/lib/data/image-types";
+import { buildProductJsonLd, buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta } from "@/lib/seo-meta";
 import { ProductCard } from "@/components/ProductCard";
 import { IndustrialVisual } from "@/components/IndustrialVisual";
 import { JsonLd } from "@/components/JsonLd";
@@ -14,11 +16,12 @@ import { CheckIcon, CableIcon, ProfileIcon, InjectionIcon, ExtrusionIcon } from 
 import { Container, PageHero, CTABand, SectionHead } from "@/components/ui";
 import Image from "next/image";
 
-const CATEGORY_SLUGS = ["pvc", "masterbatch"] as const;
+const CATEGORY_SLUGS = ["pvc", "masterbatch", "color-masterbatch"] as const;
 
-const CATEGORY_META: Record<(typeof CATEGORY_SLUGS)[number], { heroKey: string; introKey: string }> = {
-  pvc: { heroKey: "pvc.hero", introKey: "pvc.intro" },
-  masterbatch: { heroKey: "mb.hero", introKey: "mb.intro" },
+const CATEGORY_META: Record<(typeof CATEGORY_SLUGS)[number], { heroKey: string; introKey: string; titleKey: string }> = {
+  pvc: { heroKey: "pvc.hero", introKey: "pvc.intro", titleKey: "mega.pvc.title" },
+  masterbatch: { heroKey: "mb.hero", introKey: "mb.intro", titleKey: "mega.masterbatch.title" },
+  "color-masterbatch": { heroKey: "cmb.hero", introKey: "cmb.intro", titleKey: "mega.colormb.title" },
 };
 
 export function generateStaticParams() {
@@ -34,7 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   if ((CATEGORY_SLUGS as readonly string[]).includes(slug)) {
     const meta = CATEGORY_META[slug as keyof typeof CATEGORY_META];
-    const { title, description } = resolvePageMeta(
+    const { title, description } = await resolvePageMeta(
       `products/${slug}`,
       locale,
       `${t(`${meta.heroKey}.title`)} — Iris Polymere`,
@@ -44,7 +47,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   }
   const product = productsBySlug[slug];
   if (!product) return {};
-  const { title, description } = resolvePageMeta(`products/${slug}`, locale, `${t(product.titleKey)} — Iris Polymere`, t(product.descKey));
+  const { title, description } = await resolvePageMeta(`products/${slug}`, locale, `${t(product.titleKey)} — Iris Polymere`, t(product.descKey));
   return buildMetadata({ locale, segments: ["products", slug], title, description });
 }
 
@@ -54,17 +57,18 @@ export default async function ProductRoute({ params }: { params: Promise<{ local
   const locale = rawLocale as Locale;
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
+  const productImages = await getProductImages();
 
   if ((CATEGORY_SLUGS as readonly string[]).includes(slug)) {
-    return <CategoryPage locale={locale} t={t} category={slug as ProductCategory} />;
+    return <CategoryPage locale={locale} t={t} category={slug as ProductCategory} productImages={productImages} />;
   }
 
   const product = productsBySlug[slug];
   if (!product) notFound();
-  return <DetailPage locale={locale} t={t} product={product} />;
+  return <DetailPage locale={locale} t={t} product={product} productImages={productImages} />;
 }
 
-function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<typeof tFrom>; category: ProductCategory }) {
+function CategoryPage({ locale, t, category, productImages }: { locale: Locale; t: ReturnType<typeof tFrom>; category: ProductCategory; productImages: Record<string, ImageRef> }) {
   const meta = CATEGORY_META[category];
   const items = productsByCategory[category];
   const isMasterbatch = category === "masterbatch";
@@ -84,7 +88,7 @@ function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<t
     <>
       <JsonLd data={collectionPageJsonLd} />
       <JsonLd data={itemListJsonLd} />
-      <PageHero t={t} locale={locale} eyebrowKey={`${meta.heroKey}.eyebrow`} titleKey={`${meta.heroKey}.title`} leadKey={`${meta.heroKey}.lead`} crumbs={[{ labelKey: `mega.${category}.title` }]} />
+      <PageHero t={t} locale={locale} eyebrowKey={`${meta.heroKey}.eyebrow`} titleKey={`${meta.heroKey}.title`} leadKey={`${meta.heroKey}.lead`} crumbs={[{ labelKey: meta.titleKey }]} />
 
       <section className="py-16 sm:py-20">
         <Container>
@@ -94,6 +98,15 @@ function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<t
               <ProductCard key={p.slug} t={t} href={`/${locale}/products/${p.slug}`} titleKey={p.titleKey} descKey={p.descKey} accent={p.accent} labelKey="btn.viewProduct" image={productImages[p.slug]} />
             ))}
           </div>
+          {category === "color-masterbatch" && (
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {["color-masterbatch-2", "color-masterbatch-3"].map((key) => (
+                <div key={key} className="overflow-hidden rounded-md border border-line">
+                  <Image src={`/assets/${key}.jpg`} alt="" width={2000} height={875} sizes="(min-width: 640px) 50vw, 100vw" className="h-auto w-full" />
+                </div>
+              ))}
+            </div>
+          )}
           {isMasterbatch && (
             <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
               {["masterbatch-filler", "masterbatch-color", "masterbatch-black"].map((key) => (
@@ -132,7 +145,7 @@ function CategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<t
   );
 }
 
-function DetailPage({ locale, t, product }: { locale: Locale; t: ReturnType<typeof tFrom>; product: (typeof products)[number] }) {
+function DetailPage({ locale, t, product, productImages }: { locale: Locale; t: ReturnType<typeof tFrom>; product: (typeof products)[number]; productImages: Record<string, ImageRef> }) {
   const related = products.filter((p) => p.category === product.category && p.slug !== product.slug).slice(0, 4);
   const productJsonLd = buildProductJsonLd({
     locale,

@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState, useRef, useEffect } from "react";
+import {useRef, useEffect} from "react";
+import { useUploadAction } from "./UploadMode";
 import { uploadMedia, type UploadState } from "@/lib/actions/media";
 
-const initialState: UploadState = {};
 
 export function MediaUploadForm() {
-  const [state, formAction, pending] = useActionState(uploadMedia, initialState);
+  const { state, submit: formAction, pending } = useUploadAction(uploadMedia);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {

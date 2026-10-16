@@ -5,8 +5,9 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { notFound } from "next/navigation";
 import { contactInfo, telHref, mapEmbedSrc } from "@/lib/contact-info";
-import { buildMetadata, resolvePageMeta, buildWebPageJsonLd } from "@/lib/seo";
-import { siteAssetOverrides } from "@/lib/data/site-assets";
+import { buildWebPageJsonLd } from "@/lib/seo";
+import { buildMetadata, resolvePageMeta } from "@/lib/seo-meta";
+import { getSiteAssetOverrides } from "@/lib/content";
 import { PinIcon, PhoneIcon, MailIcon } from "@/components/Icons";
 import { ContactForm } from "@/components/ContactForm";
 import { JsonLd } from "@/components/JsonLd";
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) return {};
   const dict = await getDictionary(locale as Locale);
   const t = tFrom(dict);
-  const { title, description } = resolvePageMeta("contact", locale as Locale, `${t("contact.hero.title")} — Iris Polymere`, t("contact.hero.lead"));
+  const { title, description } = await resolvePageMeta("contact", locale as Locale, `${t("contact.hero.title")} — Iris Polymere`, t("contact.hero.lead"));
   return buildMetadata({ locale, segments: ["contact"], title, description });
 }
 
@@ -29,6 +30,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const { locale: rawLocale } = await params;
   if (!isLocale(rawLocale)) notFound();
   const locale = rawLocale as Locale;
+  const siteAssetOverrides = await getSiteAssetOverrides();
   const dict = await getDictionary(locale);
   const t = tFrom(dict);
   const contactPageJsonLd = buildWebPageJsonLd({

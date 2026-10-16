@@ -1,28 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { randomUUID } from "crypto";
-import { writeFile, unlink, mkdir } from "fs/promises";
-import path from "path";
 import { prisma } from "@/lib/db";
-
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
-const MAX_SIZE = 20 * 1024 * 1024;
-const ALLOWED = new Map<string, string>([
-  ["image/png", "png"],
-  ["image/jpeg", "jpg"],
-  ["image/webp", "webp"],
-]);
-
-async function saveFile(file: File) {
-  const ext = ALLOWED.get(file.type);
-  if (!ext) return null;
-  await mkdir(UPLOAD_DIR, { recursive: true });
-  const filename = `${randomUUID()}.${ext}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(UPLOAD_DIR, filename), buffer);
-  return `/uploads/${filename}`;
-}
+import { IMAGE_TYPES, deleteUpload, resolveUpload } from "@/lib/storage";
+import { publishContent } from "@/lib/publish";
 
 // "home-about" is the homepage About section's photo; every other slug is a corporate page.
 function adminPath(slug: string) {
@@ -36,35 +17,26 @@ export async function uploadCorporateHeroImage(
   _prev: CorporateHeroUploadState,
   formData: FormData
 ): Promise<CorporateHeroUploadState> {
-  const fileEn = formData.get("fileEn");
   const existing = await prisma.corporateHeroImage.findUnique({ where: { slug } });
 
-  let urlEn = existing?.urlEn ?? null;
-  if (fileEn instanceof File && fileEn.size > 0) {
-    if (fileEn.size > MAX_SIZE) return { error: "File is too large (20MB max)." };
-    const saved = await saveFile(fileEn);
-    if (!saved) return { error: "Unsupported file type. Allowed: PNG, JPG, WEBP." };
-    urlEn = saved;
+  const en = await resolveUpload(formData, "fileEn", IMAGE_TYPES);
+  if (en && "error" in en) return { error: en.error };
+  const fr = await resolveUpload(formData, "fileFr", IMAGE_TYPES);
+  if (fr && "error" in fr) {
+    if (en) await deleteUpload(en.upload.url);
+    return { error: fr.error };
   }
+  const ar = await resolveUpload(formData, "fileAr", IMAGE_TYPES);
+  if (ar && "error" in ar) {
+    if (en) await deleteUpload(en.upload.url);
+    if (fr) await deleteUpload(fr.upload.url);
+    return { error: ar.error };
+  }
+
+  const urlEn = en?.upload.url ?? existing?.urlEn ?? null;
   if (!urlEn) return { error: "Choose an English image to upload — it's required." };
-
-  const fileFr = formData.get("fileFr");
-  let urlFr = existing?.urlFr ?? null;
-  if (fileFr instanceof File && fileFr.size > 0) {
-    if (fileFr.size > MAX_SIZE) return { error: "File is too large (20MB max)." };
-    const saved = await saveFile(fileFr);
-    if (!saved) return { error: "Unsupported file type for the French image." };
-    urlFr = saved;
-  }
-
-  const fileAr = formData.get("fileAr");
-  let urlAr = existing?.urlAr ?? null;
-  if (fileAr instanceof File && fileAr.size > 0) {
-    if (fileAr.size > MAX_SIZE) return { error: "File is too large (20MB max)." };
-    const saved = await saveFile(fileAr);
-    if (!saved) return { error: "Unsupported file type for the Arabic image." };
-    urlAr = saved;
-  }
+  const urlFr = fr?.upload.url ?? existing?.urlFr ?? null;
+  const urlAr = ar?.upload.url ?? existing?.urlAr ?? null;
 
   await prisma.corporateHeroImage.upsert({
     where: { slug },
@@ -72,7 +44,15 @@ export async function uploadCorporateHeroImage(
     update: { urlEn, urlFr, urlAr },
   });
 
+  // Replaced files are no longer referenced.
+  if (existing) {
+    if (en) await deleteUpload(existing.urlEn);
+    if (fr) await deleteUpload(existing.urlFr);
+    if (ar) await deleteUpload(existing.urlAr);
+  }
+
   revalidatePath(adminPath(slug));
+  publishContent();
   return { success: true };
 }
 
@@ -80,12 +60,7 @@ export async function resetCorporateHeroImage(slug: string) {
   const existing = await prisma.corporateHeroImage.findUnique({ where: { slug } });
   if (!existing) return;
   await prisma.corporateHeroImage.delete({ where: { slug } });
-  for (const url of [existing.urlEn, existing.urlFr, existing.urlAr]) {
-    if (url && url.startsWith("/uploads/")) {
-      try {
-        await unlink(path.join(process.cwd(), "public", url));
-      } catch {}
-    }
-  }
+  for (const url of [existing.urlEn, existing.urlFr, existing.urlAr]) await deleteUpload(url);
   revalidatePath(adminPath(slug));
+  publishContent();
 }

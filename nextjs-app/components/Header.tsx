@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { corporateLinks, productLinks } from "@/lib/nav-data";
 import { contactInfo, telHref, whatsappHref } from "@/lib/contact-info";
-import { siteAssetOverrides } from "@/lib/data/site-assets";
 import { useI18n } from "./providers/i18n-provider";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { WhatsAppIcon } from "./Icons";
@@ -19,7 +18,7 @@ function ChevronDown({ className = "" }: { className?: string }) {
   );
 }
 
-export function Header() {
+export function Header({ logoSrc }: { logoSrc: string }) {
   const { locale, t } = useI18n();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -27,7 +26,7 @@ export function Header() {
 
   const home = `/${locale}`;
   const isActive = (href: string) => pathname === `/${locale}/${href}` || pathname === `/${locale}/${href}/`;
-  const logoMark = siteAssetOverrides["logo-mark"] ?? "/brand/logo-mark.webp";
+  const logoMark = logoSrc;
 
   // Lock background scroll while the mobile menu overlay is open — without
   // this, iOS Safari lets touch-scroll pass through to the page behind a

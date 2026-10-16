@@ -1,9 +1,9 @@
 "use client";
 
-import { useActionState, useRef, useEffect } from "react";
+import {useRef, useEffect} from "react";
+import { useUploadAction } from "./UploadMode";
 import { uploadBanner, type BannerUploadState } from "@/lib/actions/banners";
 
-const initialState: BannerUploadState = {};
 
 const LOCALES = [
   { code: "En", label: "English", required: true },
@@ -12,7 +12,7 @@ const LOCALES = [
 ] as const;
 
 export function BannerUploadForm({ atMax }: { atMax: boolean }) {
-  const [state, formAction, pending] = useActionState(uploadBanner, initialState);
+  const { state, submit: formAction, pending } = useUploadAction(uploadBanner);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {

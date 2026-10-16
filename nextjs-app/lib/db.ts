@@ -5,11 +5,14 @@ import path from "path";
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function createClient() {
-  // DATABASE_URL in .env is relative to prisma/schema.prisma (Prisma CLI
-  // convention); resolve an explicit absolute path here so the app runtime
-  // (which starts from the project root) finds the same database file.
-  const dbPath = path.join(process.cwd(), "dev.db");
-  const adapter = new PrismaLibSql({ url: `file:${dbPath}` });
+  // Hosted (Vercel / production): the Turso database named by TURSO_DATABASE_URL.
+  // Local development without those variables: the SQLite file dev.db at the project
+  // root (resolved to an absolute path — DATABASE_URL in .env is relative to
+  // prisma/schema.prisma, which the app runtime doesn't share).
+  const tursoUrl = process.env.TURSO_DATABASE_URL;
+  const adapter = tursoUrl
+    ? new PrismaLibSql({ url: tursoUrl, authToken: process.env.TURSO_AUTH_TOKEN })
+    : new PrismaLibSql({ url: `file:${path.join(process.cwd(), "dev.db")}` });
   return new PrismaClient({ adapter });
 }
 

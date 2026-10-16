@@ -1,47 +1,46 @@
 # Iris Polymere — Admin CMS
 
-A local content-management backend for blog posts, categories, media (PDF/image
-uploads), certificates, homepage banners, site-wide brand assets, and
-per-page SEO. Runs alongside the public Next.js site.
+A content-management backend for blog posts, categories, media (PDF/image
+uploads), certificates, homepage banners, site-wide brand assets, product
+photos and per-page SEO. It runs inside the public Next.js site at `/admin`,
+both on the live site and locally.
+
+## Where things live
+
+| What | Hosted (Vercel) | Local development |
+| --- | --- | --- |
+| Database | **Turso** (`TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`) | SQLite file `dev.db` (when those variables are absent) |
+| Uploaded files | **Vercel Blob** (`BLOB_READ_WRITE_TOKEN`) — browser uploads straight to Blob | `public/uploads/` |
+| Admin session | `SESSION_SECRET` env variable | `.env` |
+
+Content saved in the admin is live right away: every save purges the cached
+public pages (`lib/publish.ts`), and pages are otherwise regenerated every 5
+minutes. There is **nothing to export or publish** any more. Public pages
+read the database through `lib/content.ts`.
+
+Admin sign-in is on the live site at `/admin/login`. Change the password under
+**Settings → Admin Password** (10+ characters).
 
 ## Running locally
 
 ```bash
 npm install
-npm run dev
+npm run dev          # http://localhost:3300/admin/login
 ```
 
-Open **http://localhost:3300/admin/login**.
+Without the Turso/Blob variables the app uses the local `dev.db` and
+`public/uploads/`, a separate sandbox from the live data. To work against the
+live data locally, put `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` in
+`.env.local` (and `BLOB_READ_WRITE_TOKEN` to upload to the live Blob store) —
+be careful, edits then change the live site.
 
-Admin credentials (local/testing only — change before any real deployment):
-
-- Username: `admin@admin.com`
-- Password: `123456`
-
-Reset the local database (re-creates the admin user above) with:
+### Database changes (Prisma migrations)
 
 ```bash
-npx prisma migrate reset   # wipes and re-seeds the local database
+npx prisma migrate dev --name something   # creates + applies it to dev.db
+npm run db:migrate:turso                  # applies new migrations to Turso
+                                          # (needs the Turso variables in .env.turso)
 ```
-
-## How content gets from the admin to the live site
-
-The admin panel edits a local SQLite database (`dev.db`, gitignored — never
-deployed). The public site does **not** query that database at runtime; it
-reads from static files in `lib/data/` that are committed to git and built
-into the site (same pattern as a headless CMS + SSG).
-
-After making changes in `/admin`, click **Export Content Now** on the
-Dashboard (runs `npm run export-content` for you), or run it yourself:
-
-```bash
-npm run export-content   # regenerates the lib/data/*.ts files (blog, banners,
-                          # certificates, pages, site assets, product photos…)
-npm run build             # rebuilds the static site with the new content
-```
-
-Then commit the updated `lib/data/*.ts` files (and any new files under
-`public/uploads/`) and redeploy (`vercel --prod`).
 
 ## What's editable
 
@@ -52,8 +51,8 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   has its own artwork **per language** (English required, French/Arabic
   optional — falls back to the English image if left blank), since the
   source photography has language-specific text baked in.
-- **Product Photos** — one real photo per product (PVC and Filler
-  Masterbatch), shown on that product's detail page and its category-page
+- **Product Photos** — one real photo per product (PVC, Color
+  Masterbatch and Filler Masterbatch), shown on that product's detail page and its category-page
   card. Not localized — plain product photography with no on-image text. A
   product with no photo shows a placeholder graphic instead.
 - **Site Assets** — the brand-wide images used across the whole site: the
@@ -102,7 +101,7 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
   public page renders whatever certificates exist, no fixed set required.
 - **Pages** — per-locale meta title/description overrides for every static
   (non-blog) page: Home, Contact, Blog index, Certificates, the 5 Corporate
-  pages, the 2 product category pages (PVC, Filler Masterbatch), and all 4 individual product pages.
+  pages, the 3 product category pages (PVC, Color Masterbatch, Filler Masterbatch), and all 5 individual product pages.
   Each page shows its dictionary-driven default copy for reference; leaving
   a field blank keeps using that default. The list shows a "Custom"/"Default"
   badge per page. Backed by the `PageMeta` table, keyed by the page's entry
@@ -129,14 +128,13 @@ Then commit the updated `lib/data/*.ts` files (and any new files under
 Every uploaded image (homepage banners, blog covers, product photos, Corporate
 header/side photos) is shown at its **own shape, whole, never cropped** — wide,
 square or tall all work, on every device. The recommended sizes in the admin
-are just what the designs were made at, not requirements. How: `npm run
-export-content` reads each uploaded file's real pixel size (via `sharp`) and
-writes it next to the URL in `lib/data/*.ts` (`{ src, width, height }`), and
-the pages render with that ratio. So after uploading in the admin, run the
-export (the dashboard button) like for any other content change. The
-homepage slider takes the shape of the tallest banner; banners of the same
-shape (the normal case) fill it exactly, a differently shaped one is
-centered on navy rather than cropped.
+are just what the designs were made at, not requirements. How: the upload
+writes the image's pixel size into its file name (`<id>-2400x1050.jpg`) and
+pages render with that ratio. The homepage slider takes the shape of the
+tallest banner; banners of the same shape (the normal case) fill it exactly, a
+differently shaped one is centered on navy rather than cropped. Logos uploaded
+under Site Assets also have their transparent margins trimmed automatically.
+
 - **Messages** — read-only inbox of submissions from the public Contact
   form (`/[locale]/contact`). Shows an unread-count badge in the sidebar
   and on the dashboard. Click a row to expand full details (and mark it
@@ -152,19 +150,10 @@ centered on navy rather than cropped.
 ## Contact form submissions
 
 The public Contact form is a real Server Action (`lib/actions/contact.ts`)
-with server-side validation (required fields + email format), independent
-of the client-side checks. On success it writes a `ContactSubmission` row
-to the same local SQLite database as the rest of the CMS, visible under
-**Messages** above.
-
-This only works where the app is running with access to that database —
-i.e. locally (`npm run dev` / `npm run build && npm start`). On the Vercel
-deployment (ephemeral filesystem, no persistent DB) the write fails
-silently server-side and the visitor still sees the normal success message,
-so the public form never appears broken — but no message is actually
-captured there. To collect real inquiries from the live site, point
-`submitContactForm` at an external store (e.g. a hosted Postgres DB, or an
-email/webhook integration) before go-live.
+with server-side validation (required fields + email format). On success it
+writes a `ContactSubmission` row to the database (Turso when hosted), visible
+under **Messages** above. The notification address in Settings is stored but
+nothing emails it yet — new messages only appear in the admin.
 
 ## Known limitations vs. WordPress
 
@@ -178,17 +167,11 @@ PDF upload, admin login, content editing):
 - No bulk actions (bulk delete/publish) on the Posts, Media or Messages
   lists.
 - No tags — posts have one optional category, not a tag system.
-- Publishing still requires an explicit **Export Content Now** click plus a
-  rebuild/redeploy — it is not instant the way a live-database-backed
-  WordPress site is (see "How content gets from the admin to the live
-  site" above; this is a deliberate tradeoff of the static-export
-  architecture, not an oversight).
 
 ## Notes
 
-- `/admin` only runs where the SQLite file exists — i.e. locally. It is not
-  reachable/functional on the Vercel deployment by design (ephemeral
-  filesystem, no persistent DB there).
 - Rich text bodies are stored as HTML (from the Tiptap editor) and rendered
   with `dangerouslySetInnerHTML` on the public post page — only content you
   or the client author should go through this field.
+- Keep the Turso token, Blob token and `SESSION_SECRET` out of git (they live
+  in Vercel's environment variables and git-ignored `.env*` files).
