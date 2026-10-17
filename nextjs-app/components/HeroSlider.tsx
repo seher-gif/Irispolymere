@@ -24,7 +24,7 @@ export function HeroSlider({ banners }: { banners: HeroBanner[] }) {
   const aspectRatio = Math.min(...banners.map((b) => b.width / b.height));
 
   return (
-    <section className="relative w-full overflow-hidden bg-brand-darker max-h-[calc(100svh-5rem)] md:max-h-[calc(100svh-7.5rem)]" style={{ aspectRatio }}>
+    <section className="relative w-full overflow-hidden bg-brand-darker max-h-[calc(100svh-6rem)] md:max-h-[calc(100svh-8.5rem)]" style={{ aspectRatio }}>
       {/* Admin-managed banner images (see /admin/banners): shown as-is, full
           bleed, no gradient scrim or text layered on top of them. */}
       <h1 className="sr-only">{t("hero.slide1.title")}</h1>
