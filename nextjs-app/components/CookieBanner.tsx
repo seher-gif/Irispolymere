@@ -20,10 +20,10 @@ export function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[80] border-t border-line bg-white px-5 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] sm:flex sm:items-center sm:justify-between sm:gap-6">
-      <div className="mb-3 sm:mb-0">
+    <div className="fixed inset-x-0 bottom-0 z-[80] border-t border-line bg-white px-5 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] sm:inset-x-auto sm:bottom-4 sm:start-4 sm:w-[340px] sm:rounded-md sm:border sm:p-4 sm:shadow-xl">
+      <div className="mb-3">
         <p className="text-sm font-bold text-ink">{t("cookie.title")}</p>
-        <p className="mt-1 max-w-xl text-xs text-muted">{t("cookie.text")}</p>
+        <p className="mt-1 text-xs text-muted">{t("cookie.text")}</p>
       </div>
       <div className="flex shrink-0 gap-2">
         <button onClick={() => decide("rejected")} className="rounded-sm border border-line px-4 py-2 text-xs font-bold text-ink-soft">
