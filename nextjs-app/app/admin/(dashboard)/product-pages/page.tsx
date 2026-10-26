@@ -2,7 +2,10 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { productsByCategory, type ProductCategory } from "@/lib/data/products";
 import { getHiddenProductPages } from "@/lib/content";
+import { prisma } from "@/lib/db";
 import { ProductVisibilityToggle } from "@/components/admin/ProductVisibilityToggle";
+import { CustomCategoryForm } from "@/components/admin/CustomCategoryForm";
+import { CustomCategoryRow } from "@/components/admin/CustomCategoryRow";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +16,11 @@ const CATEGORIES: { slug: ProductCategory; titleKey: string }[] = [
 ];
 
 export default async function AdminProductPagesPage() {
-  const [dict, hidden] = await Promise.all([getDictionary("en"), getHiddenProductPages()]);
+  const [dict, hidden, custom] = await Promise.all([
+    getDictionary("en"),
+    getHiddenProductPages(),
+    prisma.customCategory.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] }),
+  ]);
   const t = tFrom(dict);
 
   return (
@@ -51,6 +58,31 @@ export default async function AdminProductPagesPage() {
             </div>
           );
         })}
+        {custom.map((c) => (
+          <CustomCategoryRow
+            key={c.id}
+            visible={!hidden.includes(c.slug)}
+            category={{
+              id: c.id,
+              slug: c.slug,
+              titleEn: c.titleEn,
+              titleAr: c.titleAr ?? "",
+              titleFr: c.titleFr ?? "",
+              descEn: c.descEn,
+              descAr: c.descAr ?? "",
+              descFr: c.descFr ?? "",
+              hasImage: Boolean(c.imageUrl),
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="mt-8 border border-line bg-white p-5">
+        <h2 className="text-sm font-bold text-ink">Add a new category</h2>
+        <p className="mb-4 mt-1 text-xs text-muted">
+          Creates a new product category with its own page, menu entry and homepage card in all three languages.
+        </p>
+        <CustomCategoryForm />
       </div>
     </div>
   );

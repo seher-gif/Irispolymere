@@ -193,3 +193,22 @@ export const getHiddenProductPages = cache(async (): Promise<string[]> => {
     return [];
   }
 });
+
+export type CustomCategoryData = {
+  slug: string;
+  title: LocalizedText;
+  desc: LocalizedText;
+  image: ImageRef | null;
+};
+
+export const getCustomCategories = cache(async (): Promise<CustomCategoryData[]> => {
+  const rows = await prisma.customCategory.findMany({ orderBy: [{ order: "asc" }, { createdAt: "asc" }] });
+  return Promise.all(
+    rows.map(async (c) => ({
+      slug: c.slug,
+      title: tri(c.titleEn, c.titleFr, c.titleAr),
+      desc: tri(c.descEn, c.descFr, c.descAr),
+      image: c.imageUrl ? await imgRef(c.imageUrl) : null,
+    }))
+  );
+});

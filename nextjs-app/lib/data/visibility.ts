@@ -27,3 +27,9 @@ export function isSlugHidden(hidden: readonly string[], slug: string) {
   const product = products.find((p) => p.slug === slug);
   return product ? isProductHidden(hidden, product) : isCategoryHidden(hidden, slug);
 }
+
+// Admin-added categories show text that isn't in the dictionaries. Pass a key prefixed with
+// "=" to a translator wrapped by literalT() and it comes back as-is ("=Fillers" → "Fillers").
+export function literalT<F extends (key: string) => string>(t: F) {
+  return (key: string) => (key.startsWith("=") ? key.slice(1) : t(key));
+}

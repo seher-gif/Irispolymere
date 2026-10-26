@@ -15,8 +15,8 @@ type BannerItem = {
 
 const VARIANTS = [
   { key: "En", label: "EN" },
-  { key: "Fr", label: "FR" },
   { key: "Ar", label: "AR" },
+  { key: "Fr", label: "FR" },
 ] as const;
 
 export function BannerGrid({ items }: { items: BannerItem[] }) {

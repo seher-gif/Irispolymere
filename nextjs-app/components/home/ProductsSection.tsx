@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { TFunc } from "@/lib/i18n/t";
 import { productLinks } from "@/lib/nav-data";
-import { filterProductLinks } from "@/lib/data/visibility";
-import { getProductImages, getHiddenProductPages } from "@/lib/content";
+import { filterProductLinks, literalT } from "@/lib/data/visibility";
+import { getProductImages, getHiddenProductPages, getCustomCategories } from "@/lib/content";
 import { ProductCard } from "../ProductCard";
 import { Container, SectionHead } from "../ui";
 
@@ -21,9 +21,12 @@ const CATEGORY_IMAGE_SLUG: Record<string, string> = {
 };
 
 export async function ProductsSection({ t, locale }: { t: TFunc; locale: string }) {
-  const [productImages, hidden] = await Promise.all([getProductImages(), getHiddenProductPages()]);
+  const [productImages, hidden, custom] = await Promise.all([getProductImages(), getHiddenProductPages(), getCustomCategories()]);
   const links = filterProductLinks(productLinks, hidden);
-  if (links.length === 0) return null;
+  const customVisible = custom.filter((c) => !hidden.includes(c.slug));
+  const firstHref = links[0]?.href ?? (customVisible[0] && `products/${customVisible[0].slug}`);
+  if (!firstHref) return null;
+  const tl = literalT(t);
   return (
     <section className="bg-surface-alt py-16 sm:py-20">
       <Container>
@@ -40,9 +43,21 @@ export async function ProductsSection({ t, locale }: { t: TFunc; locale: string 
               image={productImages[CATEGORY_IMAGE_SLUG[p.href]]}
             />
           ))}
+          {customVisible.map((c) => (
+            <ProductCard
+              key={c.slug}
+              t={tl}
+              href={`/${locale}/products/${c.slug}`}
+              titleKey={`=${c.title[locale as "en" | "ar" | "fr"]}`}
+              descKey={`=${c.desc[locale as "en" | "ar" | "fr"]}`}
+              accent="#105191"
+              labelKey="btn.viewProducts"
+              image={c.image ?? undefined}
+            />
+          ))}
         </div>
         <div className="mt-10 text-center">
-          <Link href={`/${locale}/${links[0].href}`} className="inline-block rounded-sm bg-brand px-7 py-3 text-sm font-bold text-white hover:bg-brand-hover">
+          <Link href={`/${locale}/${firstHref}`} className="inline-block rounded-sm bg-brand px-7 py-3 text-sm font-bold text-white hover:bg-brand-hover">
             {t("nav.allProducts")}
           </Link>
         </div>

@@ -11,8 +11,8 @@ import {
 
 const LOCALES = [
   { code: "En", label: "English", required: true },
-  { code: "Fr", label: "Français", required: false },
   { code: "Ar", label: "العربية", required: false },
+  { code: "Fr", label: "Français", required: false },
 ] as const;
 
 export function CorporateHeroImageCard({

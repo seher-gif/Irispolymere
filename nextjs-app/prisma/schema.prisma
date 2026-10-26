@@ -192,3 +192,20 @@ model Certificate {
   pdfUrl    String? // relative /uploads path once the client-supplied PDF is added
   updatedAt DateTime @updatedAt
 }
+
+// Product categories added by the admin (Admin → Product Pages), on top of the built-in
+// PVC / Masterbatch / Color Masterbatch ones. Each gets its own page at /products/<slug>, a
+// menu entry and a homepage card. French/Arabic fall back to English when left blank.
+model CustomCategory {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  titleEn   String
+  titleAr   String?
+  titleFr   String?
+  descEn    String
+  descAr    String?
+  descFr    String?
+  imageUrl  String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}

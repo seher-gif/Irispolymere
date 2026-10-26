@@ -6,8 +6,8 @@ import type { PageMetaFormState } from "@/lib/actions/pages";
 
 const LOCALES = [
   { code: "en", label: "English" },
-  { code: "fr", label: "Français" },
   { code: "ar", label: "العربية" },
+  { code: "fr", label: "Français" },
 ] as const;
 
 type PageMetaData = {
