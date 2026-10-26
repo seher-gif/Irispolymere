@@ -9,7 +9,7 @@ import { products } from "@/lib/data/products";
 const KNOWN = new Set<string>([...products.map((p) => p.slug), ...products.map((p) => p.category)]);
 
 export async function setProductPageVisible(slug: string, visible: boolean) {
-  if (!KNOWN.has(slug)) return;
+  if (!KNOWN.has(slug) && !(await prisma.customCategory.findUnique({ where: { slug } }))) return;
   const row = await prisma.siteSetting.findUnique({ where: { key: HIDDEN_PAGES_KEY } });
   let hidden: string[] = [];
   try {

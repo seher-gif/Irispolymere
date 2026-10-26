@@ -20,7 +20,7 @@ const SOCIAL = [
   { label: "X", href: "#", path: "M4 4l7.1 9.5L4.3 20h1.9l6-6.6 4.9 6.6h4l-7.4-9.9L19.7 4h-1.9l-5.6 6.1L8 4H4zm2.9 1.5h1.8l9.4 12.9h-1.8L6.9 5.5z" },
 ];
 
-export function Footer({ logoSrc, productLinks }: { logoSrc: string; productLinks: { key: string; href: string }[] }) {
+export function Footer({ logoSrc, productLinks }: { logoSrc: string; productLinks: { label: string; href: string }[] }) {
   const { locale, t } = useI18n();
   const home = `/${locale}`;
   const logoFull = logoSrc;
@@ -63,7 +63,7 @@ export function Footer({ logoSrc, productLinks }: { logoSrc: string; productLink
           <div>
             <p className="mb-2 font-bold uppercase tracking-wide text-white">{t("footer.products")}</p>
             {productLinks.map((p) => (
-              <Link key={p.href} href={`${home}/${p.href}`} className="block py-0.5 hover:text-white">{t(p.key)}</Link>
+              <Link key={p.href} href={`${home}/${p.href}`} className="block py-0.5 hover:text-white">{p.label}</Link>
             ))}
           </div>
           <div>

@@ -3,14 +3,14 @@ import { locales } from "@/lib/i18n/config";
 import { SITE_URL } from "@/lib/seo";
 import { corporatePages } from "@/lib/data/corporate";
 import { visibleProducts, isCategoryHidden } from "@/lib/data/visibility";
-import { getBlogPosts, getHiddenProductPages } from "@/lib/content";
+import { getBlogPosts, getHiddenProductPages, getCustomCategories } from "@/lib/content";
 
 const CATEGORY_SLUGS = ["pvc", "masterbatch", "color-masterbatch"];
 
 export const revalidate = 300;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [blogPosts, hidden] = await Promise.all([getBlogPosts(), getHiddenProductPages()]);
+  const [blogPosts, hidden, custom] = await Promise.all([getBlogPosts(), getHiddenProductPages(), getCustomCategories()]);
   const segmentSets: string[][] = [
     [],
     ["certificates"],
@@ -18,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ["blog"],
     ...corporatePages.map((p) => ["corporate", p.slug]),
     ...CATEGORY_SLUGS.filter((s) => !isCategoryHidden(hidden, s)).map((s) => ["products", s]),
+    ...custom.filter((c) => !isCategoryHidden(hidden, c.slug)).map((c) => ["products", c.slug]),
     ...visibleProducts(hidden).map((p) => ["products", p.slug]),
     ...blogPosts.map((p) => ["blog", p.slug]),
   ];

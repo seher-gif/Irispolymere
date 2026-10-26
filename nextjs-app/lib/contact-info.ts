@@ -4,7 +4,7 @@ export const contactInfo = {
   whatsappNumber: "213560090018", // digits only, international format, no leading +
   website: "www.irispolymere.com",
   // Not localized — it's the same physical location regardless of UI language.
-  address: "Rue Dahmani Rabah, Groupe Propriete 40, Ilot 04, Soumaa, Wilaya de Blida, 09470, Algeria",
+  address: "Soumaa – Blida",
 };
 
 export function telHref(phone: string) {
@@ -18,5 +18,5 @@ export function whatsappHref(message?: string) {
 
 /** No-API-key Google Maps embed URL — interactive (zoom/pan) by default. */
 export function mapEmbedSrc() {
-  return `https://www.google.com/maps?q=${encodeURIComponent(contactInfo.address)}&output=embed`;
+  return `https://www.google.com/maps?q=${encodeURIComponent("Soumaa, Blida, Algeria")}&output=embed`;
 }

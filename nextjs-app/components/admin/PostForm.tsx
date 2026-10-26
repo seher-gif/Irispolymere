@@ -21,8 +21,8 @@ type PostData = {
 
 const LOCALES = [
   { code: "en", label: "English", required: true },
-  { code: "fr", label: "Français", required: false },
   { code: "ar", label: "العربية", required: false },
+  { code: "fr", label: "Français", required: false },
 ] as const;
 
 const initialState: PostFormState = {};

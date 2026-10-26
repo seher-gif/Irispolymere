@@ -5,8 +5,8 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { tFrom } from "@/lib/i18n/t";
 import { products, productsByCategory, productsBySlug, appKeys, benKeys, type ProductCategory } from "@/lib/data/products";
-import { getProductImages, getHiddenProductPages } from "@/lib/content";
-import { isCategoryHidden, isProductHidden } from "@/lib/data/visibility";
+import { getProductImages, getHiddenProductPages, getCustomCategories, type CustomCategoryData } from "@/lib/content";
+import { isCategoryHidden, isProductHidden, literalT } from "@/lib/data/visibility";
 import type { ImageRef } from "@/lib/data/image-types";
 import { buildProductJsonLd, buildWebPageJsonLd, buildItemListJsonLd, SITE_URL } from "@/lib/seo";
 import { buildMetadata, resolvePageMeta } from "@/lib/seo-meta";
@@ -47,7 +47,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     return buildMetadata({ locale, segments: ["products", slug], title, description });
   }
   const product = productsBySlug[slug];
-  if (!product) return {};
+  if (!product) {
+    const custom = (await getCustomCategories()).find((c) => c.slug === slug);
+    if (!custom) return {};
+    return buildMetadata({ locale, segments: ["products", slug], title: `${custom.title[locale as Locale]} — Iris Polymere`, description: custom.desc[locale as Locale] });
+  }
   const { title, description } = await resolvePageMeta(`products/${slug}`, locale, `${t(product.titleKey)} — Iris Polymere`, t(product.descKey));
   return buildMetadata({ locale, segments: ["products", slug], title, description });
 }
@@ -66,7 +70,12 @@ export default async function ProductRoute({ params }: { params: Promise<{ local
   }
 
   const product = productsBySlug[slug];
-  if (!product || isProductHidden(hidden, product)) notFound();
+  if (!product) {
+    const custom = (await getCustomCategories()).find((c) => c.slug === slug);
+    if (!custom || isCategoryHidden(hidden, slug)) notFound();
+    return <CustomCategoryPage locale={locale} t={t} category={custom} />;
+  }
+  if (isProductHidden(hidden, product)) notFound();
   return <DetailPage locale={locale} t={t} product={product} productImages={productImages} hidden={hidden} />;
 }
 
@@ -142,6 +151,40 @@ function CategoryPage({ locale, t, category, productImages, hidden }: { locale: 
         </section>
       )}
 
+      <CTABand t={t} locale={locale} />
+    </>
+  );
+}
+
+// A category added in the admin (Product Pages → Add a new category): title, description and an
+// optional photo, shown in the visitor's language (English where a translation is blank).
+function CustomCategoryPage({ locale, t, category }: { locale: Locale; t: ReturnType<typeof tFrom>; category: CustomCategoryData }) {
+  const tl = literalT(t);
+  const title = category.title[locale];
+  const desc = category.desc[locale];
+  const jsonLd = buildWebPageJsonLd({ locale, segments: ["products", category.slug], type: "CollectionPage", name: title, description: desc });
+
+  return (
+    <>
+      <JsonLd data={jsonLd} />
+      <PageHero t={tl} locale={locale} eyebrowKey="nav.products" titleKey={`=${title}`} leadKey={`=${desc}`} crumbs={[{ labelKey: `=${title}` }]} />
+      <section className="py-16 sm:py-20">
+        <Container>
+          {category.image && (
+            <div className="overflow-hidden rounded-md border border-line shadow-sm">
+              <Image src={category.image.src} alt={title} width={category.image.width} height={category.image.height} sizes="(min-width: 1280px) 1240px, 100vw" className="h-auto w-full" />
+            </div>
+          )}
+          <div className={`flex flex-wrap justify-center gap-3 ${category.image ? "mt-10" : ""}`}>
+            <Link href={`/${locale}/contact`} className="rounded-sm bg-brand px-6 py-3 text-sm font-bold text-white hover:bg-brand-hover">
+              {t("btn.requestQuote")}
+            </Link>
+            <Link href={`/${locale}/contact`} className="rounded-sm border border-line px-6 py-3 text-sm font-bold text-ink hover:border-brand hover:text-brand">
+              {t("btn.requestTechInfo")}
+            </Link>
+          </div>
+        </Container>
+      </section>
       <CTABand t={t} locale={locale} />
     </>
   );

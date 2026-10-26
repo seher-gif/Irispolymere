@@ -66,10 +66,8 @@ export function buildOrganizationJsonLd() {
     telephone: contactInfo.phones[0],
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Rue Dahmani Rabah, Groupe Propriete 40, Ilot 04",
       addressLocality: "Soumaa",
       addressRegion: "Blida",
-      postalCode: "09470",
       addressCountry: "DZ",
     },
     contactPoint: contactInfo.phones.map((phone) => ({

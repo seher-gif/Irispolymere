@@ -18,7 +18,7 @@ function ChevronDown({ className = "" }: { className?: string }) {
   );
 }
 
-export function Header({ logoSrc, productLinks }: { logoSrc: string; productLinks: { key: string; href: string }[] }) {
+export function Header({ logoSrc, productLinks }: { logoSrc: string; productLinks: { label: string; href: string }[] }) {
   const { locale, t } = useI18n();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -90,7 +90,7 @@ export function Header({ logoSrc, productLinks }: { logoSrc: string; productLink
             <div className="invisible absolute start-0 top-full z-50 w-80 translate-y-1 rounded-sm border border-line bg-white py-2 opacity-0 shadow-xl transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
               {productLinks.map((item) => (
                 <Link key={item.href} href={`${home}/${item.href}`} className="block px-5 py-2.5 text-[19.5px] font-semibold text-ink-soft hover:bg-surface-alt hover:text-brand">
-                  {t(item.key)}
+                  {item.label}
                 </Link>
               ))}
             </div>
@@ -163,7 +163,7 @@ export function Header({ logoSrc, productLinks }: { logoSrc: string; productLink
                   <div className="pb-2 ps-3">
                     {productLinks.map((item) => (
                       <Link key={item.href} href={`${home}/${item.href}`} onClick={() => setMobileOpen(false)} className="block py-2 text-[19.5px] font-semibold text-ink-soft">
-                        {t(item.key)}
+                        {item.label}
                       </Link>
                     ))}
                   </div>
