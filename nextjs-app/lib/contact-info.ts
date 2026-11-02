@@ -1,7 +1,7 @@
 export const contactInfo = {
   email: "irispolymerecom@hotmail.com",
-  phones: ["+213 560 09 00 18", "+213 560 09 00 16"],
-  whatsappNumber: "213560090018", // digits only, international format, no leading +
+  phones: ["+213 770 71 81 19", "+213 770 71 81 48", "+213 770 71 50 88", "+213 560 09 00 19"],
+  whatsappNumber: "213770718119", // digits only, international format, no leading +
   website: "www.irispolymere.com",
   // Not localized — it's the same physical location regardless of UI language.
   address: "Soumaa – Blida",
