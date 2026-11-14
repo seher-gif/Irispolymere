@@ -63,7 +63,7 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
                 <div>
                   <strong className="block text-sm text-ink">{t("contact.info.phone.label")}</strong>
                   {contactInfo.phones.map((phone) => (
-                    <a key={phone} href={telHref(phone)} className="block text-sm text-muted hover:text-brand">{phone}</a>
+                    <a key={phone} href={telHref(phone)} className="block text-sm text-muted hover:text-brand"><bdi dir="ltr">{phone}</bdi></a>
                   ))}
                 </div>
               </div>

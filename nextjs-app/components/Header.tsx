@@ -49,7 +49,7 @@ export function Header({ logoSrc, productLinks }: { logoSrc: string; productLink
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M4.5 4.5h3.7l1.6 4.4-2.1 1.7a12.5 12.5 0 006 6l1.7-2.1 4.4 1.6v3.7c0 1-1 1.7-2 1.5-11.4-1.7-17-9.4-18-16-.2-1 .6-2 1.7-2z" />
             </svg>
-            {contactInfo.phones[0]}
+            <bdi dir="ltr">{contactInfo.phones[0]}</bdi>
           </a>
           <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs font-semibold text-ink-soft hover:text-[#25D366] transition-colors">
             <WhatsAppIcon className="h-3.5 w-3.5" />
