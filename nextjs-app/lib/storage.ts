@@ -54,7 +54,7 @@ export async function storeBuffer(buffer: Buffer, ext: string, contentType: stri
     return blob.url;
   }
   await mkdir(UPLOAD_DIR, { recursive: true });
-  const filename = `${randomUUID()}.${ext}`;
+  const filename = await nameWithSize(ext, buffer, contentType);
   await writeFile(path.join(UPLOAD_DIR, filename), buffer);
   return `/uploads/${filename}`;
 }
